@@ -29,7 +29,7 @@ client
 //
 client
   .get('search.json')
-  .params({ q: 'bananas', since: '2011-11-11' })
+  .params({ q: 'banana', since: '2011-11-11' })
   .end(function(err, reply) {
     console.log(JSON.parse(reply));
   });
