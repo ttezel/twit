@@ -1,0 +1,8 @@
+{
+  "name": "Twitbot"
+  , "description": "Twitter bot for github enthusiasts"
+  , "version": "0.1.0"
+  , "author": "Tolga Tezel"
+  , "dependencies": { "oauth": ">=0.9.0" }
+  , "engines": { "node": "0.4.12" }
+}
