@@ -1,6 +1,9 @@
 //
 //  RTD2 - Twitter bot that tweets today's most popular github project
 //
+//  contains methods to follow/unfollow random users in the bot's social graph
+//
+//
 var config = require('./config')
   , Twitter = require('../lib/twitter').Twitter;
 
