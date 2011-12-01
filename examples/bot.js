@@ -1,58 +1,169 @@
 //
-//  Twitter Bot
+//  Bot
+//  class for performing various twitter actions
 //
-//  utility functions for a twitter bot
-//
-var Twitter = require('../lib/twitter').Twitter;  
+var Twitter = require('../lib/twitter').Twitter
+  , colors = require('colors');
 
-var randIndex = function (array) {
-  var index = Math.floor(array.length*Math.random());
-  return array[index];
-}
+var randIndex = function (arr) {
+  var index = Math.floor(arr.length*Math.random());
+  return arr[index];
+};
 
-var Bot = function(configs) {
-  this.twitter = new Twitter(configs);
+function datestring (d) {
+  return d.getUTCFullYear()   + '-' 
+     +  (d.getUTCMonth() + 1) + '-'
+     +   d.getDate();
+};
+
+module.exports.Bot = Bot = function(config) {
+  this.twitter = new Twitter(config);
 };
 
 //
-//  make a new friend from users that your followers follow
+//  grab today's tweets containing this.tracking
 //
-Bot.prototype.mingle = function () {
+//    raw reply is passed to @callback
+//
+Bot.prototype.track = function (phrase, callback) {
+  var d = new Date(Date.now() - 5*60*60000)  //est timezone
+      , dateString = datestring(d);   
+  
+  console.log(
+      'BOT::Getting today\'s tweets filtered by `'.cyan 
+    + phrase
+    + '` since '.cyan
+    + dateString
+  );
+  
+  var params = {
+      q : phrase
+    , since: dateString
+    , result_type: 'mixed'
+  };
+  
+  this
+    .twitter
+    .get('search.json')
+    .params(params)
+    .end(callback);
+};
+
+//
+//  get the most popular tweet in @tweets (by retweet count)
+//
+//  @tweets       array       array of tweets
+//
+Bot.prototype.getPopular = function (tweets) {
+  var i = tweets.length
+    , max = 0
+    , popular;
+
+  while(i--) {
+    var tweet = tweets[i]
+      , popularity = tweet.metadata.recent_retweets;
+
+    if(popularity > max) {
+      max = popularity;
+      popular = tweet.text;
+    }
+  }
+
+  return popular;
+};
+
+//
+//  post a tweet
+//
+//  raw reply is passed to @callback
+//
+Bot.prototype.tweet = function (status, callback) {
+  if(typeof status !== 'string') {
+    return callback(new Error('tweet must be of type String'));
+  } else if(status.length > 140) {
+    return callback(new Error('BOT::tweet is too long: '.green + status.length));
+  }
+  
+  this
+    .twitter
+    .post('statuses/update.json')
+    .params({ status: status })
+    .end(callback);
+};
+
+//
+//  choose a random friend of one of your followers, and follow that user
+//
+//  raw reply is passed to @callback
+//
+Bot.prototype.mingle = function (callback) {
   var self = this;
-
-  //get followers & pick a random one
-  this.twitter.API('GET', 'followers/ids.json', {}, function(err, reply) {
-    if(err) { throw err; }
-
-    var followers = JSON.parse(reply).ids;
-
-    var randFollower  = randIndex(followers)
-      , path          = 'friends/ids.json?user_id=' + randFollower
-
-    //get friends of the random follower & pick one
-    self.twitter.API('GET', path, {}, function(err, reply) {
-      if(err) { throw err; }
-
-      var friends = JSON.parse(reply).ids;
-
-      var randFriend  = randIndex(friends)
-        , path        = 'friendships/create.json?user_id=' + randFriend;
-
-      //follow the chosen user
-      self.twitter.API('POST', path, {}, function(err, reply) {
-        if(err) { throw err; }
-
-        console.log('mingle: followed @%s', JSON.parse(reply).screen_name);
-      });
+  
+  this
+    .twitter
+    .get('followers/ids.json')
+    .end(function(err, reply) {
+      if(err) { return callback(err); }
+      
+      var followers = JSON.parse(reply).ids
+        , randFollower  = randIndex(followers);
+        
+      self
+        .twitter
+        .get('friends/ids.json')
+        .params({ user_id: randFollower })
+        .end(function(err, reply) {
+          if(err) { return callback(err); }
+          
+          var friends = JSON.parse(reply).ids
+            , target  = randIndex(friends);
+            
+          self
+            .twitter
+            .post('friendships/create.json') 
+            .params({ id: target })
+            .end(callback); 
+        })
     })
-  });
 };
 
 //
 //  prune your followers list ; unfollow a friend that hasn't followed you back
 //
-Bot.prototype.prune = function () {
-  //TODO
+//  raw reply is passed to @callback
+//
+Bot.prototype.prune = function (callback) {
+  var self = this;
+  
+  this
+    .twitter
+    .get('followers/ids.json')
+    .end(function(err, reply) {
+      if(err) return callback(err);
+      
+      var followers = JSON.parse(reply).ids;
+      
+      self
+        .twitter
+        .get('friends/ids.json')
+        .end(function(err, reply) {
+          if(err) return callback(err);
+          
+          var friends = JSON.parse(reply).ids
+            , target = randIndex(friends)
+            , pruned = false;
+          
+          while(!pruned) {
+            if(!~followers.indexOf(target)) {
+              pruned = true;
+              
+              self
+                .twitter
+                .post('friendships/destroy.json')
+                .params({ id: target })
+                .end(callback);   
+            }
+          }
+      });
+  });
 };
-
-module.exports.Bot = Bot;
