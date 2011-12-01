@@ -7,7 +7,7 @@
 var config = require('../examples/config')
   , Bot = require('./bot').Bot;
 
-var RTD2 = new Bot(config, 'github.com/');
+var RTD2 = new Bot(config);
 
 //
 //  cli interface handlers
@@ -25,6 +25,11 @@ var Cli = {
   },
   //display today's tweets containing @phrase
   track: function(phrase) {
+    if(!phrase) {
+      console.log('\nRTD2::must enter tracking phrase'.cyan);
+      return;
+    }
+
     RTD2.track(phrase, function(err, reply) {
         if(err) console.log('error:', err);
 
@@ -36,6 +41,7 @@ var Cli = {
 
         if(!num) { 
           console.log('no tweets for tracking phrase & date range'.red);
+          return;
         }
 
         for(var i = 0; i < num; i++) {
