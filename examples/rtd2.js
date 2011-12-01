@@ -46,13 +46,14 @@ var Cli = {
 
         for(var i = 0; i < num; i++) {
           var tweet = tweets[i]
+            , dateDisp = new Date(tweet.created_at).toTimeString()
             , userDisp = '@' + tweet.from_user + ':';
 
           //highlight substrings that match tracking phrase
           var regex = new RegExp(phrase, 'gi')
             , tweetDisp = tweet.text.replace(regex, phrase.yellow);
 
-         console.log(i + '  ' + userDisp.cyan + ' ' + tweetDisp + '\n');
+          console.log(dateDisp.green + '  ' + userDisp.cyan + ' ' + tweetDisp + '\n');
         }
       });
   },
