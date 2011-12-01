@@ -150,10 +150,11 @@ Bot.prototype.prune = function (callback) {
           if(err) return callback(err);
           
           var friends = JSON.parse(reply).ids
-            , target = randIndex(friends)
             , pruned = false;
           
           while(!pruned) {
+            var target = randIndex(friends);
+            
             if(!~followers.indexOf(target)) {
               pruned = true;
               
