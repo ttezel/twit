@@ -2,10 +2,12 @@
 
 Twitter API wrapper for node.js
 
+Supports both the **REST** and **Streaming** API's.
+
 ##Usage:
 
 ```javascript
-var Twitter = require('twitter').Twitter;
+var Twitter = require('twitter');
 
 var client = new Twitter({
     consumer_key:         '...'
@@ -15,9 +17,10 @@ var client = new Twitter({
 });
 
 //
-//  tweet 'hello world!'
+//  tweet 'hello world!' using the REST API
 //
 client
+  .REST
   .post('statuses/update.json')
   .params({ status: 'hello world!' })
   .end(function(err, reply) {
@@ -28,11 +31,31 @@ client
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
 client
+  .REST
   .get('search.json')
   .params({ q: 'banana', since: '2011-11-11' })
   .end(function(err, reply) {
     console.log(JSON.parse(reply));
   });
+  
+//
+//  Filter the Twitter Streaming hose by the word 'mango'. 
+//
+
+var hose = client
+            .Stream
+            .get('statuses/filter.json')
+            .params({ track: 'mango' })
+            .persist();
+  
+hose.on('data', function(data) {
+  console.log('data', data);
+})
+
+hose.on('error', function(err) {
+  console.log('error:', err);
+}); 
+
 ```
 
 ## License 
