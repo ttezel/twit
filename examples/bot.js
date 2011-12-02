@@ -2,7 +2,7 @@
 //  Bot
 //  class for performing various twitter actions
 //
-var Twitter = require('../lib/twitter').Twitter
+var Twitter = require('../lib/twitter')
   , colors = require('colors');
 
 var randIndex = function (arr) {
@@ -44,6 +44,7 @@ Bot.prototype.track = function (phrase, callback) {
   
   this
     .twitter
+    .REST
     .get('search.json')
     .params(params)
     .end(callback);
@@ -86,6 +87,7 @@ Bot.prototype.tweet = function (status, callback) {
   
   this
     .twitter
+    .REST
     .post('statuses/update.json')
     .params({ status: status })
     .end(callback);
@@ -101,6 +103,7 @@ Bot.prototype.mingle = function (callback) {
   
   this
     .twitter
+    .REST
     .get('followers/ids.json')
     .end(function(err, reply) {
       if(err) { return callback(err); }
@@ -110,6 +113,7 @@ Bot.prototype.mingle = function (callback) {
         
       self
         .twitter
+        .REST
         .get('friends/ids.json')
         .params({ user_id: randFollower })
         .end(function(err, reply) {
@@ -120,6 +124,7 @@ Bot.prototype.mingle = function (callback) {
             
           self
             .twitter
+            .REST
             .post('friendships/create.json') 
             .params({ id: target })
             .end(callback); 
@@ -137,6 +142,7 @@ Bot.prototype.prune = function (callback) {
   
   this
     .twitter
+    .REST
     .get('followers/ids.json')
     .end(function(err, reply) {
       if(err) return callback(err);
@@ -145,6 +151,7 @@ Bot.prototype.prune = function (callback) {
       
       self
         .twitter
+        .REST
         .get('friends/ids.json')
         .end(function(err, reply) {
           if(err) return callback(err);
@@ -160,6 +167,7 @@ Bot.prototype.prune = function (callback) {
               
               self
                 .twitter
+                .REST
                 .post('friendships/destroy.json')
                 .params({ id: target })
                 .end(callback);   

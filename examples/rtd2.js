@@ -13,7 +13,7 @@ var RTD2 = new Bot(config);
 //  cli interface handlers
 //
 var Cli = {
-  //displays available commands
+  //  displays available commands
   help : function() {
     console.log('RTD2::Help\n'.cyan);
     console.log('Available commands:\n'.cyan);
@@ -23,7 +23,7 @@ var Cli = {
     })
     console.log('\n');
   },
-  //display today's tweets containing @phrase
+  //  display today's tweets containing @phrase
   track: function(phrase) {
     if(!phrase) {
       console.log('\nRTD2::must enter tracking phrase'.cyan);
@@ -35,7 +35,7 @@ var Cli = {
 
         console.log('\n\nRTD2::Tracking results:'.cyan);
 
-        //display barebones metadata for each tweet result
+        //  display barebones metadata for each tweet result
         var tweets = JSON.parse(reply).results
           , num = tweets.length;
 
@@ -49,19 +49,19 @@ var Cli = {
             , dateDisp = new Date(tweet.created_at).toTimeString()
             , userDisp = '@' + tweet.from_user + ':';
 
-          //highlight substrings that match tracking phrase
+          //  highlight substrings that match tracking phrase
           var regex = new RegExp(phrase, 'gi')
             , tweetDisp = tweet.text.replace(regex, phrase.yellow);
 
-          console.log(dateDisp.green + '  ' + userDisp.cyan + ' ' + tweetDisp + '\n');
+          console.log(dateDisp.bold + '  ' + userDisp.cyan + ' ' + tweetDisp + '\n');
         }
       });
   },
   tweet: function(status) {
     if(!status.length) {
-      //default:
-      //get today's most popular tweet concerning github,
-      //then tweet it
+      //  default:
+      //  get today's most popular tweet concerning github,
+      //  then tweet it
       RTD2.track('github.com/', function(err, reply) {
         if(err) console.log('error', err);
         
@@ -79,7 +79,7 @@ var Cli = {
             console.log('RTD2::Tweeted:'.cyan, JSON.parse(reply).text);
         });
       });
-    } else {  //tweet @status
+    } else {  //  tweet @status
       RTD2.tweet(status, function(err, reply) {
         if(err) console.log(err);
 
@@ -106,7 +106,9 @@ var Cli = {
   }
 };
 
-var args = process.argv
+//  CLI dispatcher
+(function() {
+  var args = process.argv
   , params = Array.prototype.slice.call(args, 3)
                                   .join(' ');
 
@@ -128,4 +130,5 @@ switch(args[2]) {
     break;
   default:
     console.log('\ncommand `' + args[2] + '` not supported.');
-}
+  } 
+}).call(this);
