@@ -112,23 +112,23 @@ var Cli = {
   , params = Array.prototype.slice.call(args, 3)
                                   .join(' ');
 
-switch(args[2]) {
-  case 'help':
-    Cli.help();
-    break;
-  case 'track':
-    Cli.track(params);
-    break;
-  case 'tweet':
-    Cli.tweet(params);
-    break;
-  case 'mingle':
-    Cli.mingle();
-    break;
-  case 'prune':
-    Cli.prune();
-    break;
-  default:
-    console.log('\ncommand `' + args[2] + '` not supported.');
+  switch(args[2]) {
+    case 'help':
+      Cli.help();
+      break;
+    case 'track':
+      Cli.track(params);
+      break;
+    case 'tweet':
+      Cli.tweet(params);
+      break;
+    case 'mingle':
+      Cli.mingle();
+      break;
+    case 'prune':
+      Cli.prune();
+      break;
+    default:
+      console.log('\ncommand `' + args[2] + '` not supported.');
   } 
 }).call(this);
