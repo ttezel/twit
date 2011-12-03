@@ -1,4 +1,4 @@
-#Twitter
+#node-twitter
 
 Twitter API wrapper for node.js
 
@@ -42,19 +42,20 @@ client
 //  Filter the Twitter Streaming hose by the word 'mango'. 
 //
 
-var hose = client
-            .Stream
-            .get('statuses/filter.json')
-            .params({ track: 'mango' })
-            .persist();
+var mangos = client
+              .Stream
+              .Public
+              .get('statuses/filter.json')
+              .params({ track: 'mango' })
+              .persist();
   
-hose.on('data', function(data) {
+mangos.on('data', function(data) {
   console.log('data', data);
 })
 
-hose.on('error', function(err) {
+mangos.on('error', function(err) {
   console.log('error:', err);
-}); 
+});
 
 ```
 
