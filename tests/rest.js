@@ -18,11 +18,11 @@ vows.describe('REST API')
         }, 
         'no error thrown & should be valid JSON string': checkReply()
       },
-      'when calling GET search.json?q=grape': {
+      'when calling GET search.json?q=grape&since_id=12345': {
         topic: function () {
           rest
             .get('search.json')
-            .params({ q: 'grape' })
+            .params({ q: 'grape' , since_id: 12345 })
             .end(this.callback);
         },
         'no error thrown & should be valid JSON string' : checkReply()
