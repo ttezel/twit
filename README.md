@@ -4,6 +4,15 @@ Twitter API wrapper for node.js
 
 Supports both the **REST** and **Streaming** API's.
 
+Gives you access to 4 Objects:
+
+**REST** -              Connection to Twitter's REST API. 
+**Stream.Public** -     Connection to the Public stream (stream of public statuses)
+**Stream.User** -       Connection to the User stream (of the authenticated user)
+**Stream.Site** -       Connection to the Site stream (of the authenticated application)
+
+Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+
 ##Usage:
 
 ```javascript
