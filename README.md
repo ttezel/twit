@@ -65,12 +65,12 @@ var mangos = client
               .params({ track: 'mango' })
               .persist();
   
-mangos.on('tweet', function(data) {  //tweet message
-  console.log('data', data);
+mangos.on('tweet', function(tweet) {  //tweet message
+  console.log('tweet:', tweet.text);
 })
 
-mangos.on('delete', function(err) {  //status deletion message
-  console.log('error:', err);
+mangos.on('delete', function(msg) {  //status deletion message
+  console.log('delete message:', msg);
 });
 
 ```
