@@ -6,10 +6,16 @@ Supports both the **REST** and **Streaming** API's.
 
 Gives you access to 4 Objects:
 
-* **REST** -              Connection to Twitter's REST API. 
-* **Stream.Public** -     Connection to the Public stream (stream of public statuses)
-* **Stream.User** -       Connection to the User stream (of the authenticated user)
-* **Stream.Site** -       Connection to the Site stream (of the authenticated application)
+* **REST** -              Twitter's REST API. 
+* **Stream.Public** -     Public stream (stream of public statuses)
+* **Stream.User** -       User stream (of the authenticated user)
+* **Stream.Site** -       Site stream (of the authenticated application)
+
+You can GET and POST to:
+* the REST endpoints (https://dev.twitter.com/docs/api)
+* the public streaming endpoints (https://dev.twitter.com/docs/streaming-api/methods)
+* user stream endpoints (https://dev.twitter.com/docs/streaming-api/user-streams) 
+* site stream endpoints (https://dev.twitter.com/docs/streaming-api/site-streams)
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
@@ -58,11 +64,11 @@ var mangos = client
               .params({ track: 'mango' })
               .persist();
   
-mangos.on('data', function(data) {
+mangos.on('tweet', function(data) {  //tweet message
   console.log('data', data);
 })
 
-mangos.on('error', function(err) {
+mangos.on('delete', function(err) {  //status deletion message
   console.log('error:', err);
 });
 
