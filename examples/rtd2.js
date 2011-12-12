@@ -62,14 +62,15 @@ var Cli = {
       //  default:
       //  get today's most popular tweet concerning github,
       //  then tweet it
-      RTD2.track('github.com/', function(err, reply) {
+      var phrase = 'github.com/'
+      RTD2.track(phrase, function(err, reply) {
         if(err) console.log('error', err);
         
         var tweets = JSON.parse(reply).results
           , popular = RTD2.getPopular(tweets);
 
         if(!tweets.length) {
-          console.log('no results for `github.com/` so far today'.red);
+          console.log('no results for `'+phrase+'` so far today'.red);
           return;
         }
         

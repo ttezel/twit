@@ -84,7 +84,7 @@ Bot.prototype.tweet = function (status, callback) {
   } else if(status.length > 140) {
     return callback(new Error('BOT::tweet is too long: '.green + status.length));
   }
-  
+
   this
     .twitter
     .REST

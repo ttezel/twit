@@ -21,7 +21,7 @@ vows.describe('Streaming API')
           listen(promise, mango);
           return promise;
         },
-        'no error & reply is string': check()
+        'no error & reply is an object': check()
       },
       'User: user.json': {
         topic: function () {
@@ -35,7 +35,7 @@ vows.describe('Streaming API')
           listen(promise, ustream);
           return promise;                      
         },
-        'no error & reply is a string': check()
+        'no error & reply is an object': check()
       }
   })
   .export(module);
@@ -43,14 +43,14 @@ vows.describe('Streaming API')
 function check() {
   return function (err, reply) {
     assert.isNull(err);
-    assert.isString(reply);
+    assert.isObject(reply);
   };
 };
 
 function listen (promise, stream) {
   stream
-    .on('data',   function(chunk) { 
-          promise.emit('success', chunk) 
+    .on('tweet',   function(chunk) {
+      promise.emit('success', chunk) 
     })
     .on('error',  function(chunk) { 
       promise.emit('error', chunk) 
