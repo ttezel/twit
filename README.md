@@ -12,6 +12,7 @@ Gives you access to 4 Objects:
 * **Stream.Site** -       Site stream (of the authenticated application)
 
 You can GET and POST to:
+
 * the REST endpoints (https://dev.twitter.com/docs/api)
 * the public streaming endpoints (https://dev.twitter.com/docs/streaming-api/methods)
 * user stream endpoints (https://dev.twitter.com/docs/streaming-api/user-streams) 
