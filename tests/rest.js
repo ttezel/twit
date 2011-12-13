@@ -16,7 +16,7 @@ vows.describe('REST API')
            .get('statuses/public_timeline.json')
            .end(this.callback);
         }, 
-        'no error thrown & should be valid JSON string': checkReply()
+        'no error thrown & reply is object': checkReply()
       },
       'when calling GET search.json?q=grape&since_id=12345': {
         topic: function () {
@@ -25,7 +25,7 @@ vows.describe('REST API')
             .params({ q: 'grape' , since_id: 12345 })
             .end(this.callback);
         },
-        'no error thrown & should be valid JSON string' : checkReply()
+        'no error thrown & reply is object' : checkReply()
       },
       'when calling GET followers/ids.json': {
         topic: function () {
@@ -33,7 +33,7 @@ vows.describe('REST API')
             .get('followers/ids.json')
             .end(this.callback);
         },
-        'no error thrown & should be valid JSON string' : checkReply()
+        'no error thrown & reply is object' : checkReply()
       }
     })
     .export(module);
@@ -41,7 +41,6 @@ vows.describe('REST API')
 function checkReply () {
   return function (err, reply) {
     assert.isNull(err);
-    assert.isString(reply);
-    assert.doesNotThrow(function () { JSON.parse(reply) }, Error); 
+    assert.isTrue(typeof reply === 'object' || typeof reply === 'array');
   };
 };

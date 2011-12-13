@@ -36,7 +36,7 @@ var Cli = {
         console.log('\n\nRTD2::Tracking results:'.cyan);
 
         //  display barebones metadata for each tweet result
-        var tweets = JSON.parse(reply).results
+        var tweets = reply.results
           , num = tweets.length;
 
         if(!num) { 
@@ -66,7 +66,7 @@ var Cli = {
       RTD2.track(phrase, function(err, reply) {
         if(err) console.log('error', err);
         
-        var tweets = JSON.parse(reply).results
+        var tweets = reply.results
           , popular = RTD2.getPopular(tweets);
 
         if(!tweets.length) {
@@ -77,14 +77,14 @@ var Cli = {
         RTD2.tweet(popular, function(err, reply) {
             if(err) console.log('error:', err);
 
-            console.log('RTD2::Tweeted:'.cyan, JSON.parse(reply).text);
+            console.log('RTD2::Tweeted:'.cyan, reply.text);
         });
       });
     } else {  //  tweet @status
       RTD2.tweet(status, function(err, reply) {
         if(err) console.log(err);
 
-        var text = JSON.parse(reply).text;
+        var text = reply.text;
         console.log('RTD2::Tweeted: '.cyan, text)
       });
     }
@@ -93,7 +93,7 @@ var Cli = {
     RTD2.mingle(function(err, reply) {
       if(err) console.log('error', err);
 
-      var name = JSON.parse(reply).screen_name;
+      var name = reply.screen_name;
       console.log('RTD2::Mingle:'.cyan, 'followed ' + ('@' + name).bold.yellow);
     });  
   },
@@ -101,7 +101,7 @@ var Cli = {
     RTD2.prune(function(err, reply) {
       if(err) console.log('error', err);
 
-      var name = JSON.parse(reply).screen_name
+      var name = reply.screen_name
       console.log('RTD2::Prune:'.cyan, 'unfollowed ' + ('@'+ name).bold.yellow);
     });
   }

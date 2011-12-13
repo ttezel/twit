@@ -108,7 +108,7 @@ Bot.prototype.mingle = function (callback) {
     .end(function(err, reply) {
       if(err) { return callback(err); }
       
-      var followers = JSON.parse(reply).ids
+      var followers = reply.ids
         , randFollower  = randIndex(followers);
         
       self
@@ -119,7 +119,7 @@ Bot.prototype.mingle = function (callback) {
         .end(function(err, reply) {
           if(err) { return callback(err); }
           
-          var friends = JSON.parse(reply).ids
+          var friends = reply.ids
             , target  = randIndex(friends);
             
           self
@@ -147,7 +147,7 @@ Bot.prototype.prune = function (callback) {
     .end(function(err, reply) {
       if(err) return callback(err);
       
-      var followers = JSON.parse(reply).ids;
+      var followers = reply.ids;
       
       self
         .twitter
@@ -156,7 +156,7 @@ Bot.prototype.prune = function (callback) {
         .end(function(err, reply) {
           if(err) return callback(err);
           
-          var friends = JSON.parse(reply).ids
+          var friends = reply.ids
             , pruned = false;
           
           while(!pruned) {
