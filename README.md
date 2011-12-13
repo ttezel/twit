@@ -67,7 +67,7 @@ Then, optionally pass in params to the request with `.params()`, and finish the 
 
 #Finishing the request
 
-* `.end(function(err, reply))`      makes the http request and calls the (optional) callback when the reply is received. 
+* `.end(function(err, reply) {})`      makes the http request and calls the (optional) callback when the reply is received. 
 * `.persist()`                      keeps the connection alive and allows you to listen on the following 4 events:
 
     * `tweet`            status (tweet)
