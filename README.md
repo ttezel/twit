@@ -1,6 +1,6 @@
 #twit
 
-Twitter API wrapper for node
+Twitter API client for node
 
 Supports both the **REST** and **Streaming** API.
 
