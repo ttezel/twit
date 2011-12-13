@@ -1,8 +1,14 @@
 {
-  "name": "twitter"
-  , "description": "Twitter API wrapper"
+    "name": "twit"
+  , "description": "Twitter API wrapper for node (REST & Streaming)"
   , "version": "0.1.0"
   , "author": "Tolga Tezel"
+  , "keywords": ["twitter", "rest", "stream", "oauth"]
   , "dependencies": { "oauth": ">=0.9.0" }
   , "engines": { "node": ">=0.6.0" }
+  , "main": "./lib/twitter"
+  , "repository": {
+        "type": "git"
+      , "url": "http://github.com/ttezel/twit.git"
+    }
 }

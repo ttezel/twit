@@ -1,31 +1,15 @@
-#node-twitter
+#twit
 
-Twitter API wrapper for node.js
+Twitter API wrapper for node
 
-Supports both the **REST** and **Streaming** API's.
-
-Gives you access to 4 Objects:
-
-* **REST** -              Twitter's REST API. 
-* **Stream.Public** -     Public stream (stream of public statuses)
-* **Stream.User** -       User stream (of the authenticated user)
-* **Stream.Site** -       Site stream (of the authenticated application)
-
-You can GET and POST to:
-
-* the REST endpoints (https://dev.twitter.com/docs/api)
-* the public streaming endpoints (https://dev.twitter.com/docs/streaming-api/methods)
-* user stream endpoints (https://dev.twitter.com/docs/streaming-api/user-streams) 
-* site stream endpoints (https://dev.twitter.com/docs/streaming-api/site-streams)
-
-Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+Supports both the **REST** and **Streaming** API.
 
 ##Usage:
 
 ```javascript
-var Twitter = require('twitter');
+var Twit = require('twit');
 
-var client = new Twitter({
+var T = new Twit({
     consumer_key:         '...'
   , consumer_secret:      '...'
   , access_token:         '...'
@@ -35,45 +19,67 @@ var client = new Twitter({
 //
 //  tweet 'hello world!' using the REST API
 //
-client
-  .REST
-  .post('statuses/update.json')
-  .params({ status: 'hello world!' })
-  .end(function(err, reply) {
-    console.log('tweeted:', JSON.parse(reply).text);
+T.REST
+ .post('statuses/update.json')
+ .params({ status: 'hello world!' })
+ .end(function(err, reply) {
+    //  ...
   });
-
+      
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-client
-  .REST
-  .get('search.json')
-  .params({ q: 'banana', since: '2011-11-11' })
-  .end(function(err, reply) {
-    console.log(JSON.parse(reply));
+T.REST
+ .get('search.json')
+ .params({ q: 'banana', since: '2011-11-11' })
+ .end(function(err, reply) {
+    //  ...
   });
-  
+      
 //
-//  Filter the Twitter Streaming hose by the word 'mango'. 
+//  Filter the Twitter stream of public statuses by the word 'mango'. 
 //
 
-var mangos = client
-              .Stream
-              .Public
+var mangos = T.publicStream
               .get('statuses/filter.json')
               .params({ track: 'mango' })
               .persist();
-  
-mangos.on('tweet', function(tweet) {  //tweet message
-  console.log('tweet:', tweet.text);
-})
-
-mangos.on('delete', function(msg) {  //status deletion message
-  console.log('delete message:', msg);
+                    
+                    
+mangos.on('tweet', function(tweet) {
+  //  ...
 });
 
 ```
+
+##GET and POST to:
+
+* **REST** -              REST endpoints (https://dev.twitter.com/docs/api)
+* **publicStream** -      public stream endpoints (https://dev.twitter.com/docs/streaming-api/methods)
+* **userStream** -        user stream endpoints (https://dev.twitter.com/docs/streaming-api/user-streams) 
+* **siteStream** -        site stream endpoints (https://dev.twitter.com/docs/streaming-api/site-streams)
+
+
+
+
+Then, optionally pass in params to the request with `.params()`, and finish the request:
+
+
+#Finishing the request
+
+* `.end(function(err, reply))`      makes the http request and calls the callback when the reply is received. 
+* `.persist()`                      keeps the connection alive and allows you to listen on the following 4 events:
+
+* `tweet`            status (tweet)
+* `delete`           status (tweet) deletion message
+* `limit`            limitation message 
+* `scrub_geo`        location deletion message
+
+
+Hint: Use `.persist()` on the stream endpoints (`publicStream`, `userstream`, `siteStream`)
+
+
+Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
 ## License 
 

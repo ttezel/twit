@@ -1,20 +1,20 @@
 var vows = require('vows')
   , assert = require('assert')
   , events = require('events')
-  , Twitter = require('../lib/twitter')
+  , Twit = require('../lib/twitter')
   , config = require('../examples/config');
 
-var stream = new Twitter(config).Stream;
+var twitter = new Twit(config)
+  , publicstream = twitter.publicStream
+  , userstream = twitter.userStream;
 
 vows.describe('Streaming API')
     .addBatch({
       'Public: statuses/filter.json?track=mango': {
         topic: function () {
-          var mango = stream
-                        .Public
-                        .get('statuses/filter.json')
-                        .params({ track: 'mango' })
-                        .persist();
+          var mango = publicstream.get('statuses/filter.json')
+                                  .params({ track: 'mango' })
+                                  .persist();
           
           var promise = new(events.EventEmitter);
 
@@ -25,12 +25,8 @@ vows.describe('Streaming API')
       },
       'User: user.json': {
         topic: function () {
-          var ustream = stream
-                          .User
-                          .get('user.json')
-                          .persist();
-
-          var promise = new (events.EventEmitter);
+          var ustream = userstream.get('user.json').persist()
+            , promise = new (events.EventEmitter);
 
           listen(promise, ustream);
           return promise;                      
