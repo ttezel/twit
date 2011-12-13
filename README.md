@@ -78,6 +78,13 @@ Then, optionally pass in params to the request with `.params()`, and finish the 
 
 Hint: Use `.persist()` on the stream endpoints (`publicStream`, `userstream`, `siteStream`)
 
+#Installing
+
+```
+npm install twit
+
+```
+
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
