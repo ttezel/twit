@@ -1,6 +1,6 @@
 {
     "name": "twit"
-  , "description": "Twitter API wrapper for node (REST & Streaming)"
+  , "description": "Twitter API client for node (REST & Streaming)"
   , "version": "0.1.0"
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "rest", "stream", "oauth"]
