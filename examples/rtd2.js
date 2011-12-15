@@ -134,6 +134,7 @@ var Cli = {
       break;
     case 'stream':
       Cli.stream(params);
+      break;
     default:
       console.log('\ncommand `' + args[2] + '` not supported.');
   } 

@@ -140,7 +140,6 @@ Bot.prototype.prune = function (callback) {
 
 Bot.prototype.stream = function (phrase) {
   this.twit.stream('statuses/filter', {track: phrase}, function(stream) {
-    console.log('STREAM', stream)
     stream.on('tweet', function (tweet) { console.log(tweet.text); });
   });
 };
