@@ -3,44 +3,35 @@ var vows = require('vows')
   , Twitter = require('../lib/twitter')
   , config = require('../examples/config');
 
-var rest = new Twitter(config).REST;
+var twit = new Twitter(config);
 
 //
 //  REST API tests
 //
 vows.describe('REST API')
     .addBatch({
-      'when calling GET statuses/public_timeline.json': {
+      'calling GET statuses/public_timeline.json': {
         topic: function () {
-         rest
-           .get('statuses/public_timeline.json')
-           .end(this.callback);
+         twit.get('statuses/public_timeline', this.callback);
         }, 
-        'no error thrown & reply is object': checkReply()
+        'no error thrown & reply is object': checkReply
       },
-      'when calling GET search.json?q=grape&since_id=12345': {
+      'calling GET search.json?q=grape&since_id=12345': {
         topic: function () {
-          rest
-            .get('search.json')
-            .params({ q: 'grape' , since_id: 12345 })
-            .end(this.callback);
+          twit.get('search', { q: 'grape' , since_id: 12345 }, this.callback);
         },
-        'no error thrown & reply is object' : checkReply()
+        'no error thrown & reply is object' : checkReply
       },
-      'when calling GET followers/ids.json': {
+      'calling GET followers/ids.json': {
         topic: function () {
-          rest
-            .get('followers/ids.json')
-            .end(this.callback);
+          twit.get('followers/ids', this.callback);
         },
-        'no error thrown & reply is object' : checkReply()
+        'no error thrown & reply is object' : checkReply
       }
     })
     .export(module);
 
-function checkReply () {
-  return function (err, reply) {
-    assert.isNull(err);
-    assert.isTrue(typeof reply === 'object' || typeof reply === 'array');
-  };
+function checkReply (err, reply) {
+  assert.isNull(err);
+  assert.isTrue(typeof reply === 'object' || Array.isArray(reply));
 };
