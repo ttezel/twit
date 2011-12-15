@@ -61,6 +61,9 @@ Note: You can omit the `.json` from `path`.
 * `limit`            limitation message 
 * `scrub_geo`        location deletion message
 
+###path
+
+
 * If `path` is *'user'*, the User stream of the authenticated user will be streamed.
 * If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
 * If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
