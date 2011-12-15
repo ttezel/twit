@@ -42,26 +42,28 @@ T.stream('statuses/filter', { track: 'mango' }, function (stream) {
 
 ```
 
-##
+## twit API:
+
+Just 3 methods. They cover the full twitter API.
 
 * `T.get(path, [, params], callback)`         GET any of the REST API Endpoints.
 * `T.post(path, [, params], callback)`        POST any of the REST API Endpoints.
-* `T.stream(path, [, params], callback)`      <--use this with the Streaming API.
+* `T.stream(path, [, params], callback)`      Use this with the Streaming API.
 
 Note: You can omit the `.json` from `path`.
 
-* If `path` is *'user'*, the User stream of the authenticated user will be streamed.
-* If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
-* If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
-
 # Using the Streaming API
 
-When you do `T.stream()`, the connection is kept alive and allows you to listen on the following 4 events:
+`T.stream()` keeps the connection alive and allows you to listen on the following 4 events:
 
 * `tweet`            status (tweet)
 * `delete`           status (tweet) deletion message
 * `limit`            limitation message 
 * `scrub_geo`        location deletion message
+
+* If `path` is *'user'*, the User stream of the authenticated user will be streamed.
+* If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
+* If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
 
 #What do I have access to?
 
@@ -79,6 +81,7 @@ npm install twit
 
 ```
 
+---
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
