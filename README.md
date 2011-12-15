@@ -44,9 +44,9 @@ T.stream('statuses/filter', { track: 'mango' }, function (stream) {
 
 ##
 
-`T.get(path, [, params], callback)` and `T.post(path, [, params], callback)` are used to GET and POST to any of the REST API Endpoints.
-
-Use `T.stream(path, [, params], callback)` with the Streaming API.
+* `T.get(path, [, params], callback)`         GET any of the REST API Endpoints.
+* `T.post(path, [, params], callback)`        POST any of the REST API Endpoints.
+* `T.stream(path, [, params], callback)`      <--use this with the Streaming API.
 
 Note: You can omit the `.json` from `path`.
 
