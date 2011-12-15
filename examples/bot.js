@@ -2,7 +2,7 @@
 //  Bot
 //  class for performing various twitter actions
 //
-var Twitter = require('../lib/twitter')
+var Twit = require('../lib/twitter')
   , colors = require('colors');
 
 var randIndex = function (arr) {
@@ -17,11 +17,11 @@ function datestring (d) {
 };
 
 module.exports.Bot = Bot = function(config) {
-  this.twitter = new Twitter(config);
+  this.twit = new Twit(config);
 };
 
 //
-//  grab today's tweets containing this.tracking
+//  grab today's tweets containing @phrase
 //
 //    raw reply is passed to @callback
 //
@@ -42,12 +42,7 @@ Bot.prototype.track = function (phrase, callback) {
     , result_type: 'mixed'
   };
   
-  this
-    .twitter
-    .REST
-    .get('search.json')
-    .params(params)
-    .end(callback);
+  this.twit.get('search', params, callback);
 };
 
 //
@@ -84,13 +79,7 @@ Bot.prototype.tweet = function (status, callback) {
   } else if(status.length > 140) {
     return callback(new Error('BOT::tweet is too long: '.green + status.length));
   }
-
-  this
-    .twitter
-    .REST
-    .post('statuses/update.json')
-    .params({ status: status })
-    .end(callback);
+  this.twit.post('statuses/update', { status: status }, callback);
 };
 
 //
@@ -101,33 +90,19 @@ Bot.prototype.tweet = function (status, callback) {
 Bot.prototype.mingle = function (callback) {
   var self = this;
   
-  this
-    .twitter
-    .REST
-    .get('followers/ids.json')
-    .end(function(err, reply) {
+  this.twit.get('followers/ids', function(err, reply) {
       if(err) { return callback(err); }
       
       var followers = reply.ids
         , randFollower  = randIndex(followers);
         
-      self
-        .twitter
-        .REST
-        .get('friends/ids.json')
-        .params({ user_id: randFollower })
-        .end(function(err, reply) {
+      self.twit.get('friends/ids', { user_id: randFollower }, function(err, reply) {
           if(err) { return callback(err); }
           
           var friends = reply.ids
             , target  = randIndex(friends);
             
-          self
-            .twitter
-            .REST
-            .post('friendships/create.json') 
-            .params({ id: target })
-            .end(callback); 
+          self.twit.post('friendships/create', { id: target }, callback); 
         })
     })
 };
@@ -140,20 +115,12 @@ Bot.prototype.mingle = function (callback) {
 Bot.prototype.prune = function (callback) {
   var self = this;
   
-  this
-    .twitter
-    .REST
-    .get('followers/ids.json')
-    .end(function(err, reply) {
+  this.twit.get('followers/ids', function(err, reply) {
       if(err) return callback(err);
       
       var followers = reply.ids;
       
-      self
-        .twitter
-        .REST
-        .get('friends/ids.json')
-        .end(function(err, reply) {
+      self.twit.get('friends/ids', function(err, reply) {
           if(err) return callback(err);
           
           var friends = reply.ids
@@ -164,15 +131,16 @@ Bot.prototype.prune = function (callback) {
             
             if(!~followers.indexOf(target)) {
               pruned = true;
-              
-              self
-                .twitter
-                .REST
-                .post('friendships/destroy.json')
-                .params({ id: target })
-                .end(callback);   
+              self.twit.post('friendships/destroy', { id: target }, callback);   
             }
           }
       });
+  });
+};
+
+Bot.prototype.stream = function (phrase) {
+  this.twit.stream('statuses/filter', {track: phrase}, function(stream) {
+    console.log('STREAM', stream)
+    stream.on('tweet', function (tweet) { console.log(tweet.text); });
   });
 };

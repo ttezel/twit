@@ -104,6 +104,9 @@ var Cli = {
       var name = reply.screen_name
       console.log('RTD2::Prune:'.cyan, 'unfollowed ' + ('@'+ name).bold.yellow);
     });
+  },
+  stream: function (phrase) {
+    RTD2.stream(phrase);
   }
 };
 
@@ -129,6 +132,8 @@ var Cli = {
     case 'prune':
       Cli.prune();
       break;
+    case 'stream':
+      Cli.stream(params);
     default:
       console.log('\ncommand `' + args[2] + '` not supported.');
   } 
