@@ -54,13 +54,6 @@ Note: You can omit the `.json` from `path`.
 * If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
 * If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
 
----
-
-REST API Endpoints:       https://dev.twitter.com/docs/api
-Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
-User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
-Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
-
 # Using the Streaming API
 
 When you do `T.stream()`, the connection is kept alive and allows you to listen on the following 4 events:
@@ -69,6 +62,15 @@ When you do `T.stream()`, the connection is kept alive and allows you to listen 
 * `delete`           status (tweet) deletion message
 * `limit`            limitation message 
 * `scrub_geo`        location deletion message
+
+#What do I have access to?
+
+Anything in the Twitter API:
+
+* REST API Endpoints:       https://dev.twitter.com/docs/api
+* Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
+* User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
+* Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
 
 #Installing
 
