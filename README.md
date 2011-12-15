@@ -4,6 +4,13 @@ Twitter API Client for node
 
 Supports both the **REST** and **Streaming** API.
 
+#Installing
+
+```
+npm install twit
+
+```
+
 ##Usage:
 
 ```javascript
@@ -46,11 +53,11 @@ T.stream('statuses/filter', { track: 'mango' }, function (stream) {
 
 Just 3 methods. They cover the full twitter API.
 
-* `T.get(path, [, params], callback)`         GET any of the REST API Endpoints.
-* `T.post(path, [, params], callback)`        POST any of the REST API Endpoints.
-* `T.stream(path, [, params], callback)`      Use this with the Streaming API.
+* `T.get(path, [params], callback)`         GET any of the REST API Endpoints.
+* `T.post(path, [params], callback)`        POST any of the REST API Endpoints.
+* `T.stream(path, [params], callback)`      Use this with the Streaming API.
 
-Note: You can omit the `.json` from `path` (i.e. use 'statuses/sample' instead of 'statuses/sample.json').
+Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
 # Using the Streaming API
 
@@ -64,9 +71,9 @@ Note: You can omit the `.json` from `path` (i.e. use 'statuses/sample' instead o
 ###path
 
 
-* If `path` is *'user'*, the User stream of the authenticated user will be streamed.
-* If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
-* If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
+* If `path` is `'user'`, the User stream of the authenticated user will be streamed.
+* If `path` is `'site'`, the Site stream of the authenticated application will be streamed.
+* If `path` is anything other than `'user'` or `'site'`, the Public stream will be streamed.
 
 #What do I have access to?
 
@@ -76,13 +83,6 @@ Anything in the Twitter API:
 * Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
 * User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
 * Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
-
-#Installing
-
-```
-npm install twit
-
-```
 
 ---
 
