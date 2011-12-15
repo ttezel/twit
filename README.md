@@ -1,6 +1,6 @@
 #twit
 
-Twitter API client for node
+Twitter API Client for node
 
 Supports both the **REST** and **Streaming** API.
 
@@ -17,66 +17,58 @@ var T = new Twit({
 });
 
 //
-//  tweet 'hello world!' using the REST API
+//  tweet 'hello world!'
 //
-T.REST
- .post('statuses/update.json')
- .params({ status: 'hello world!' })
- .end(function(err, reply) {
-    //  ...
-  });
+T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
+  //  ...
+});
       
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-T.REST
- .get('search.json')
- .params({ q: 'banana', since: '2011-11-11' })
- .end(function(err, reply) {
-    //  ...
-  });
+T.get('search', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
+  //  ...
+});
       
 //
-//  Filter the Twitter stream of public statuses by the word 'mango'. 
+//  filter the twitter public stream by the word 'mango'. 
 //
 
-var mangos = T.publicStream
-              .get('statuses/filter.json')
-              .params({ track: 'mango' })
-              .persist();
-                    
-                    
-mangos.on('tweet', function(tweet) {
-  //  ...
+T.stream('statuses/filter', { track: 'mango' }, function (stream) {
+  stream.on('tweet', function (tweet) {
+    console.log(tweet);
+  });
 });
 
 ```
 
-##GET and POST to:
+##
 
-* **REST** -              REST endpoints (https://dev.twitter.com/docs/api)
-* **publicStream** -      public stream endpoints (https://dev.twitter.com/docs/streaming-api/methods)
-* **userStream** -        user stream endpoints (https://dev.twitter.com/docs/streaming-api/user-streams) 
-* **siteStream** -        site stream endpoints (https://dev.twitter.com/docs/streaming-api/site-streams)
+`T.get(path, [, params], callback)` and `T.post(path, [, params], callback)` are used to GET and POST to any of the REST API Endpoints.
 
+Use `T.stream(path, [, params], callback)` with the Streaming API.
 
+Note: You can omit the `.json` from `path`.
 
+* If `path` is *'user'*, the User stream of the authenticated user will be streamed.
+* If `path` is *'site'*, the Site stream of the authenticated application will be streamed.
+* If `path` is anything other than *'user'* or *'site'*, the Public stream will be streamed.
 
-Then, optionally pass in params to the request with `.params()`, and finish the request:
+##
 
+* REST API Endpoints:       https://dev.twitter.com/docs/api
+* Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
+* User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
+* Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
 
-#Finishing the request
+# Using the Streaming API
 
-* `.end(function(err, reply) {})`      makes the http request and calls the (optional) callback when the reply is received. 
-* `.persist()`                      keeps the connection alive and allows you to listen on the following 4 events:
+When you do `T.stream()`, the connection is kept alive and allows you to listen on the following 4 events:
 
     * `tweet`            status (tweet)
     * `delete`           status (tweet) deletion message
     * `limit`            limitation message 
     * `scrub_geo`        location deletion message
-
-
-Hint: Use `.persist()` on the stream endpoints (`publicStream`, `userstream`, `siteStream`)
 
 #Installing
 
