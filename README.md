@@ -50,7 +50,7 @@ Just 3 methods. They cover the full twitter API.
 * `T.post(path, [, params], callback)`        POST any of the REST API Endpoints.
 * `T.stream(path, [, params], callback)`      Use this with the Streaming API.
 
-Note: You can omit the `.json` from `path`.
+Note: You can omit the `.json` from `path` (i.e. use 'statuses/sample' instead of 'statuses/sample.json').
 
 # Using the Streaming API
 
