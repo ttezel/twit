@@ -22,6 +22,7 @@ var cases = [
   } 
 ];
 
+//attach them to the test suite
 var twit = new Twit(config)
   , tests = vows.describe('Streaming API');
 

@@ -1,141 +1,70 @@
-//
-//  RTD2 - twitter Bot
-//
-//  listens on stdin for things to do, 
-//  and broadcasts events to stdout
-//
-var config = require('../examples/config')
-  , Bot = require('./bot').Bot;
+var Bot = require('./bot')
+  , config = require('./config')
+  , http = require('http');
+  
+var bot = new Bot(config);
 
-var RTD2 = new Bot(config);
+console.log('RTD2: Running.'.yellow);
 
-//
-//  cli interface handlers
-//
-var Cli = {
-  //  displays available commands
-  help : function() {
-    console.log('RTD2::Help\n'.cyan);
-    console.log('Available commands:\n'.cyan);
+http.createServer(function(req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'})
+  res.end('RTD2 is running...     8~)--|---< ');
+}).listen(13140);
 
-    Object.keys(Cli).forEach(function(cmd) {
-      console.log(cmd);
-    })
-    console.log('\n');
-  },
-  //  display today's tweets containing @phrase
-  track: function(phrase) {
-    if(!phrase) {
-      console.log('\nRTD2::must enter tracking phrase'.cyan);
-      return;
-    }
+//get date string for today's date (e.g. '2011-01-01')
+function datestring () {
+  var d = new Date(Date.now() - 5*60*60*1000);  //est timezone
+  return d.getUTCFullYear()   + '-' 
+     +  (d.getUTCMonth() + 1) + '-'
+     +   d.getDate();
+};
 
-    RTD2.track(phrase, function(err, reply) {
+setInterval(function() {
+  var rand = Math.random();
+  
+  if(rand <= 0.10) {      //  tweet popular github tweet
+    var params = {
+        q: 'github.com/'
+      , since: datestring()
+      , result_type: 'mixed'
+    };
+    this.twit.get('search', params, function (err, reply) {
+      if(err) console.log('error:', err);
+      
+      var max = 0, popular;
+      
+      var tweets = reply.results
+        , len = tweets.length;
+      
+      while(len--) {
+        var tweet = tweets[i]
+          , popularity = tweet.metadata.recent_retweets;
+          
+        if(popularity > max) {
+          max = popularity;
+          popular = tweet.text;
+        }
+      }
+      
+      this.tweet(popular, function (err, reply) {
         if(err) console.log('error:', err);
-
-        console.log('\n\nRTD2::Tracking results:'.cyan);
-
-        //  display barebones metadata for each tweet result
-        var tweets = reply.results
-          , num = tweets.length;
-
-        if(!num) { 
-          console.log('no tweets for tracking phrase & date range'.red);
-          return;
-        }
-
-        for(var i = 0; i < num; i++) {
-          var tweet = tweets[i]
-            , dateDisp = new Date(tweet.created_at).toTimeString()
-            , userDisp = '@' + tweet.from_user + ':';
-
-          //  highlight substrings that match tracking phrase
-          var regex = new RegExp(phrase, 'gi')
-            , tweetDisp = tweet.text.replace(regex, phrase.yellow);
-
-          console.log(dateDisp.bold + '  ' + userDisp.cyan + ' ' + tweetDisp + '\n');
-        }
-      });
-  },
-  tweet: function(status) {
-    if(!status.length) {
-      //  default:
-      //  get today's most popular tweet concerning github,
-      //  then tweet it
-      var phrase = 'github.com/'
-      RTD2.track(phrase, function(err, reply) {
-        if(err) console.log('error', err);
         
-        var tweets = reply.results
-          , popular = RTD2.getPopular(tweets);
-
-        if(!tweets.length) {
-          console.log('no results for `'+phrase+'` so far today'.red);
-          return;
-        }
-        
-        RTD2.tweet(popular, function(err, reply) {
-            if(err) console.log('error:', err);
-
-            console.log('RTD2::Tweeted:'.cyan, reply.text);
-        });
-      });
-    } else {  //  tweet @status
-      RTD2.tweet(status, function(err, reply) {
-        if(err) console.log(err);
-
-        var text = reply.text;
-        console.log('RTD2::Tweeted: '.cyan, text)
-      });
-    }
-  },
-  mingle: function() {
-    RTD2.mingle(function(err, reply) {
+        console.log('Tweeted:'.cyan, reply.text);
+      })
+    });
+  } else if(rand <= 0.50) { //  make a friend
+    bot.mingle(function(err, reply) {
       if(err) console.log('error', err);
 
       var name = reply.screen_name;
-      console.log('RTD2::Mingle:'.cyan, 'followed ' + ('@' + name).bold.yellow);
-    });  
-  },
-  prune: function() {
-    RTD2.prune(function(err, reply) {
+      console.log('Mingle:'.cyan, 'followed ' + ('@' + name).bold.yellow);
+    });
+  } else {                  //  prune a friend
+    bot.prune(function(err, reply) { 
       if(err) console.log('error', err);
 
       var name = reply.screen_name
-      console.log('RTD2::Prune:'.cyan, 'unfollowed ' + ('@'+ name).bold.yellow);
+      console.log('Prune:'.cyan, 'unfollowed ' + ('@'+ name).bold.yellow);
     });
-  },
-  stream: function (phrase) {
-    RTD2.stream(phrase);
   }
-};
-
-//  CLI dispatcher
-(function() {
-  var args = process.argv
-  , params = Array.prototype.slice.call(args, 3)
-                                  .join(' ');
-
-  switch(args[2]) {
-    case 'help':
-      Cli.help();
-      break;
-    case 'track':
-      Cli.track(params);
-      break;
-    case 'tweet':
-      Cli.tweet(params);
-      break;
-    case 'mingle':
-      Cli.mingle();
-      break;
-    case 'prune':
-      Cli.prune();
-      break;
-    case 'stream':
-      Cli.stream(params);
-      break;
-    default:
-      console.log('\ncommand `' + args[2] + '` not supported.');
-  } 
-}).call(this);
+}, 30000);
