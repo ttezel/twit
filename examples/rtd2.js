@@ -9,7 +9,7 @@ console.log('RTD2: Running.'.yellow);
 http.createServer(function(req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'})
   res.end('RTD2 is running...     8~)--|---< ');
-}).listen(13140);
+}).listen(13142);
 
 //get date string for today's date (e.g. '2011-01-01')
 function datestring () {
