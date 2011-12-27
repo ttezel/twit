@@ -1,18 +1,12 @@
 var Bot = require('./bot')
   , config = require('./config')
   , http = require('http');
-
-  var util = require('util')
   
-var bot = new Bot(config);
-
 console.log('RTD2: Running.'.yellow);
 
-http.createServer(function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'})
-  res.write('RTD2 is running..   8~)');
-  run(res);
-}).listen(13142);
+var bot = new Bot(config);
+
+console.log('RTD2: Running.');
 
 //get date string for today's date (e.g. '2011-01-01')
 function datestring () {
@@ -22,7 +16,10 @@ function datestring () {
      +   d.getDate();
 };
 
-function run (res) {
+setInterval(function() {
+  bot.twit.get('followers/ids', function(err, reply) {
+    console.log('\n# followers:' + reply.ids.length.toString());
+  });
   var rand = Math.random();
   
   if(rand <= 0.10) {      //  tweet popular github tweet
@@ -31,15 +28,15 @@ function run (res) {
       , since: datestring()
       , result_type: 'mixed'
     };
-    this.twit.get('search', params, function (err, reply) {
-      if(err) console.log('error:', err);
+    bot.twit.get('search', params, function (err, reply) {
+      if(err) console.log(err);
       
       var max = 0, popular;
       
       var tweets = reply.results
-        , len = tweets.length;
+        , i = tweets.length;
       
-      while(len--) {
+      while(i--) {
         var tweet = tweets[i]
           , popularity = tweet.metadata.recent_retweets;
           
@@ -49,25 +46,23 @@ function run (res) {
         }
       }
       
-      this.tweet(popular, function (err, reply) {
-        if(err) console.log('error:', err);
-        
-        res.write('Tweeted:'.cyan, reply.text);
+      bot.tweet(popular, function (err, reply) {
+        console.log('\nTweet: ' + reply.text || err);
       })
     });
-  } else if(rand <= 0.50) { //  make a friend
+  } else if(rand <= 0.55) { //  make a friend
     bot.mingle(function(err, reply) {
-      if(err) console.log('error', err);
+      if(err) console.log(err);
 
       var name = reply.screen_name;
-      res.write('Mingle:'.cyan, 'followed ' + ('@' + name).bold.yellow);
+      console.log('\nMingle: followed @' + name);
     });
   } else {                  //  prune a friend
     bot.prune(function(err, reply) { 
-      if(err) console.log('error', err);
+      if(err) console.log(err);
 
       var name = reply.screen_name
-      res.write('Prune:'.cyan, 'unfollowed ' + ('@'+ name).bold.yellow);
+      console.log('\nPrune: unfollowed @'+ name);
     });
   }
-};
+}, 25000);
