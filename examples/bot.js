@@ -2,8 +2,7 @@
 //  Bot
 //  class for performing various twitter actions
 //
-var Twit = require('../lib/twitter')
-  , colors = require('colors');
+var Twit = require('../lib/twitter');
 
 var Bot = module.exports = function(config) { 
   this.twit = new Twit(config);
