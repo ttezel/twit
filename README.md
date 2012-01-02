@@ -142,7 +142,7 @@ node examples/rtd2.js
 
 ![iRTD2](https://twimg0-a.akamaihd.net/profile_images/1606932914/robot-icon.png)
 
-The example is a twitter bot named RTD2 written using **twit**. RTD2 tweets about **github** and curates its social graph. Its profile is [here](https://twitter.com/#!/iRTD2)
+The example is a twitter bot named `RTD2` written using `twit`. RTD2 tweets about **github** and curates its social graph. Its twitter profile is [here](https://twitter.com/#!/iRTD2).
 
 -------
 
