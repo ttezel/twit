@@ -134,13 +134,13 @@ Then run the tests:
 mocha -t 10000 tests/*
 ```
 
-You can also run the example.:
+You can also run the example:
 
 ```
 node examples/rtd2.js
 ```
 
-![iRTD2](https://twimg0-a.akamaihd.net/profile_images/1606932914/robot-icon.png)
+![iRTD2](http://dl.dropbox.com/u/32773572/RTD2_logo.png)
 
 The example is a twitter bot named `RTD2` written using `twit`. RTD2 tweets about **github** and curates its social graph. Its twitter profile is [here](https://twitter.com/#!/iRTD2).
 
