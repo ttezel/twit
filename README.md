@@ -103,6 +103,12 @@ Go here to create an app and get OAuth credentials (if you haven't already): htt
 
 #How do I run the tests?
 
+Clone the repo
+
+```
+git clone git@github.com:ttezel/twit.git
+```
+
 Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha) and [should](https://github.com/visionmedia/should.js)):
 
 ```
@@ -111,11 +117,32 @@ npm install mocha -g should
 
 Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag.
 
+Create a `config.js` file in the root of the cloned repo. It should export the oauth credentials. It should look something like this:
+
+```
+module.exports = {
+    consumer_key: '...'
+  , consumer_secret: '...'
+  , access_token: '...'
+  , access_token_secret: '...'
+}
+```
+
 Then run the tests:
 
 ```
 mocha -t 10000 tests/*
 ```
+
+You can also run the example.:
+
+```
+node examples/rtd2.js
+```
+
+![iRTD2](https://twimg0-a.akamaihd.net/profile_images/1606932914/robot-icon.png)
+
+The example is a twitter bot named RTD2 written using **twit**. RTD2 tweets about **github** and curates its social graph. Its profile is [here](https://twitter.com/#!/iRTD2)
 
 -------
 

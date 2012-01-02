@@ -1,5 +1,5 @@
 var Twitter = require('../lib/twitter')
-  , config = require('../examples/config')
+  , config = require('../config')
   , should = require('should')
 
 var twit = new Twitter(config);
