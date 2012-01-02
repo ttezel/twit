@@ -5,6 +5,10 @@
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "rest", "stream", "oauth"]
   , "dependencies": { "oauth": ">=0.9.0" }
+  , "devDependencies": {
+      "should": ">=0.4.2"
+    , "mocha": ">=0.8.1"
+  }
   , "engines": { "node": ">=0.6.0" }
   , "main": "./lib/twitter"
   , "repository": {
