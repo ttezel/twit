@@ -100,11 +100,10 @@ Anything in the Twitter API:
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
---------
 
 #How do I run the tests?
 
-Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha and [should](https://github.com/visionmedia/should.js)):
+Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha) and [should](https://github.com/visionmedia/should.js)):
 
 ```
 npm install mocha -g should
@@ -113,6 +112,7 @@ npm install mocha -g should
 Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag.
 
 Then run the tests:
+
 ```
 mocha -t 10000 tests/*
 ```
