@@ -36,11 +36,19 @@ T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
 T.get('search', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
   //  ...
 });
+
+//
+//  stream a sample of public statuses
+//
+T.stream('statuses/sample', function (stream) {
+   stream.on('tweet', function (tweet) {
+     console.log(tweet); 
+   });
+});
       
 //
 //  filter the twitter public stream by the word 'mango'. 
 //
-
 T.stream('statuses/filter', { track: 'mango' }, function (stream) {
   stream.on('tweet', function (tweet) {
     console.log(tweet);
@@ -68,6 +76,10 @@ Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'st
 * `limit`            limitation message 
 * `scrub_geo`        location deletion message
 
+If you want to stop the stream, emit the 'stop' event: `stream.emit('stop')`.
+
+To restart the stream, emit the 'start' event: `stream.emit('start')`.
+
 ###path
 
 
@@ -84,9 +96,28 @@ Anything in the Twitter API:
 * User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
 * Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
 
----
+-------
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+
+--------
+
+#How do I run the tests?
+
+Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha and [should](https://github.com/visionmedia/should.js)):
+
+```
+npm install mocha -g should
+```
+
+Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag.
+
+Then run the tests:
+```
+mocha -t 10000 tests/*
+```
+
+-------
 
 ## License 
 
