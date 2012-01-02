@@ -1,8 +1,8 @@
-var vows = require('vows')
-  , assert = require('assert')
-  , EventEmitter = require('events').EventEmitter
-  , Twit = require('../lib/twitter')
-  , config = require('../examples/config');
+var Twit = require('../lib/twitter')
+  , config = require('../examples/config')
+  , should = require('should');
+
+var twit = new Twit(config);
 
 //test cases
 var cases = [
@@ -17,45 +17,52 @@ var cases = [
   { description: 'status/filter using location'
   , path: 'statuses/filter'
   , params: { locations:
-      '-122.75,36.8,-121.75,37.8,-74,40,-73,41'
+      '-122.75,36.8,121.75,37.8,-74,40,73,41'
+    }
+  },
+  { description: 'stopping/restarting the stream'
+  , custom: function () {
+      it('stream should stop, restart, stop', function (done) {
+        twit.stream('statuses/sample', function (stream) {
+          stream.on('tweet', function (tweet) {
+            tweet.should.be.a('object').and.have.property('text');
+          });
+          setTimeout(function () {
+            stream.emit('stop');
+            console.log('stop')
+          }, 2000)
+          setTimeout(function () {
+            stream.emit('start')
+            console.log('restart');
+          }, 3000)
+          setTimeout(function () {
+            stream.emit('stop')
+            console.log('stop')
+            done();
+          }, 4000)
+        })
+      })
     }
   } 
 ];
 
-//attach them to the test suite
-var twit = new Twit(config)
-  , tests = vows.describe('Streaming API');
+describe('Streaming API', function () {
+  //  generate test cases
+  //  if specified, use @custom test. Otherwise use @vanilla
+  cases.forEach(function (test) {
 
-cases.forEach(function(el) {
-  var test = makeBatch(el.description, el.path, el.params);
-  tests.addBatch(test);
-});
+    function vanilla () {
+      it('should be an object', function (done) {
+        twit.stream(test.path, test.params, function (stream) {
+          stream.on('tweet', function (tweet) {
+            process.nextTick(function () { stream.emit('stop') });
+            tweet.should.be.a('object').and.have.property('text');
+            done();
+          })
+        })
+      })
+    };
 
-tests.export(module);
-
-//make vows batch with 1 context (we want serial)
-function makeBatch(description, path, params) {
-  var batch = {}; 
-  batch[description] = {
-    topic: function () {
-      var promise = new EventEmitter();
-      
-      twit.stream(path, params, function(stream) {
-        stream.on('tweet', function(tweet) {
-                promise.emit('success', tweet);
-                stream.emit('stop');
-              })
-              .on('error', function(err) {
-                promise.emit('error', err);
-                stream.emit('stop');
-              });
-      });
-      return promise;
-    }, 
-    'no error and reply is object': function (err, reply) {
-      assert.isNull(err);
-      assert.isObject(reply);
-    }
-  };
-  return batch;
-};
+    describe(test.description, test.custom || vanilla);
+  })
+})
