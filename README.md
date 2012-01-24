@@ -57,7 +57,7 @@ T.stream('statuses/filter', { track: 'mango' }, function (stream) {
 
 ```
 
-## twit API:
+# twit API:
 
 Just 3 methods. They cover the full twitter API.
 
@@ -69,7 +69,9 @@ Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'st
 
 # Using the Streaming API
 
-`T.stream()` keeps the connection alive and allows you to listen on the following 4 events:
+`T.stream()` keeps the connection alive, and passes a `stream` object to `callback`.
+
+`stream` is an EventEmitter that emits the following 4 events:
 
 * `tweet`            status (tweet)
 * `delete`           status (tweet) deletion message
@@ -128,7 +130,7 @@ module.exports = {
 }
 ```
 
-Then run the tests:
+Then run the tests with mocha:
 
 ```
 mocha -t 10000 tests/*
@@ -142,7 +144,7 @@ node examples/rtd2.js
 
 ![iRTD2](http://dl.dropbox.com/u/32773572/RTD2_logo.png)
 
-The example is a twitter bot named `RTD2` written using `twit`. RTD2 tweets about **github** and curates its social graph. Its twitter profile is [here](https://twitter.com/#!/iRTD2).
+The example is a twitter bot named [RTD2](https://twitter.com/#!/iRTD2) written using `twit`. RTD2 tweets about **github** and curates its social graph.
 
 -------
 
