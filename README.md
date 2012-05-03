@@ -40,19 +40,19 @@ T.get('search', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
 //
 //  stream a sample of public statuses
 //
-T.stream('statuses/sample', function (stream) {
-   stream.on('tweet', function (tweet) {
-     console.log(tweet); 
-   });
+var stream = T.stream('statuses/sample')
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet); 
 });
       
 //
 //  filter the twitter public stream by the word 'mango'. 
 //
-T.stream('statuses/filter', { track: 'mango' }, function (stream) {
-  stream.on('tweet', function (tweet) {
-    console.log(tweet);
-  });
+var stream = T.stream('statuses/filter', { track: 'mango' }
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet);
 });
 
 ```
@@ -63,15 +63,13 @@ Just 3 methods. They cover the full twitter API.
 
 * `T.get(path, [params], callback)`         GET any of the REST API Endpoints.
 * `T.post(path, [params], callback)`        POST any of the REST API Endpoints.
-* `T.stream(path, [params], callback)`      Use this with the Streaming API.
+* `T.stream(path, [params])`                Use this with the Streaming API.
 
 Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
 # Using the Streaming API
 
-`T.stream()` keeps the connection alive, and passes a `stream` object to `callback`.
-
-`stream` is an EventEmitter that emits the following 4 events:
+`T.stream()` keeps the connection alive, and returns an `EventEmitter`, which emits the following 4 events:
 
 * `tweet`            status (tweet)
 * `delete`           status (tweet) deletion message
@@ -171,3 +169,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+## Changelog
+
+###0.1.5
+
+  * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns 
+    immediately with the `EventEmitter` that you can listen on. The `Usage` section in 
+    the Readme.md has been updated accordingly.
+
+
+###0.1.4
+
+  * `twit.stream()` has signature `function (path, params, callback)`
