@@ -115,7 +115,7 @@ Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha) and 
 npm install mocha -g should
 ```
 
-Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag.
+Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag. This is necessary to run the tests with `npm test`.
 
 Create a `config.js` file in the root of the cloned repo. It should export the oauth credentials. It should look something like this:
 
@@ -128,10 +128,10 @@ module.exports = {
 }
 ```
 
-Then run the tests with mocha:
+Then run the tests:
 
 ```
-mocha -t 10000 tests/*
+npm test
 ```
 
 You can also run the example:

@@ -15,4 +15,7 @@
         "type": "git"
       , "url": "http://github.com/ttezel/twit.git"
     }
+  , "scripts": {
+      "test": "mocha tests/rest.js tests/streaming.js -t 10000"
+    }
 }
