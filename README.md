@@ -176,7 +176,7 @@ THE SOFTWARE.
 
   * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns 
     immediately with the `EventEmitter` that you can listen on. The `Usage` section in 
-    the Readme.md has been updated accordingly.
+    the Readme.md has been updated. Read it.
 
 
 ###0.1.4
