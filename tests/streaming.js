@@ -12,60 +12,61 @@ var cases = [
   },
   { description: 'statuses/filter'
   , path: 'statuses/filter'
-  , params: {track: 'blue'}
+  , params: {track: 'apple'}
   },
-  { description: 'status/filter using location'
+  { description: 'statuses/filter using location'
   , path: 'statuses/filter'
   , params: { locations:
       '-122.75,36.8,121.75,37.8,-74,40,73,41'
     }
   },
-  // { description: 'site stream'
-  // , path: 'site'
-  // },
   { description: 'stopping/restarting the stream'
   , custom: function () {
-      it('stream should stop, restart, stop', function (done) {
-        var stream = twit.stream('statuses/sample')
+      var stream = twit.stream('statuses/sample')
 
-        stream.on('tweet', function (tweet) {
-          tweet.should.be.a('object').and.have.property('text');
-        });
-        setTimeout(function () {
-          stream.emit('stop');
-          console.log('stop')
-        }, 2000)
-        setTimeout(function () {
-          stream.emit('start')
-          console.log('restart');
-        }, 3000)
-        setTimeout(function () {
-          stream.emit('stop')
-          console.log('stop')
-          done();
-        }, 4000)
-      })
+      stream.on('tweet', function (tweet) {
+        tweet.should.be.a('object').and.have.property('text');
+      });
+      setTimeout(function () {
+        stream.emit('stop');
+        console.log('\nstop')
+      }, 2000)
+      setTimeout(function () {
+        stream.emit('start')
+        console.log('restart');
+      }, 3000)
+      setTimeout(function () {
+        stream.emit('stop')
+        console.log('stop')
+        caseNum++
+        if (cases[caseNum]) runTest(cases[caseNum])
+      }, 4000)
     }
   } 
 ];
 
-describe('Streaming API', function () {
-  //  generate test cases
-  //  if specified, use @custom test. Otherwise use @vanilla
-  cases.forEach(function (test) {
+var caseNum = 0
 
-    function vanilla () {
-      it('should be an object', function (done) {
-        var stream = twit.stream(test.path, test.params)
+var curr = cases[0]
 
-        stream.on('tweet', function (tweet) {
-          process.nextTick(function () { stream.emit('stop') });
-          tweet.should.be.a('object').and.have.property('text');
-          done();
-        })
-      })
-    };
+runTest(curr)
 
-    describe(test.description, test.custom || vanilla);
+function runTest (testcase) {
+  console.log(testcase.description)
+  if (testcase.custom) {
+    testcase.custom()
+  } else {
+    vanilla(testcase)
+  }
+}
+
+function vanilla (test) {
+  console.log('caseNum', caseNum)
+  var stream = twit.stream(test.path, test.params)
+  stream.on('tweet', function (tweet) {
+    stream.emit('stop')
+    tweet.should.be.a('object').and.have.property('text')
+    caseNum++
+    if (cases[caseNum]) runTest(cases[caseNum])
   })
-})
+}
