@@ -8,6 +8,7 @@
   , "devDependencies": {
       "should": ">=0.4.2"
     , "mocha": ">=0.8.1"
+    , "colors": ">=0.6.0"
   }
   , "engines": { "node": ">=0.6.0" }
   , "main": "./lib/twitter"
