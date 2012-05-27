@@ -1,6 +1,7 @@
 var Twit = require('../lib/twitter')
   , config = require('../config')
-  , should = require('should');
+  , should = require('should')
+  , colors = require('colors')
 
 var twit = new Twit(config);
 
@@ -40,6 +41,7 @@ var cases = [
         console.log('stop')
         caseNum++
         if (cases[caseNum]) runTest(cases[caseNum])
+        else success()
       }, 4000)
     }
   } 
@@ -68,5 +70,10 @@ function vanilla (test) {
     tweet.should.be.a('object').and.have.property('text')
     caseNum++
     if (cases[caseNum]) runTest(cases[caseNum])
+    else success()
   })
+}
+
+function success () {
+  console.log('ALL TESTS PASSED :)'.green)
 }
