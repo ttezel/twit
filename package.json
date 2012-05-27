@@ -16,6 +16,6 @@
       , "url": "http://github.com/ttezel/twit.git"
     }
   , "scripts": {
-      "test": "mocha tests/rest.js tests/streaming.js -t 10000"
+      "test": "mocha tests/rest.js -t 15000 -R spec && node tests/streaming.js"
     }
 }
