@@ -5,6 +5,13 @@ var Twitter = require('../lib/twitter')
 var twit = new Twitter(config);
 
 describe('REST API', function () {
+  it('POST `account/update_profile`', function (done) {
+    twit.post('account/update_profile', function (err, reply) {
+      check(err, reply)
+      console.log('screen name:', reply.screen_name)
+      done()
+    })
+  })
   it('GET `statuses/public_timeline`', function (done) {
     twit.get('statuses/public_timeline', function (err, reply) {
       check(err, reply);
