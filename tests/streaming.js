@@ -62,6 +62,7 @@ function runTest (testcase) {
   }
 }
 
+//run current testcase, keep calling tests sequentially
 function vanilla (test) {
   console.log('caseNum', caseNum)
   var stream = twit.stream(test.path, test.params)
