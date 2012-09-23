@@ -33,7 +33,7 @@ T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-T.get('search', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
+T.get('search/tweets', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
   //  ...
 });
 
