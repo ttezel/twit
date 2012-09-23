@@ -12,15 +12,15 @@ describe('REST API', function () {
       done()
     })
   })
-  it('GET `statuses/public_timeline`', function (done) {
-    twit.get('statuses/public_timeline', function (err, reply) {
+  it('GET `statuses/home_timeline`', function (done) {
+    twit.get('statuses/home_timeline', function (err, reply) {
       check(err, reply);
       done();
     });
   });
-  it('GET `search` { q: "grape", since_id: 12345 }', function (done) {
+  it('GET `search/tweets` { q: "grape", since_id: 12345 }', function (done) {
     var params = { q: 'grape', since_id: 12345 };
-    twit.get('search', params, function (err, reply) {
+    twit.get('search/tweets', params, function (err, reply) {
       check(err, reply);
       done();
     });
