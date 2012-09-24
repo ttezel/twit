@@ -172,6 +172,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+###0.2.0
+  * Updated `twit` for usage with v1.1 of the Twitter API.
+
 ###0.1.5
 
   * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns 
