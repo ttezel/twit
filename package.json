@@ -1,7 +1,7 @@
 {
     "name": "twit"
   , "description": "Twitter API client for node (REST & Streaming)"
-  , "version": "0.2.0"
+  , "version": "1.0.0"
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "rest", "stream", "oauth"]
   , "dependencies": { "oauth": ">=0.9.0" }
@@ -17,6 +17,6 @@
       , "url": "http://github.com/ttezel/twit.git"
     }
   , "scripts": {
-      "test": "mocha tests/rest.js -t 15000 -R spec && node tests/streaming.js"
+      "test": "mocha tests/* -t 30000 -R spec"
     }
 }
