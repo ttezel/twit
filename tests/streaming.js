@@ -1,80 +1,65 @@
-var Twit = require('../lib/twitter')
+var assert = require('assert')
+  , Twit = require('../lib/twitter')
   , config = require('../config')
-  , should = require('should')
   , colors = require('colors')
 
 var twit = new Twit(config);
 
-//test cases
-var cases = [
-  { description: 'statuses/sample'
-  , path: 'statuses/sample'
-  , params: null
-  },
-  { description: 'statuses/filter'
-  , path: 'statuses/filter'
-  , params: {track: 'apple'}
-  },
-  { description: 'statuses/filter using location'
-  , path: 'statuses/filter'
-  , params: { locations:
-      '-122.75,36.8,121.75,37.8,-74,40,73,41'
-    }
-  },
-  { description: 'stopping/restarting the stream'
-  , custom: function () {
-      var stream = twit.stream('statuses/sample')
-
-      stream.on('tweet', function (tweet) {
-        tweet.should.be.a('object').and.have.property('text');
-      });
-      setTimeout(function () {
-        stream.emit('stop');
-        console.log('\nstop')
-      }, 2000)
-      setTimeout(function () {
-        stream.emit('start')
-        console.log('restart');
-      }, 3000)
-      setTimeout(function () {
-        stream.emit('stop')
-        console.log('stop')
-        caseNum++
-        if (cases[caseNum]) runTest(cases[caseNum])
-        else success()
-      }, 4000)
-    }
-  } 
-];
-
-var caseNum = 0
-
-var curr = cases[0]
-
-runTest(curr)
-
-function runTest (testcase) {
-  console.log(testcase.description)
-  if (testcase.custom) {
-    testcase.custom()
-  } else {
-    vanilla(testcase)
-  }
-}
-
-//run current testcase, keep calling tests sequentially
-function vanilla (test) {
-  console.log('caseNum', caseNum)
-  var stream = twit.stream(test.path, test.params)
+function checkStream(stream, done) {
   stream.on('tweet', function (tweet) {
-    stream.emit('stop')
-    tweet.should.be.a('object').and.have.property('text')
-    caseNum++
-    if (cases[caseNum]) runTest(cases[caseNum])
-    else success()
+    assert.deepEqual(null, stream.abortedBy)
+    stream.stop()
+    assert.equal('twit-client', stream.abortedBy)
+
+    assert.ok(tweet)
+    assert.equal('string', typeof tweet.text)
+    assert.equal('string', typeof tweet.id_str)
+
+    done()
   })
 }
 
-function success () {
-  console.log('ALL TESTS PASSED :)'.green)
-}
+describe('Streaming API', function () {
+  it('statuses/sample', function (done) {
+    var stream = twit.stream('statuses/sample')
+
+    checkStream(stream, done)
+  })
+
+  it('statuses/filter using `track`', function (done) {
+    var stream = twit.stream('statuses/filter', { track: 'apple' })
+
+    checkStream(stream, done)
+  })
+
+  it('statuses/filter using `location`', function (done) {
+    var stream = twit.stream('statuses/filter', { locations: '-122.75,36.8,121.75,37.8,-74,40,73,41' })
+
+    checkStream(stream, done)
+  })
+
+  it('stopping & restarting the stream', function (done) {
+    var stream = twit.stream('statuses/sample')
+
+    setTimeout(function () {
+      assert.equal(null, stream.abortedBy)
+      stream.stop()
+      assert.equal('twit-client', stream.abortedBy)
+      console.log('\nstopped stream')
+    }, 2000)
+
+    setTimeout(function () {
+      //when stream reconnects, stop it again
+      stream.on('connect', function (req) {
+        console.log('\nrestarted stream')
+        stream.stop()
+        assert.equal('twit-client', stream.abortedBy)
+        console.log('\nstopped stream')
+        done()
+      })
+
+      //restart the stream
+      stream.start()
+    }, 3000)
+  })
+})
