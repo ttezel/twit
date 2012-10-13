@@ -14,28 +14,28 @@ npm install twit
 ##Usage:
 
 ```javascript
-var Twit = require('twit');
+var Twit = require('twit')
 
 var T = new Twit({
     consumer_key:         '...'
   , consumer_secret:      '...'
   , access_token:         '...'
   , access_token_secret:  '...'
-});
+})
 
 //
 //  tweet 'hello world!'
 //
 T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
   //  ...
-});
+})
       
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
 T.get('search/tweets', { q: 'banana', since: '2011-11-11' }, function(err, reply) {
   //  ...
-});
+})
 
 //
 //  stream a sample of public statuses
@@ -43,8 +43,8 @@ T.get('search/tweets', { q: 'banana', since: '2011-11-11' }, function(err, reply
 var stream = T.stream('statuses/sample')
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet); 
-});
+  console.log(tweet)
+})
       
 //
 //  filter the twitter public stream by the word 'mango'. 
@@ -52,8 +52,8 @@ stream.on('tweet', function (tweet) {
 var stream = T.stream('statuses/filter', { track: 'mango' })
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet);
-});
+  console.log(tweet)
+})
 
 ```
 
@@ -69,16 +69,17 @@ Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'st
 
 # Using the Streaming API
 
-`T.stream()` keeps the connection alive, and returns an `EventEmitter`, which emits the following 4 events:
+`T.stream()` keeps the connection alive, and returns an `EventEmitter`, which emits the following events:
 
 * `tweet`            status (tweet)
 * `delete`           status (tweet) deletion message
 * `limit`            limitation message 
 * `scrub_geo`        location deletion message
+* `disconnect`       disconnect message from twitter. If this occurs, `Twit` will close the connection and emit `disconnect` with the message details received from twitter.
 
-If you want to stop the stream, emit the 'stop' event: `stream.emit('stop')`.
+If you want to stop the stream, use `stream.stop()`
 
-To restart the stream, emit the 'start' event: `stream.emit('start')`.
+To restart the stream, use `stream.start()`.
 
 ###path
 
@@ -109,10 +110,10 @@ Clone the repo
 git clone git@github.com:ttezel/twit.git
 ```
 
-Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha) and [should](https://github.com/visionmedia/should.js)):
+Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha)
 
 ```
-npm install mocha -g should
+npm install mocha -g
 ```
 
 Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag. This is necessary to run the tests with `npm test`.
@@ -171,6 +172,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###1.0.0
+  * now to stop and start the stream, use `stream.stop()` and `stream.start()` instead of emitting the `start` and `stop` events
+  * If twitter sends a `disconnect` message, closes the stream and emits `disconnect` with the disconnect message received from twitter
 
 ###0.2.0
   * Updated `twit` for usage with v1.1 of the Twitter API.
