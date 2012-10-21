@@ -5,9 +5,19 @@ var assert = require('assert')
 var twit = new Twit(config)
 
 describe('REST API', function () {
+  it('GET `account/verify_credentials`', function (done) {
+    twit.get('account/verify_credentials', function (err, reply) {
+      check(err, reply)
+      assert.ok(reply.followers_count)
+      assert.ok(reply.friends_count)
+      assert.ok(reply.id_str)
+      done()
+    })
+  })
   it('POST `account/update_profile`', function (done) {
     twit.post('account/update_profile', function (err, reply) {
       check(err, reply)
+      assert.ok(reply.screen_name)
       console.log('screen name:', reply.screen_name)
       done()
     })
@@ -61,5 +71,4 @@ describe('REST API', function () {
 function check (err, reply) {
   assert.equal(err, null)
   assert.equal(typeof reply, 'object')
-  assert.ok(typeof reply === 'object' || Array.isArray(reply))
 }
