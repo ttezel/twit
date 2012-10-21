@@ -69,17 +69,7 @@ Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'st
 
 # Using the Streaming API
 
-`T.stream()` keeps the connection alive, and returns an `EventEmitter`, which emits the following events:
-
-* `tweet`            status (tweet)
-* `delete`           status (tweet) deletion message
-* `limit`            limitation message 
-* `scrub_geo`        location deletion message
-* `disconnect`       disconnect message from twitter. If this occurs, `Twit` will close the connection and emit `disconnect` with the message details received from twitter.
-
-If you want to stop the stream, use `stream.stop()`
-
-To restart the stream, use `stream.start()`.
+`T.stream(path, [params])` keeps the connection alive, and returns an `EventEmitter`.
 
 ###path
 
@@ -87,6 +77,89 @@ To restart the stream, use `stream.start()`.
 * If `path` is `'user'`, the User stream of the authenticated user will be streamed.
 * If `path` is `'site'`, the Site stream of the authenticated application will be streamed.
 * If `path` is anything other than `'user'` or `'site'`, the Public stream will be streamed.
+
+The following events are emitted:
+
+##event: 'tweet'
+
+```javascript
+stream.on('tweet', function (tweet) {
+  //...
+})
+```
+
+Emitted each time a status (tweet) comes into the stream.
+
+##event: 'delete'
+
+```javascript
+stream.on('delete', function (deleteMessage) {
+  //...
+})
+```
+
+Emitted each time a status (tweet) deletion message comes into the stream.
+
+##event: 'limit'
+
+```javascript
+stream.on('limit', function (limitMessage) {
+  //...
+})
+```
+
+Emitted each time a limitation message comes into the stream.
+
+##event: 'scrub_geo'
+
+```javascript
+stream.on('scrub_geo', function (scrubGeoMessage) {
+  //...
+})
+```
+
+Emitted each time a location deletion message comes into the stream.
+
+##event: 'disconnect'
+
+```javascript
+stream.on('disconnect', function (disconnect) {
+  //...
+})
+```
+
+Emitted when a disconnect message comes from Twitter. This occurs if you have multiple streams connected to Twitter's API. Upon receiving a disconnect message from Twitter, `Twit` will close the connection and emit this event with the message details received from twitter.
+
+##event: 'connect'
+
+```javascript
+stream.on('connect', function (request) {
+  //...
+})
+```
+
+Emitted when a connection attempt is made to Twitter. The http request object is emitted.
+
+##event: 'reconnect'
+
+```javascript
+stream.on('reconnect', function (request, response, connectInterval) {
+  //...
+})
+```
+
+Emitted when a reconnection attempt is made to Twitter. The http request and response objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
+
+##stream.stop()
+
+Call this function on the stream to stop streaming (closes the connection with Twitter).
+
+##stream.start()
+
+Call this function to restart the stream after you called `.stop()` on it.
+Note: there is no need to call `.start()` to begin streaming. `Twit.stream` calls `.start()` for you.
+
+-------
 
 #What do I have access to?
 
