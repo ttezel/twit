@@ -38,6 +38,26 @@ describe('Streaming API', function () {
     checkStream(stream, done)
   })
 
+  it('statuses/filter using `location` array', function (done) {
+    var params = {
+      locations: [ '-122.75', '36.8', '121.75', '37.8', '-74', '40', '73', '41' ]
+    }
+
+    var stream = twit.stream('statuses/filter', params)
+
+    checkStream(stream, done)
+  })
+
+  it('statuses/filter using `track` array', function (done) {
+    var params = {
+      track: [ 'spring', 'summer', 'fall', 'winter' ]
+    }
+
+    var stream = twit.stream('statuses/filter', params)
+
+    checkStream(stream, done)
+  })
+
   it('stopping & restarting the stream', function (done) {
     var stream = twit.stream('statuses/sample')
 
