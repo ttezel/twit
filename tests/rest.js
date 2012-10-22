@@ -85,6 +85,13 @@ describe('REST API', function () {
       done()
     })
   })
+
+  it('GET `followers/ids` of screen_name tolga_tezel', function (done) {
+    twit.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
+      check(err, reply)
+      done()
+    })
+  })
 })
 
 function check (err, reply) {
