@@ -218,7 +218,7 @@ Clone the repo
 git clone git@github.com:ttezel/twit.git
 ```
 
-Install the dev dependencies ([mocha](https://github.com/visionmedia/mocha)
+Install [mocha](https://github.com/visionmedia/mocha)
 
 ```
 npm install mocha -g
