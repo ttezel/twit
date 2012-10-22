@@ -38,7 +38,15 @@ describe('Streaming API', function () {
     checkStream(stream, done)
   })
 
-  it('statuses/filter using `location` array', function (done) {
+  it('statuses/filter using `location` array for San Francisco', function (done) {
+    var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
+
+    var stream = twit.stream('statuses/filter', { locations: sanFrancisco })
+
+    checkStream(stream, done)
+  })
+
+  it('statuses/filter using `location` array for San Francisco and New York', function (done) {
     var params = {
       locations: [ '-122.75', '36.8', '121.75', '37.8', '-74', '40', '73', '41' ]
     }
