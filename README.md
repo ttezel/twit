@@ -151,7 +151,7 @@ Emitted each time a location deletion message comes into the stream.
 ##event: 'disconnect'
 
 ```javascript
-stream.on('disconnect', function (disconnect) {
+stream.on('disconnect', function (disconnectMessage) {
   //...
 })
 ```
@@ -166,7 +166,7 @@ stream.on('connect', function (request) {
 })
 ```
 
-Emitted when a connection attempt is made to Twitter. The http request object is emitted.
+Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
 
 ##event: 'reconnect'
 
@@ -176,7 +176,7 @@ stream.on('reconnect', function (request, response, connectInterval) {
 })
 ```
 
-Emitted when a reconnection attempt is made to Twitter. The http request and response objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
+Emitted when a reconnection attempt is made to Twitter. The http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
 
 ##stream.stop()
 
