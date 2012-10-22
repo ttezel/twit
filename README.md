@@ -79,9 +79,14 @@ stream.on('tweet', function (tweet) {
 
 Just 3 methods. They cover the full twitter API.
 
-* `T.get(path, [params], callback)`         GET any of the REST API Endpoints.
-* `T.post(path, [params], callback)`        POST any of the REST API Endpoints.
-* `T.stream(path, [params])`                Use this with the Streaming API.
+##`T.get(path, [params], callback)`         
+GET any of the REST API Endpoints.
+
+##`T.post(path, [params], callback)`        
+POST any of the REST API Endpoints.
+
+##`T.stream(path, [params])`               
+Use this with the Streaming API.
 
 Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
