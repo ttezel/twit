@@ -55,6 +55,17 @@ stream.on('tweet', function (tweet) {
   console.log(tweet)
 })
 
+//
+// filter the public stream by the latitude/longitude bounded box of San Francisco
+//
+var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
+
+var stream = T.stream('statuses/filter', { locations: sanFrancisco })
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet)
+})
+
 ```
 
 # twit API:
@@ -66,6 +77,23 @@ Just 3 methods. They cover the full twitter API.
 * `T.stream(path, [params])`                Use this with the Streaming API.
 
 Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
+
+###params
+
+Params is an optional object, allowing you to pass in parameters to Twitter when making a request. Any Arrays passed into `params` get converted to comma-separated strings, allowing you to do requests like:
+
+```javascript
+//
+// I only want to see tweets about my favorite fruits
+//
+
+//same result as doing { track: 'bananas,oranges,strawberries' }
+var stream = T.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
+
+stream.on('tweet', function (tweet) {
+  //...
+})
+```
 
 # Using the Streaming API
 
