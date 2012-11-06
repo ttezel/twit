@@ -5,6 +5,13 @@ var assert = require('assert')
 
 var twit = new Twit(config);
 
+/**
+ * Stop the stream and check the tweet we got back.
+ * Call @done on completion.
+ * 
+ * @param  {object}   stream object returned by twit.stream()
+ * @param  {Function} done   completion callback
+ */
 function checkStream(stream, done) {
   stream.on('tweet', function (tweet) {
     assert.deepEqual(null, stream.abortedBy)
@@ -89,5 +96,20 @@ describe('Streaming API', function () {
       //restart the stream
       stream.start()
     }, 3000)
+  })
+
+  it('user stream first tweet is an array of friend id\'s', function (done) {
+    var stream = twit.stream('user')
+
+    //make sure we're connected to the right endpoint
+    assert.equal(stream.path, 'https://userstream.twitter.com/1.1/user.json')
+
+    //first tweet should be an array of friend id's. Validate it.
+    stream.on('tweet', function (tweet) {
+      stream.stop()
+      assert.equal('twit-client', stream.abortedBy)
+      assert.ok(Array.isArray(tweet.friends))
+      done()
+    })
   })
 })
