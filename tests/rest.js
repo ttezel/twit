@@ -28,7 +28,7 @@ describe('REST API', function () {
     twit.post('statuses/update', params, function (err, reply) {
       checkReply(err, reply)
       console.log('\ntweeted:', reply.text)
-      console.log('tweet id:', reply.id_str)
+      console.log('tweeted on:', reply.created_at)
       done()
     })
   })
