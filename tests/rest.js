@@ -23,12 +23,28 @@ describe('REST API', function () {
     })
   })
 
+  var tweetId = null
+
   it('POST `statuses/update`', function (done) {
     var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit' }
     twit.post('statuses/update', params, function (err, reply) {
       checkReply(err, reply)
+
       console.log('\ntweeted:', reply.text)
       console.log('tweeted on:', reply.created_at)
+
+      tweetId = reply.id_str
+
+      done()
+    })
+  })
+
+  it('POST `statuses/destroy:id`', function (done) {
+    var destroyRoute = 'statuses/destroy/'+tweetId
+
+    twit.post(destroyRoute, function (err, reply) {
+      checkReply(err, reply)
+      checkTweet(reply)
       done()
     })
   })
