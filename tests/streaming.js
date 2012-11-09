@@ -13,16 +13,23 @@ var twit = new Twit(config);
  * @param  {Function} done   completion callback
  */
 function checkStream(stream, done) {
-  stream.on('tweet', function (tweet) {
-    assert.deepEqual(null, stream.abortedBy)
-    stream.stop()
-    assert.equal('twit-client', stream.abortedBy)
+  stream.on('connect', function () {
+    console.log('\nconnected'.grey)
 
-    assert.ok(tweet)
-    assert.equal('string', typeof tweet.text)
-    assert.equal('string', typeof tweet.id_str)
+    stream.on('tweet', function (tweet) {
+      assert.equal(null, stream.abortedBy)
 
-    done()
+      stream.stop()
+
+      assert.equal('twit-client', stream.abortedBy)
+      assert.ok(tweet)
+      assert.equal('string', typeof tweet.text)
+      assert.equal('string', typeof tweet.id_str)
+
+      console.log(('\ntweet: '+tweet.text).grey)
+
+      done()
+    })
   })
 }
 
