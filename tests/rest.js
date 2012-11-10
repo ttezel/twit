@@ -86,8 +86,8 @@ describe('REST API', function () {
     })
   })
 
-  it('GET `search/tweets` { q: "banana", since: "2011-11-11" }', function (done) {
-    var params = { q: 'banana', since: '2011-11-11' }
+  it('GET `search/tweets` { q: "banana since:2011-11-11" }', function (done) {
+    var params = { q: 'banana since:2011-11-11' }
     twit.get('search/tweets', params, function (err, reply) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
