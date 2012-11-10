@@ -24,6 +24,7 @@ describe('REST API', function () {
   })
 
   var tweetId = null
+    , text = null
 
   it('POST `statuses/update`', function (done) {
     var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit' }
@@ -34,6 +35,7 @@ describe('REST API', function () {
       console.log('tweeted on:', reply.created_at)
 
       tweetId = reply.id_str
+      text = reply.text
 
       done()
     })
@@ -45,6 +47,7 @@ describe('REST API', function () {
     twit.post(destroyRoute, function (err, reply) {
       checkReply(err, reply)
       checkTweet(reply)
+      assert.equal(reply.text, text)
       done()
     })
   })
