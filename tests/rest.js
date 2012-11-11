@@ -2,9 +2,9 @@ var assert = require('assert')
   , Twit = require('../lib/twitter')
   , config = require('../config')
 
-var twit = new Twit(config)
-
 describe('REST API', function () {
+  var twit = new Twit(config)
+
   it('GET `account/verify_credentials`', function (done) {
     twit.get('account/verify_credentials', function (err, reply) {
       checkReply(err, reply)
