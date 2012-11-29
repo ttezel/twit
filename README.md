@@ -122,15 +122,17 @@ The following events are emitted:
 
 ##event: 'tweet'
 
+Emitted each time a status (tweet) comes into the stream.
+
 ```javascript
 stream.on('tweet', function (tweet) {
   //...
 })
 ```
 
-Emitted each time a status (tweet) comes into the stream.
-
 ##event: 'delete'
+
+Emitted each time a status (tweet) deletion message comes into the stream.
 
 ```javascript
 stream.on('delete', function (deleteMessage) {
@@ -138,9 +140,9 @@ stream.on('delete', function (deleteMessage) {
 })
 ```
 
-Emitted each time a status (tweet) deletion message comes into the stream.
-
 ##event: 'limit'
+
+Emitted each time a limitation message comes into the stream.
 
 ```javascript
 stream.on('limit', function (limitMessage) {
@@ -148,9 +150,9 @@ stream.on('limit', function (limitMessage) {
 })
 ```
 
-Emitted each time a limitation message comes into the stream.
-
 ##event: 'scrub_geo'
+
+Emitted each time a location deletion message comes into the stream.
 
 ```javascript
 stream.on('scrub_geo', function (scrubGeoMessage) {
@@ -158,9 +160,9 @@ stream.on('scrub_geo', function (scrubGeoMessage) {
 })
 ```
 
-Emitted each time a location deletion message comes into the stream.
-
 ##event: 'disconnect'
+
+Emitted when a disconnect message comes from Twitter. This occurs if you have multiple streams connected to Twitter's API. Upon receiving a disconnect message from Twitter, `Twit` will close the connection and emit this event with the message details received from twitter.
 
 ```javascript
 stream.on('disconnect', function (disconnectMessage) {
@@ -168,9 +170,11 @@ stream.on('disconnect', function (disconnectMessage) {
 })
 ```
 
-Emitted when a disconnect message comes from Twitter. This occurs if you have multiple streams connected to Twitter's API. Upon receiving a disconnect message from Twitter, `Twit` will close the connection and emit this event with the message details received from twitter.
+
 
 ##event: 'connect'
+
+Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
 
 ```javascript
 stream.on('connect', function (request) {
@@ -178,9 +182,9 @@ stream.on('connect', function (request) {
 })
 ```
 
-Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
-
 ##event: 'reconnect'
+
+Emitted when a reconnection attempt is made to Twitter. The http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
 
 ```javascript
 stream.on('reconnect', function (request, response, connectInterval) {
@@ -188,7 +192,35 @@ stream.on('reconnect', function (request, response, connectInterval) {
 })
 ```
 
-Emitted when a reconnection attempt is made to Twitter. The http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
+##event: 'warning'
+
+This message is appropriate for clients using high-bandwidth connections, like the firehose. If your connection is falling behind, Twitter will queue messages for you, until your queue fills up, at which point they will disconnect you.
+
+```javascript
+stream.on('warning', function (warning) {
+  //...
+})
+```
+
+##event: 'status_withheld'
+
+Emitted when Twitter sends back a `status_withheld` message in the stream. This means that a tweet was withheld in certain countries.
+
+```javascript
+stream.on('status_withheld', function (withheldMsg) {
+  //...
+})
+```
+
+##event: 'user_withheld'
+
+Emitted when Twitter sends back a `user_withheld` message in the stream. This means that a Twitter user was withheld in certain countries.
+
+```javascript
+stream.on('user_withheld', function (withheldMsg) {
+  //...
+})
+```
 
 ##stream.stop()
 
