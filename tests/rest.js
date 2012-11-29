@@ -27,10 +27,11 @@ describe('REST API', function () {
     , text = null
 
   it('POST `statuses/update`', function (done) {
-    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit' }
+    var params = { status: 'hello world' }
     twit.post('statuses/update', params, function (err, reply) {
       checkReply(err, reply)
-
+console.log("ERR:");
+    console.log(err);
       console.log('\ntweeted:', reply.text)
       console.log('tweeted on:', reply.created_at)
 
