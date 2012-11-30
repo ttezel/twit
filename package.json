@@ -1,12 +1,15 @@
 {
     "name": "twit"
   , "description": "Twitter API client for node (REST & Streaming)"
-  , "version": "1.0.10"
+  , "version": "1.0.11"
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "api", "rest", "stream", "streaming", "oauth"]
   , "dependencies": {
 
     }
+  , "bundledDependencies": [
+    "oauth"
+  ]
   , "devDependencies": {
       "mocha": ">=0.8.1"
     , "colors": "0.6.x"
