@@ -1,3 +1,4 @@
-node_modules/
+node_modules/*
+!node_modules/oauth
 config.js
 test.js
