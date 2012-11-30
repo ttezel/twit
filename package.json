@@ -4,10 +4,11 @@
   , "version": "1.0.9"
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "api", "rest", "stream", "streaming", "oauth"]
-  , "dependencies": { "oauth": "0.9.x" }
+  , "dependencies": {
+
+    }
   , "devDependencies": {
-      "should": ">=0.4.2"
-    , "mocha": ">=0.8.1"
+      "mocha": ">=0.8.1"
     , "colors": "0.6.x"
   }
   , "engines": { "node": ">=0.6.0" }
