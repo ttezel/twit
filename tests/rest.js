@@ -52,6 +52,28 @@ describe('REST API', function () {
     })
   })
 
+  it('POST `statuses/update` with characters requiring escaping', function (done) {
+    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit :) !' }
+
+    twit.post('statuses/update', params, function (err, reply) {
+      checkReply(err, reply)
+
+      console.log('\ntweeted:', reply.text)
+      console.log('tweeted on:', reply.created_at)
+
+      var text = reply.text
+
+      var destroyRoute = 'statuses/destroy/'+reply.id_str
+
+      twit.post(destroyRoute, function (err, reply) {
+        checkReply(err, reply)
+        checkTweet(reply)
+        assert.equal(reply.text, text)
+        done()
+      })
+    })
+  })
+
   it('GET `statuses/home_timeline`', function (done) {
     twit.get('statuses/home_timeline', function (err, reply) {
       checkReply(err, reply)
