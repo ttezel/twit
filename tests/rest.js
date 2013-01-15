@@ -1,24 +1,31 @@
 var assert = require('assert')
   , Twit = require('../lib/twitter')
   , config = require('../config')
+  , util = require('util')
 
 describe('REST API', function () {
   var twit = new Twit(config)
 
   it('GET `account/verify_credentials`', function (done) {
-    twit.get('account/verify_credentials', function (err, reply) {
+    twit.get('account/verify_credentials', function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.followers_count)
       assert.ok(reply.friends_count)
       assert.ok(reply.id_str)
+
+      checkResponse(response)
+
+      assert(response.headers['x-rate-limit-limit'])
+
       done()
     })
   })
 
   it('POST `account/update_profile`', function (done) {
-    twit.post('account/update_profile', function (err, reply) {
+    twit.post('account/update_profile', function (err, reply, response) {
       checkReply(err, reply)
       console.log('\nscreen name:', reply.screen_name)
+      checkResponse(response)
       done()
     })
   })
@@ -28,7 +35,7 @@ describe('REST API', function () {
 
   it('POST `statuses/update`', function (done) {
     var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit' }
-    twit.post('statuses/update', params, function (err, reply) {
+    twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
 
       console.log('\ntweeted:', reply.text)
@@ -37,6 +44,8 @@ describe('REST API', function () {
       tweetId = reply.id_str
       text = reply.text
 
+      checkResponse(response)
+
       done()
     })
   })
@@ -44,10 +53,13 @@ describe('REST API', function () {
   it('POST `statuses/destroy:id`', function (done) {
     var destroyRoute = 'statuses/destroy/'+tweetId
 
-    twit.post(destroyRoute, function (err, reply) {
+    twit.post(destroyRoute, function (err, reply, response) {
       checkReply(err, reply)
       checkTweet(reply)
       assert.equal(reply.text, text)
+
+      checkResponse(response)
+
       done()
     })
   })
@@ -55,35 +67,43 @@ describe('REST API', function () {
   it('POST `statuses/update` with characters requiring escaping', function (done) {
     var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit :) !' }
 
-    twit.post('statuses/update', params, function (err, reply) {
+    twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
 
       console.log('\ntweeted:', reply.text)
       console.log('tweeted on:', reply.created_at)
 
+      checkResponse(response)
+
       var text = reply.text
 
       var destroyRoute = 'statuses/destroy/'+reply.id_str
 
-      twit.post(destroyRoute, function (err, reply) {
+      twit.post(destroyRoute, function (err, reply, response) {
         checkReply(err, reply)
         checkTweet(reply)
         assert.equal(reply.text, text)
+
+        checkResponse(response)
+
         done()
       })
     })
   })
 
   it('GET `statuses/home_timeline`', function (done) {
-    twit.get('statuses/home_timeline', function (err, reply) {
+    twit.get('statuses/home_timeline', function (err, reply, response) {
       checkReply(err, reply)
       checkTweet(reply[0])
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `statuses/mentions_timeline`', function (done) {
-    twit.get('statuses/mentions_timeline', function (err, reply) {
+    twit.get('statuses/mentions_timeline', function (err, reply, response) {
       checkReply(err, reply)
       checkTweet(reply[0])
       done()
@@ -91,29 +111,38 @@ describe('REST API', function () {
   })
 
   it('GET `statuses/user_timeline`', function (done) {
-    twit.get('statuses/user_timeline', function (err, reply) {
+    twit.get('statuses/user_timeline', function (err, reply, response) {
       checkReply(err, reply)
       checkTweet(reply[0])
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `search/tweets` { q: "grape", since_id: 12345 }', function (done) {
     var params = { q: 'grape', since_id: 12345 }
-    twit.get('search/tweets', params, function (err, reply) {
+    twit.get('search/tweets', params, function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
       checkTweet(reply.statuses[0])
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `search/tweets` { q: "banana since:2011-11-11" }', function (done) {
     var params = { q: 'banana since:2011-11-11' }
-    twit.get('search/tweets', params, function (err, reply) {
+    twit.get('search/tweets', params, function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
       checkTweet(reply.statuses[0])
+
+      checkResponse(response)
+
       done()
     })
   })
@@ -123,35 +152,47 @@ describe('REST API', function () {
       q: [ 'banana', 'mango', 'peach' ]
     }
 
-    twit.get('search/tweets', params, function (err, reply) {
+    twit.get('search/tweets', params, function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
       checkTweet(reply.statuses[0])
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `direct_messages`', function (done) {
-    twit.get('direct_messages', function (err, reply) {
+    twit.get('direct_messages', function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(Array.isArray(reply))
       checkDm(reply[0])
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `followers/ids`', function (done) {
-    twit.get('followers/ids', function (err, reply) {
+    twit.get('followers/ids', function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(Array.isArray(reply.ids))
+
+      checkResponse(response)
+
       done()
     })
   })
 
   it('GET `followers/ids` of screen_name tolga_tezel', function (done) {
-    twit.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
+    twit.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(Array.isArray(reply.ids))
+
+      checkResponse(response)
+
       done()
     })
   })
@@ -166,6 +207,15 @@ describe('REST API', function () {
 function checkReply (err, reply) {
   assert.equal(err, null)
   assert.equal(typeof reply, 'object')
+}
+
+/**
+ * check the http response object and its headers
+ * @param  {object} response  http response object
+ */
+function checkResponse (response) {
+  assert(response)
+  assert(response.headers)
 }
 
 /**
