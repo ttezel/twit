@@ -91,6 +91,33 @@ describe('REST API', function () {
     })
   })
 
+  it('POST `statuses/update` with \'Hi!\' works', function (done) {
+    var params = { status: 'Hi!' }
+
+    twit.post('statuses/update', params, function (err, reply, response) {
+      checkReply(err, reply)
+
+      console.log('\ntweeted:', reply.text)
+      console.log('tweeted on:', reply.created_at)
+
+      checkResponse(response)
+
+      var text = reply.text
+
+      var destroyRoute = 'statuses/destroy/'+reply.id_str
+
+      twit.post(destroyRoute, function (err, reply, response) {
+        checkReply(err, reply)
+        checkTweet(reply)
+        assert.equal(reply.text, text)
+
+        checkResponse(response)
+
+        done()
+      })
+    })
+  })
+
   it('GET `statuses/home_timeline`', function (done) {
     twit.get('statuses/home_timeline', function (err, reply, response) {
       checkReply(err, reply)
