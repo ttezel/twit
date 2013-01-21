@@ -249,21 +249,7 @@ Go here to create an app and get OAuth credentials (if you haven't already): htt
 
 #How do I run the tests?
 
-Clone the repo
-
-```
-git clone git@github.com:ttezel/twit.git
-```
-
-Install [mocha](https://github.com/visionmedia/mocha)
-
-```
-npm install mocha -g
-```
-
-Note: When the `-g` flag is invoked, the package will be installed globally. In order to use `mocha` from the command line, you must use the `-g` flag. This is necessary to run the tests with `npm test`.
-
-Create a `config.js` file in the root of the cloned repo. It should export the oauth credentials. It should look something like this:
+Create a `config.js` at the root of the `twit` folder. It should export the oauth credentials. It should look something like this:
 
 ```
 module.exports = {
