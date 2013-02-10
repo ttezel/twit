@@ -243,8 +243,9 @@ The following user stream events are provided:
 * `ustream_list_member_removed`
 * `ustream_list_user_subscribed`
 * `ustream_list_user_unsubscribed`
+* `ustream_event`
 
-If an event does not match any of these recognized user stream events, a default `ustream_event` will be emitted instead.
+If an event does not match any of these recognized user stream events, the default `ustream_event` will be emitted instead as a fallback event.
 
 ```javascript
 stream.on('ustream_favorite', function (event) {
