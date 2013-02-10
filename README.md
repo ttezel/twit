@@ -222,6 +222,36 @@ stream.on('user_withheld', function (withheldMsg) {
 })
 ```
 
+##event: 'ustream_*'
+
+Emitted when Twitter sends back a [user stream specific event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
+Please reference the Twitter documentation for more information on each event's structure.
+
+The following user stream events are provided: 
+
+* `ustream_blocked`
+* `ustream_unblocked`
+* `ustream_favorite`
+* `ustream_unfavorite`
+* `ustream_follow`
+* `ustream_unfollow`
+* `ustream_user_update`
+* `ustream_list_created`
+* `ustream_list_destroyed`
+* `ustream_list_updated`
+* `ustream_list_member_added`
+* `ustream_list_member_removed`
+* `ustream_list_user_subscribed`
+* `ustream_list_user_unsubscribed`
+
+If an event does not match any of these recognized user stream events, a default `ustream_event` will be emitted instead.
+
+```javascript
+stream.on('ustream_favorite', function (event) {
+  //...
+})
+```
+
 ##stream.stop()
 
 Call this function on the stream to stop streaming (closes the connection with Twitter).
