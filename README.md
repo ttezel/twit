@@ -222,6 +222,16 @@ stream.on('user_withheld', function (withheldMsg) {
 })
 ```
 
+##event: 'user_friends'
+
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids.
+
+```javascript
+stream.on('user_friends', function (friendsMsg) {
+  //...
+})
+```
+
 ##event: 'ustream_*'
 
 Emitted when Twitter sends back a [user stream specific event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
