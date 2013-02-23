@@ -232,8 +232,8 @@ stream.on('friends', function (friendsMsg) {
 
 ##event: 'user_event'
 
-Emitted when Twitter sends back a [user stream specific event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
-Please check the Twitter docs for more information on each event's structure.
+Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
+See the Twitter docs for more information on each event's structure.
 
 ```javascript
 stream.on('user_event', function (eventMsg) {
@@ -241,7 +241,7 @@ stream.on('user_event', function (eventMsg) {
 })
 ```
 
-In addition, the following user stream events are provided: 
+In addition, the following user stream events are provided for you to listen on: 
 
 * `blocked`
 * `unblocked`
