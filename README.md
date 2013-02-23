@@ -170,8 +170,6 @@ stream.on('disconnect', function (disconnectMessage) {
 })
 ```
 
-
-
 ##event: 'connect'
 
 Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
@@ -222,43 +220,48 @@ stream.on('user_withheld', function (withheldMsg) {
 })
 ```
 
-##event: 'user_friends'
+##event: 'friends'
 
 Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids.
 
 ```javascript
-stream.on('user_friends', function (friendsMsg) {
+stream.on('friends', function (friendsMsg) {
   //...
 })
 ```
 
-##event: 'ustream_*'
+##event: 'user_event'
 
 Emitted when Twitter sends back a [user stream specific event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
-Please reference the Twitter documentation for more information on each event's structure.
-
-The following user stream events are provided: 
-
-* `ustream_blocked`
-* `ustream_unblocked`
-* `ustream_favorite`
-* `ustream_unfavorite`
-* `ustream_follow`
-* `ustream_unfollow`
-* `ustream_user_update`
-* `ustream_list_created`
-* `ustream_list_destroyed`
-* `ustream_list_updated`
-* `ustream_list_member_added`
-* `ustream_list_member_removed`
-* `ustream_list_user_subscribed`
-* `ustream_list_user_unsubscribed`
-* `ustream_event`
-
-If an event does not match any of these recognized user stream events, the default `ustream_event` will be emitted instead as a fallback event.
+Please check the Twitter docs for more information on each event's structure.
 
 ```javascript
-stream.on('ustream_favorite', function (event) {
+stream.on('user_event', function (eventMsg) {
+  //...
+})
+```
+
+In addition, the following user stream events are provided: 
+
+* `blocked`
+* `unblocked`
+* `favorite`
+* `unfavorite`
+* `follow`
+* `unfollow`
+* `user_update`
+* `list_created`
+* `list_destroyed`
+* `list_updated`
+* `list_member_added`
+* `list_member_removed`
+* `list_user_subscribed`
+* `list_user_unsubscribed`
+
+###Example:
+
+```javascript
+stream.on('favorite', function (event) {
   //...
 })
 ```
