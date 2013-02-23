@@ -243,20 +243,20 @@ stream.on('user_event', function (eventMsg) {
 
 In addition, the following user stream events are provided for you to listen on: 
 
-* `blocked`
-* `unblocked`
-* `favorite`
-* `unfavorite`
-* `follow`
-* `unfollow`
-* `user_update`
-* `list_created`
-* `list_destroyed`
-* `list_updated`
-* `list_member_added`
-* `list_member_removed`
-* `list_user_subscribed`
-* `list_user_unsubscribed`
+* **`blocked`**
+* **`unblocked`**
+* **`favorite`**
+* **`unfavorite`**
+* **`follow`**
+* **`unfollow`**
+* **`user_update`**
+* **`list_created`**
+* **`list_destroyed`**
+* **`list_updated`**
+* **`list_member_added`**
+* **`list_member_removed`**
+* **`list_user_subscribed`**
+* **`list_user_unsubscribed`**
 
 ###Example:
 
