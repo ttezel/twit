@@ -7,6 +7,7 @@
   , "dependencies": {
         "mocha": "0.8.1"
       , "colors": "0.6.x"
+      , "oauth": "0.9.8"
     }
   , "bundledDependencies": [
       "oauth"
