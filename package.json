@@ -1,16 +1,15 @@
 {
     "name": "twit"
   , "description": "Twitter API client for node (REST & Streaming)"
-  , "version": "1.1.4"
+  , "version": "1.1.5"
   , "author": "Tolga Tezel"
   , "keywords": ["twitter", "api", "rest", "stream", "streaming", "oauth"]
   , "dependencies": {
-        "mocha": "1.8.1"
-      , "colors": "0.6.x"
-      , "oauth": "0.9.9"
+      "oauth": "0.9.9"
     }
   , "devDependencies": {
-      
+      "mocha": "1.8.1"
+    , "colors": "0.6.x"
   }
   , "engines": { "node": ">=0.6.0" }
   , "main": "./lib/twitter"
