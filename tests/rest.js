@@ -138,7 +138,11 @@ describe('REST API', function () {
   })
 
   it('GET `statuses/user_timeline`', function (done) {
-    twit.get('statuses/user_timeline', function (err, reply, response) {
+    var params = {
+      screen_name: 'tolga_tezel'
+    }
+
+    twit.get('statuses/user_timeline', params, function (err, reply, response) {
       checkReply(err, reply)
       checkTweet(reply[0])
 
@@ -252,7 +256,7 @@ function checkResponse (response) {
  */
 function checkTweet (tweet) {
   assert.ok(tweet)
-  assert.equal('string', typeof tweet.id_str)
+  assert.equal('string', typeof tweet.id_str, 'id_str wasnt string:'+tweet.id_str)
   assert.equal('string', typeof tweet.text)
 
   assert.ok(tweet.user)
