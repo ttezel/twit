@@ -29,13 +29,6 @@ var T = new Twit({
 T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
   //  ...
 })
-
-//
-//  retweet a tweet with the id_str of '241259202004267009'
-//
-T.post('statuses/retweet', { id: '241259202004267009' }, function(err, reply) {
-  //  ...
-})
       
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
@@ -49,6 +42,13 @@ T.get('search/tweets', { q: 'banana since:2011-11-11' }, function(err, reply) {
 //
 T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
   //  ...    
+})
+
+//
+//  retweet a tweet with id '241259202004267009'
+//
+T.post('statuses/retweet/241259202004267009', function(err, reply) {
+  //  ...
 })
 
 //
