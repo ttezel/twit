@@ -9,8 +9,8 @@ describe('REST API', function () {
   it('GET `account/verify_credentials`', function (done) {
     twit.get('account/verify_credentials', function (err, reply, response) {
       checkReply(err, reply)
-      assert.ok(reply.followers_count)
-      assert.ok(reply.friends_count)
+      assert.notEqual(reply.followers_count, undefined)
+      assert.notEqual(reply.friends_count, undefined)
       assert.ok(reply.id_str)
 
       checkResponse(response)
@@ -225,6 +225,33 @@ describe('REST API', function () {
       checkResponse(response)
 
       done()
+    })
+  })
+
+  it('POST `statuses/retweet`', function (done) {
+    // search for a tweet to retweet
+    twit.get('search/tweets', { q: 'apple' }, function (err, reply, response) {
+      checkReply(err, reply)
+      assert.ok(reply.statuses)
+      
+      var tweet = reply.statuses[0]
+      checkTweet(tweet)
+
+      var tweetId = tweet.id_str
+      assert(tweetId)
+
+      twit.post('statuses/retweet/'+tweetId, function (err, reply, response) {
+        checkReply(err, reply)
+
+        var retweetId = reply.id_str
+        assert(retweetId)
+
+        twit.post('statuses/destroy/'+retweetId, function (err, reply, response) {
+          checkReply(err, reply)
+
+          done()
+        })
+      })
     })
   })
 })
