@@ -254,6 +254,67 @@ describe('REST API', function () {
       })
     })
   })
+
+  // 1.1.8 usage
+  it('POST `statuses/retweet/:id` without `id` in params returns error', function (done) {
+    twit.post('statuses/retweet/:id', function (err, reply, response) {
+      assert(err)
+      assert.equal(err.message, 'Twit: Params object is missing a required parameter for this request: `id`')
+      done()
+    })
+  })
+
+  // 1.1.8 usage
+  it('POST `statuses/retweet/:id`', function (done) {
+    twit.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, reply) {
+      checkReply(err, reply)
+
+      var retweetId = reply.id_str
+      assert(retweetId)
+
+      twit.post('statuses/destroy/:id', { id: retweetId }, function (err, reply, response) {
+        checkReply(err, reply)
+
+        done()
+      })
+    })
+  })
+
+  // 1.1.8 usage
+  it('GET `users/suggestions/:slug`', function (done) {
+    twit.get('users/suggestions/:slug', { slug: 'funny' }, function (err, reply, res) {
+      checkReply(err, reply)
+      assert.equal(reply.slug, 'funny')
+      done()
+    })
+  })
+
+  // 1.1.8 usage
+  it('GET `users/suggestions/:slug/members`', function (done) {
+    twit.get('users/suggestions/:slug/members', { slug: 'funny' }, function (err, reply, res) {
+      checkReply(err, reply)
+
+      assert(reply[0].id_str)
+      assert(reply[0].screen_name)
+
+      done()
+    })
+  })
+
+  // 1.1.8 usage
+  it('GET `geo/id/:place_id`', function (done) {
+    var placeId = 'df51dec6f4ee2b2c'
+
+    twit.get('geo/id/:place_id', { place_id: placeId }, function (err, reply, res) {
+      checkReply(err, reply)
+
+      assert(reply.country)
+      assert(reply.bounding_box)
+      assert.equal(reply.id, placeId)
+
+      done()
+    })
+  })
 })
 
 /**
@@ -263,7 +324,7 @@ describe('REST API', function () {
  * @param  {object} reply reply object received from twitter
  */
 function checkReply (err, reply) {
-  assert.equal(err, null)
+  assert.equal(err, null, 'reply err:'+util.inspect(err, true, 10, true))
   assert.equal(typeof reply, 'object')
 }
 
