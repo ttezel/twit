@@ -45,9 +45,23 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
 })
 
 //
-//  retweet a tweet with id '241259202004267009'
+//  retweet a tweet with id '343360866131001345'
 //
-T.post('statuses/retweet/241259202004267009', function(err, reply) {
+T.post('statuses/retweet/:id', { id: '343360866131001345' } function (err, reply) {
+  //  ...
+})
+
+//
+//  destroy a tweet with id '343360866131001345'
+//
+T.post('statuses/destroy/:id', { id: '343360866131001345' } function (err, reply) {
+  //  ...
+})
+
+//
+// get `funny` twitter users
+//
+T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, reply) {
   //  ...
 })
 
