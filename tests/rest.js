@@ -194,6 +194,23 @@ describe('REST API', function () {
     })
   })
 
+  it('GET `search/tweets` with count set to 100', function (done) {
+    var params = {
+      q: 'happy',
+      count: 100
+    }
+
+    twit.get('search/tweets', params, function (err, reply, res) {
+      checkReply(err, reply)
+      console.log('\nnumber of tweets from search:', reply.statuses.length)
+      // twitter won't always send back 100 tweets if we ask for 100,
+      // but make sure it's close to 100
+      assert(reply.statuses.length > 95)
+
+      done()
+    })
+  })
+
   it('GET `direct_messages`', function (done) {
     twit.get('direct_messages', function (err, reply, response) {
       checkReply(err, reply)
