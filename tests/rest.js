@@ -220,7 +220,6 @@ describe('REST API', function () {
 
     twit.get('search/tweets', params, function (err, reply) {
       checkReply(err, reply)
-      console.log('reply', util.inspect(reply.statuses[0], true, 10, true))
 
       done()
     })
