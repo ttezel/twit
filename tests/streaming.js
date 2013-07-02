@@ -81,6 +81,17 @@ describe('Streaming API', function () {
     exports.checkStream(stream, done)
   })
 
+  it('statuses/filter using `track` and `language`', function (done) {
+    var params = {
+      track: '#apple',
+      language: 'en'
+    }
+
+    var stream = twit.stream('statuses/filter', params)
+
+    exports.checkStream(stream, done)
+  })
+
   it('stopping & restarting the stream works', function (done) {
     var stream = twit.stream('statuses/sample')
 
