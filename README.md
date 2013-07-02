@@ -94,6 +94,15 @@ stream.on('tweet', function (tweet) {
   console.log(tweet)
 })
 
+//
+// filter the public stream by english tweets containing `#apple`
+//
+var stream = twit.stream('statuses/filter', { track: '#apple', language: 'en' })
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet)
+})
+
 ```
 
 # twit API:
