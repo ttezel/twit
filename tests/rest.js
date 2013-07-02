@@ -213,6 +213,19 @@ describe('REST API', function () {
     })
   })
 
+  it('GET `search/tweets` with geocode', function (done) {
+    var params = {
+      q: 'apple', geocode: [ '37.781157', '-122.398720', '1mi' ]
+    }
+
+    twit.get('search/tweets', params, function (err, reply) {
+      checkReply(err, reply)
+      console.log('reply', util.inspect(reply.statuses[0], true, 10, true))
+
+      done()
+    })
+  })
+
   it('GET `direct_messages`', function (done) {
     twit.get('direct_messages', function (err, reply, response) {
       checkReply(err, reply)
