@@ -47,14 +47,14 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
 //
 //  retweet a tweet with id '343360866131001345'
 //
-T.post('statuses/retweet/:id', { id: '343360866131001345' } function (err, reply) {
+T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, reply) {
   //  ...
 })
 
 //
 //  destroy a tweet with id '343360866131001345'
 //
-T.post('statuses/destroy/:id', { id: '343360866131001345' } function (err, reply) {
+T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, reply) {
   //  ...
 })
 
