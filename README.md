@@ -107,7 +107,7 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
-Just 3 methods. They cover the full twitter API.
+Just 3 methods to access the full twitter API.
 
 ##`T.get(path, [params], callback)`         
 GET any of the REST API Endpoints.
@@ -117,6 +117,12 @@ POST any of the REST API Endpoints.
 
 ##`T.stream(path, [params])`               
 Use this with the Streaming API.
+
+##`T.getAuth()`
+Get the client's authentication tokens.
+
+##`T.setAuth(tokens)`
+Update the client's authentication tokens.
 
 Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
