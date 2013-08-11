@@ -264,7 +264,7 @@ describe('REST API', function () {
     twit.get('search/tweets', { q: 'apple' }, function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
-      
+
       var tweet = reply.statuses[0]
       checkTweet(tweet)
 
@@ -346,11 +346,59 @@ describe('REST API', function () {
       done()
     })
   })
+
+  describe('error handling', function () {
+    describe('handling errors from the twitter api', function () {
+      it('should callback with an Error object with all the info', function (done) {
+        var twit = new Twit({
+          consumer_key: 'a',
+          consumer_secret: 'b',
+          access_token: 'c',
+          access_token_secret: 'd'
+        })
+        twit.get('account/verify_credentials', function (err, reply, res) {
+          assert(err instanceof Error)
+          assert(err.statusCode === 401)
+          assert(err.code > 0)
+          assert(err.message.match(/token/))
+          assert(err.twitterReply)
+          assert(err.allErrors)
+          assert(!reply)
+          assert(!res)
+          done()
+        })
+      })
+    })
+    describe('handling other errors', function () {
+      it('should just forward them', function (done) {
+        var twit = new Twit(config);
+
+        var fakeError = new Error('derp')
+
+        // stub the makeRequest function to throw a fake error
+        var OARequest = require('../lib/oarequest')
+        var orig = OARequest.prototype.makeRequest
+        OARequest.prototype.makeRequest = function (cb) {
+          cb(fakeError);
+        }
+
+        twit.get('account/verify_credentials', function (err, reply, res) {
+          assert(err === fakeError)
+
+          // restore stub
+          OARequest.prototype.makeRequest = orig
+
+          done()
+        })
+      })
+    })
+  })
+
 })
 
 /**
  * Basic validation to verify we have no error and reply is an object
- * 
+ *
  * @param  {error} err   error object (or null)
  * @param  {object} reply reply object received from twitter
  */
@@ -370,7 +418,7 @@ function checkResponse (response) {
 
 /**
  * validate that @tweet is a tweet object
- * 
+ *
  * @param  {object} tweet `tweet` object received from twitter
  */
 function checkTweet (tweet) {
@@ -385,7 +433,7 @@ function checkTweet (tweet) {
 
 /**
  * Validate that @dm is a direct message object
- * 
+ *
  * @param  {object} dm `direct message` object received from twitter
  */
 function checkDm (dm) {
