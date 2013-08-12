@@ -29,7 +29,7 @@ var T = new Twit({
 T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
   //  ...
 })
-      
+
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
@@ -41,7 +41,7 @@ T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(er
 //  get the list of user id's that follow @tolga_tezel
 //
 T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
-  //  ...    
+  //  ...
 })
 
 //
@@ -73,9 +73,9 @@ var stream = T.stream('statuses/sample')
 stream.on('tweet', function (tweet) {
   console.log(tweet)
 })
-      
+
 //
-//  filter the twitter public stream by the word 'mango'. 
+//  filter the twitter public stream by the word 'mango'.
 //
 var stream = T.stream('statuses/filter', { track: 'mango' })
 
@@ -109,22 +109,22 @@ stream.on('tweet', function (tweet) {
 
 Just 3 methods to access the full twitter API.
 
-##`T.get(path, [params], callback)`         
+##`T.get(path, [params], callback)`
 GET any of the REST API Endpoints.
 
-##`T.post(path, [params], callback)`        
+##`T.post(path, [params], callback)`
 POST any of the REST API Endpoints.
 
-##`T.stream(path, [params])`               
+##`T.stream(path, [params])`
 Use this with the Streaming API.
+
+Note: When specifying `path` values, omit the `.json` at the end (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
 ##`T.getAuth()`
 Get the client's authentication tokens.
 
 ##`T.setAuth(tokens)`
 Update the client's authentication tokens.
-
-Note: Omit the `.json` from `path` (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
 ###params
 
@@ -268,7 +268,7 @@ stream.on('friends', function (friendsMsg) {
 
 ##event: 'user_event'
 
-Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).  
+Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).
 See the Twitter docs for more information on each event's structure.
 
 ```javascript
@@ -277,7 +277,7 @@ stream.on('user_event', function (eventMsg) {
 })
 ```
 
-In addition, the following user stream events are provided for you to listen on: 
+In addition, the following user stream events are provided for you to listen on:
 
 * `blocked`
 * `unblocked`
@@ -359,7 +359,7 @@ The example is a twitter bot named [RTD2](https://twitter.com/#!/iRTD2) written 
 
 -------
 
-## License 
+## License
 
 (The MIT License)
 
@@ -394,8 +394,8 @@ THE SOFTWARE.
 
 ###0.1.5
 
-  * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns 
-    immediately with the `EventEmitter` that you can listen on. The `Usage` section in 
+  * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns
+    immediately with the `EventEmitter` that you can listen on. The `Usage` section in
     the Readme.md has been updated. Read it.
 
 
