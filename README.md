@@ -118,7 +118,7 @@ POST any of the REST API Endpoints.
 ##`T.stream(path, [params])`
 Use this with the Streaming API.
 
-Note: When specifying `path` values, omit the `.json` at the end (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
+**Note**: When specifying `path` values, omit the `.json` at the end (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
 
 ##`T.getAuth()`
 Get the client's authentication tokens.
