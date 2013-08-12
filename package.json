@@ -1,23 +1,33 @@
 {
-    "name": "twit"
-  , "description": "Twitter API client for node (REST & Streaming)"
-  , "version": "1.1.8"
-  , "author": "Tolga Tezel"
-  , "keywords": ["twitter", "api", "rest", "stream", "streaming", "oauth"]
-  , "dependencies": {
-      "oauth": "0.9.9"
-    }
-  , "devDependencies": {
-      "mocha": "1.8.1"
-    , "colors": "0.6.x"
+  "name": "twit",
+  "description": "Twitter API client for node (REST & Streaming)",
+  "version": "1.1.9",
+  "author": "Tolga Tezel",
+  "keywords": [
+    "twitter",
+    "api",
+    "rest",
+    "stream",
+    "streaming",
+    "oauth"
+  ],
+  "dependencies": {
+    "oauth": "0.9.9"
+  },
+  "devDependencies": {
+    "mocha": "1.8.1",
+    "colors": "0.6.x",
+    "memwatch": "~0.2.2"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "main": "./lib/twitter",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ttezel/twit.git"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests/* -t 30000 -R spec"
   }
-  , "engines": { "node": ">=0.6.0" }
-  , "main": "./lib/twitter"
-  , "repository": {
-        "type": "git"
-      , "url": "http://github.com/ttezel/twit.git"
-    }
-  , "scripts": {
-      "test": "./node_modules/.bin/mocha tests/* -t 30000 -R spec"
-    }
 }
