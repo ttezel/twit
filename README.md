@@ -266,6 +266,16 @@ stream.on('friends', function (friendsMsg) {
 })
 ```
 
+##event: 'direct_message'
+
+Emitted when a direct message is sent to the user.  Unfortunately, Twitter has not documented this event for user streams.
+
+```javascript
+stream.on('direct_message', function (dmMsg) {
+  //...
+})
+```
+
 ##event: 'user_event'
 
 Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).
