@@ -8,7 +8,6 @@ Supports both the **REST** and **Streaming** API.
 
 ```
 npm install twit
-
 ```
 
 ##Usage:
@@ -268,10 +267,10 @@ stream.on('friends', function (friendsMsg) {
 
 ##event: 'direct_message'
 
-Emitted when a direct message is sent to the user.  Unfortunately, Twitter has not documented this event for user streams.
+Emitted when a direct message is sent to the user. Unfortunately, Twitter has not documented this event for user streams.
 
 ```javascript
-stream.on('direct_message', function (dmMsg) {
+stream.on('direct_message', function (directMsg) {
   //...
 })
 ```
@@ -340,7 +339,7 @@ Go here to create an app and get OAuth credentials (if you haven't already): htt
 
 #How do I run the tests?
 
-Create a `config.js` at the root of the `twit` folder. It should export the oauth credentials. It should look something like this:
+Create two files: `config1.js` and `config2.js` at the root of the `twit` folder. They should contain two different sets of oauth credentials for twit to use (two accounts are needed for testing interactions). They should both look something like this:
 
 ```
 module.exports = {
