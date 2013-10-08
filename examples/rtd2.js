@@ -3,16 +3,16 @@
 //  Also makes new friends and prunes its followings.
 //
 var Bot = require('./bot')
-  , config = require('../config');
+  , config1 = require('../config1');
 
-var bot = new Bot(config);
+var bot = new Bot(config1);
 
 console.log('RTD2: Running.');
 
 //get date string for today's date (e.g. '2011-01-01')
 function datestring () {
   var d = new Date(Date.now() - 5*60*60*1000);  //est timezone
-  return d.getUTCFullYear()   + '-' 
+  return d.getUTCFullYear()   + '-'
      +  (d.getUTCMonth() + 1) + '-'
      +   d.getDate();
 };
@@ -23,7 +23,7 @@ setInterval(function() {
     console.log('\n# followers:' + reply.ids.length.toString());
   });
   var rand = Math.random();
-  
+
   if(rand <= 0.10) {      //  tweet popular github tweet
     var params = {
         q: 'github.com/'
@@ -32,22 +32,22 @@ setInterval(function() {
     };
     bot.twit.get('search', params, function (err, reply) {
       if(err) return handleError(err);
-      
+
       var max = 0, popular;
-      
+
       var tweets = reply.results
         , i = tweets.length;
-      
+
       while(i--) {
         var tweet = tweets[i]
           , popularity = tweet.metadata.recent_retweets;
-          
+
         if(popularity > max) {
           max = popularity;
           popular = tweet.text;
         }
       }
-      
+
       bot.tweet(popular, function (err, reply) {
         if(err) return handleError(err);
 
@@ -62,9 +62,9 @@ setInterval(function() {
       console.log('\nMingle: followed @' + name);
     });
   } else {                  //  prune a friend
-    bot.prune(function(err, reply) { 
+    bot.prune(function(err, reply) {
       if(err) return handleError(err);
-      
+
       var name = reply.screen_name
       console.log('\nPrune: unfollowed @'+ name);
     });
