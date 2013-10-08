@@ -77,9 +77,11 @@ describe('REST API', function () {
 
       var text = reply.text
 
-      var destroyRoute = 'statuses/destroy/'+reply.id_str
+      assert(reply.id_str)
 
-      twit.post(destroyRoute, function (err, reply, response) {
+      console.log('id_str', reply.id_str)
+
+      twit.post('statuses/destroy/:id', { id: reply.id_str }, function (err, reply, response) {
         checkReply(err, reply)
         checkTweet(reply)
         assert.equal(reply.text, text)
@@ -297,16 +299,28 @@ describe('REST API', function () {
 
   // 1.1.8 usage
   it('POST `statuses/retweet/:id`', function (done) {
-    twit.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, reply) {
+    // search for a tweet to retweet
+    twit.get('search/tweets', { q: 'banana' }, function (err, reply, response) {
       checkReply(err, reply)
+      assert.ok(reply.statuses)
 
-      var retweetId = reply.id_str
-      assert(retweetId)
+      var tweet = reply.statuses[0]
+      checkTweet(tweet)
 
-      twit.post('statuses/destroy/:id', { id: retweetId }, function (err, reply, response) {
+      var tweetId = tweet.id_str
+      assert(tweetId)
+
+      twit.post('statuses/retweet/:id', { id: tweetId }, function (err, reply) {
         checkReply(err, reply)
 
-        done()
+        var retweetId = reply.id_str
+        assert(retweetId)
+
+        twit.post('statuses/destroy/:id', { id: retweetId }, function (err, reply, response) {
+          checkReply(err, reply)
+
+          done()
+        })
       })
     })
   })
