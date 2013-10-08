@@ -17,7 +17,8 @@
   "devDependencies": {
     "mocha": "1.8.1",
     "colors": "0.6.x",
-    "memwatch": "~0.2.2"
+    "memwatch": "0.2.2",
+    "async": "0.2.9"
   },
   "engines": {
     "node": ">=0.6.0"
