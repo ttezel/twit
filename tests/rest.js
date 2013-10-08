@@ -1,10 +1,10 @@
 var assert = require('assert')
   , Twit = require('../lib/twitter')
-  , config = require('../config')
+  , config1 = require('../config1')
   , util = require('util')
 
 describe('REST API', function () {
-  var twit = new Twit(config)
+  var twit = new Twit(config1)
 
   it('GET `account/verify_credentials`', function (done) {
     twit.get('account/verify_credentials', function (err, reply, response) {
@@ -91,8 +91,8 @@ describe('REST API', function () {
     })
   })
 
-  it('POST `statuses/update` with \'Hi!\' works', function (done) {
-    var params = { status: 'Hi!' }
+  it('POST `statuses/update` with \'Hi!!\' works', function (done) {
+    var params = { status: 'Hi!!' }
 
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
@@ -229,7 +229,7 @@ describe('REST API', function () {
     twit.get('direct_messages', function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(Array.isArray(reply))
-      checkDm(reply[0])
+      exports.checkDm(reply[0])
 
       checkResponse(response)
 
@@ -371,7 +371,7 @@ describe('REST API', function () {
     })
     describe('handling other errors', function () {
       it('should just forward them', function (done) {
-        var twit = new Twit(config);
+        var twit = new Twit(config1);
 
         var fakeError = new Error('derp')
 
@@ -436,7 +436,7 @@ function checkTweet (tweet) {
  *
  * @param  {object} dm `direct message` object received from twitter
  */
-function checkDm (dm) {
+exports.checkDm = function checkDm (dm) {
   assert.ok(dm)
   assert.equal('string', typeof dm.id_str)
   assert.equal('string', typeof dm.text)
@@ -452,4 +452,6 @@ function checkDm (dm) {
   assert.ok(sender)
   assert.equal('string', typeof sender.id_str)
   assert.equal('string', typeof sender.screen_name)
+
+  assert.equal('string', typeof dm.text)
 }

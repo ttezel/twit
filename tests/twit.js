@@ -1,6 +1,6 @@
 var assert = require('assert')
   , Twit = require('../lib/twitter')
-  , config = require('../config')
+  , config1 = require('../config1')
 
 describe('twit', function () {
   describe('config', function () {
@@ -15,7 +15,7 @@ describe('twit', function () {
     it('throws when config is missing a required key', function (done) {
       assert.throws(function () {
         var twit = new Twit({
-          consumer_key: 'a'
+            consumer_key: 'a'
           , consumer_secret: 'a'
           , access_token: 'a'
         })
@@ -27,7 +27,7 @@ describe('twit', function () {
     it('throws when config provides all keys but they\'re empty strings', function (done) {
       assert.throws(function () {
         var twit = new Twit({
-          consumer_key: ''
+            consumer_key: ''
           , consumer_secret: ''
           , access_token: ''
           , access_token_secret: ''
@@ -61,12 +61,12 @@ describe('twit', function () {
       assert(twit.config.consumer_secret === 'y')
 
       // full update
-      twit.setAuth(config)
+      twit.setAuth(config1)
 
-      assert(twit.config.consumer_key === config.consumer_key)
-      assert(twit.config.consumer_secret === config.consumer_secret)
-      assert(twit.config.access_token === config.access_token)
-      assert(twit.config.access_token_secret === config.access_token_secret)
+      assert(twit.config.consumer_key === config1.consumer_key)
+      assert(twit.config.consumer_secret === config1.consumer_secret)
+      assert(twit.config.access_token === config1.access_token)
+      assert(twit.config.access_token_secret === config1.access_token_secret)
 
       twit.get('account/verify_credentials', function (err, reply, response) {
         assert(!err);

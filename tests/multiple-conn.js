@@ -1,5 +1,5 @@
 var Twit = require('../lib/twitter')
-  , config = require('../config')
+  , config1 = require('../config1')
   , colors = require('colors')
 
 /*
@@ -8,11 +8,11 @@ multiple connections sometimes, and sometimes not.
 
 Twitter is not consistent enough to merit running this every time
 and expecting extra streams to close. If running this test, increase
-the test timeout to make sure twitter sends back `disconnect` objects 
+the test timeout to make sure twitter sends back `disconnect` objects
 before the timeout.
  */
 describe.skip('multiple connections', function () {
-    var twit = new Twit(config)
+    var twit = new Twit(config1)
 
     var streamFoo = twit.stream('statuses/sample')
     var streamBar = twit.stream('statuses/sample')

@@ -1,6 +1,6 @@
 var assert = require('assert')
 var Twit = require('../lib/twitter')
-var config = require('../config')
+var config1 = require('../config1')
 var streaming = require('./streaming')
 
 //verify `friendsMsg` is a twitter 'friends' message object
@@ -13,7 +13,7 @@ function checkFriendsMsg (friendsMsg) {
 }
 
 describe('user events', function () {
-    var twit = new Twit(config)
+    var twit = new Twit(config1)
 
     it('friends', function (done) {
         var ustream = twit.stream('user')
@@ -23,7 +23,7 @@ describe('user events', function () {
 
         ustream.on('friends', function (friendsMsg) {
             checkFriendsMsg(friendsMsg)
-            
+
             ustream.stop()
             done()
         })
