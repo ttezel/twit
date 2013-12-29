@@ -12,7 +12,7 @@
     "oauth"
   ],
   "dependencies": {
-    "oauth": "0.9.9"
+    "oauth": "~0.9.9"
   },
   "devDependencies": {
     "mocha": "1.8.1",
@@ -29,6 +29,6 @@
     "url": "http://github.com/ttezel/twit.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/* -t 30000 -R spec"
+    "test": "mocha tests/* -t 30000 -R spec"
   }
 }

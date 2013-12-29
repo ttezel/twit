@@ -1,7 +1,13 @@
 var assert = require('assert')
   , Twit = require('../lib/twitter')
-  , config1 = require('../config1')
+  , config1 = {
+        consumer_key: 'KIuDryUZ4WVj3JKm4Ke70w',
+        consumer_secret: 'lSNlWEsWmId1lq7dAltDIPRAdfEqJSPZJtQ6FfhOAY',
+        access_token: '18002455-1vZoBBoofmzMKocUTMY1xwp5sIzdkzzCxWKrJ3LRR',
+        access_token_secret: 'gYiJv2FrG54c3EyF2UlvF5WIynnvsp5iUtee8xp6Wmxip'
+     }
   , util = require('util')
+  , fs = require('fs');
 
 describe('REST API', function () {
   var twit = new Twit(config1)
@@ -49,6 +55,13 @@ describe('REST API', function () {
       done()
     })
   })
+  
+  it('POST `statuses/update_with_media`', function(done) {
+	twit.updateWithMedia('Pew pew pew!', fs.readFileSync('./cat.jpg'), function(err, response) {
+		console.log(arguments);
+		done();
+	});  
+  });
 
   it('POST `statuses/destroy:id`', function (done) {
     var destroyRoute = 'statuses/destroy/'+tweetId
