@@ -2,6 +2,7 @@ var assert = require('assert')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
   , util = require('util')
+  , async = require('async')
 
 describe('REST API', function () {
   var twit = new Twit(config1)
@@ -359,6 +360,43 @@ describe('REST API', function () {
 
       done()
     })
+  })
+
+  it('POST `direct_messages/new`', function (done) {
+    var dmId
+
+    async.series({
+      postDm: function (next) {
+
+        var dmParams = {
+          screen_name: 'tolga_tezel',
+          text: 'hey this is a direct message from twit! :)'
+        }
+        // post a direct message from the sender's account
+        twit.post('direct_messages/new', dmParams, function (err, reply) {
+          assert(!err, err)
+          assert(reply)
+
+          dmId = reply.id_str
+
+          exports.checkDm(reply)
+
+          assert.equal(reply.text, dmParams.text)
+          assert(dmId)
+
+          return next()
+        })
+      },
+      deleteDm: function (next) {
+        twit.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
+          assert(!err, err)
+          exports.checkDm(reply)
+          assert.equal(reply.id, dmId)
+
+          return next()
+        })
+      }
+    }, done)
   })
 
   describe('error handling', function () {
