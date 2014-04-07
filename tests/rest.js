@@ -401,7 +401,7 @@ describe('REST API', function () {
 
   describe('error handling', function () {
     describe('handling errors from the twitter api', function () {
-      it('should callback with an Error object with all the info', function (done) {
+      it('should callback with an Error object with all the info and a response object', function (done) {
         var twit = new Twit({
           consumer_key: 'a',
           consumer_secret: 'b',
@@ -416,7 +416,7 @@ describe('REST API', function () {
           assert(err.twitterReply)
           assert(err.allErrors)
           assert(!reply)
-          assert(!res)
+          checkResponse(res);
           done()
         })
       })
