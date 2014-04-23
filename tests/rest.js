@@ -5,7 +5,9 @@ var assert = require('assert')
   , async = require('async')
 
 describe('REST API', function () {
-  var twit = new Twit(config1)
+  before(function () {
+    var twit = new Twit(config1);
+  })
 
   it('GET `account/verify_credentials`', function (done) {
     twit.get('account/verify_credentials', function (err, reply, response) {
@@ -473,7 +475,7 @@ function checkResponse (response) {
  *
  * @param  {object} tweet `tweet` object received from twitter
  */
-function checkTweet (tweet) {
+exports.checkTweet = function checkTweet (tweet) {
   assert.ok(tweet)
   assert.equal('string', typeof tweet.id_str, 'id_str wasnt string:'+tweet.id_str)
   assert.equal('string', typeof tweet.text)
@@ -507,3 +509,7 @@ exports.checkDm = function checkDm (dm) {
 
   assert.equal('string', typeof dm.text)
 }
+
+exports.assertTweetHasText = function (tweet, text) {
+   assert(tweet.text.toLowerCase().indexOf(text) !== -1, 'expected to find '+text+' in text: '+tweet.text);
+ }
