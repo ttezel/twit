@@ -1,33 +1,61 @@
-var Twit = require('../lib/twitter')
-  , config1 = require('../config1')
-  , colors = require('colors')
+var assert = require('assert');
+
+var Twit = require('../lib/twitter');
+var config1 = require('../config1');
+var colors = require('colors');
+var restTest = require('./rest.js');
 
 /*
-skip this test unless specifically needed, since twitter tolerates
-multiple connections sometimes, and sometimes not.
-
-Twitter is not consistent enough to merit running this every time
-and expecting extra streams to close. If running this test, increase
-the test timeout to make sure twitter sends back `disconnect` objects
-before the timeout.
+  Don't run these tests often otherwise Twitter will rate limit you
  */
+
 describe.skip('multiple connections', function () {
-    var twit = new Twit(config1)
+  it('results in one of the streams closing', function (done) {
+    var twit = new Twit(config1);
+    var streamFoo = twit.stream('statuses/sample');
+    var streamBar = twit.stream('statuses/sample');
 
-    var streamFoo = twit.stream('statuses/sample')
-    var streamBar = twit.stream('statuses/sample')
+    streamFoo.on('disconnect', function (disconnect) {
+      assert.equal(typeof disconnect, 'object');
+      assert.equal(streamFoo.abortedBy, 'twit-client');
+      done();
+    });
 
-    it('results in one of the streams closing', function (done) {
-        streamFoo.on('disconnect', function (disconnect) {
-          assert.equal(typeof disconnect, 'object')
-          assert.equal(streamFoo.abortedBy, 'twit-client')
-          done()
+    streamBar.on('disconnect', function (disconnect) {
+      assert.equal(typeof disconnect, 'object');
+      assert.equal(streamBar.abortedBy, 'twit-client');
+      done();
+    });
+  });
+});
+
+describe.skip('Managing multiple streams legally', function () {
+  this.timeout(60000);
+  it('updating track keywords without losing data', function (done) {
+    var twit = new Twit(config1);
+    var stream1 = twit.stream('statuses/filter', { track: ['#no'] });
+
+    stream1.once('tweet', function (tweet) {
+      console.log('got tweet from first stream')
+      restTest.checkTweet(tweet);
+      restTest.assertTweetHasText(tweet, '#no');
+
+      // update our track list and initiate a new connection
+      var stream2 = twit.stream('statuses/filter', { track: ['#fun'] });
+
+      stream2.once('connected', function (res) {
+        console.log('second stream connected')
+        // stop the first stream immediately
+        stream1.stop();
+        assert.equal(res.statusCode, 200)
+
+        stream2.once('tweet', function (tweet) {
+          restTest.checkTweet(tweet);
+
+          restTest.assertTweetHasText(tweet, '#fun');
+          return done();
         })
-
-        streamBar.on('disconnect', function (disconnect) {
-          assert.equal(typeof disconnect, 'object')
-          assert.equal(streamBar.abortedBy, 'twit-client')
-          done()
-        })
-    })
-})
+      });
+    });
+  });
+});
