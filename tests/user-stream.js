@@ -13,7 +13,9 @@ function checkFriendsMsg (friendsMsg) {
 }
 
 describe('user events', function () {
-    var twit = new Twit(config1)
+    before(function () {
+        var twit = new Twit(config1);
+    });
 
     it('friends', function (done) {
         var ustream = twit.stream('user')
