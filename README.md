@@ -214,6 +214,15 @@ stream.on('connect', function (request) {
   //...
 })
 ```
+##event: 'connected'
+
+Emitted when the response is received from Twitter. The http `response` object is emitted.
+
+```javascript
+stream.on('connected', function (response) {
+  //...
+})
+```
 
 ##event: 'reconnect'
 

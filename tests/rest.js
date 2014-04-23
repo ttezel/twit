@@ -5,8 +5,10 @@ var assert = require('assert')
   , async = require('async')
 
 describe('REST API', function () {
+  var twit = null
+
   before(function () {
-    var twit = new Twit(config1);
+    twit = new Twit(config1);
   })
 
   it('GET `account/verify_credentials`', function (done) {
@@ -475,7 +477,7 @@ function checkResponse (response) {
  *
  * @param  {object} tweet `tweet` object received from twitter
  */
-exports.checkTweet = function checkTweet (tweet) {
+var checkTweet = exports.checkTweet = function (tweet) {
   assert.ok(tweet)
   assert.equal('string', typeof tweet.id_str, 'id_str wasnt string:'+tweet.id_str)
   assert.equal('string', typeof tweet.text)
