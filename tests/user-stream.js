@@ -13,8 +13,10 @@ function checkFriendsMsg (friendsMsg) {
 }
 
 describe('user events', function () {
+    var twit;
+
     before(function () {
-        var twit = new Twit(config1);
+        twit = new Twit(config1);
     });
 
     it('friends', function (done) {
