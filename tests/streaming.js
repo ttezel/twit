@@ -7,9 +7,6 @@ var assert = require('assert')
   , async = require('async')
   , restTest = require('./rest')
 
-var twit = new Twit(config1);
-var twit2 = new Twit(config2)
-
 /**
  * Stop the stream and check the tweet we got back.
  * Call @done on completion.
@@ -18,10 +15,10 @@ var twit2 = new Twit(config2)
  * @param  {Function} done   completion callback
  */
 exports.checkStream = function (stream, done) {
-  stream.on('connect', function () {
+  stream.once('connected', function () {
     console.log('\nconnected'.grey)
 
-    stream.on('tweet', function (tweet) {
+    stream.once('tweet', function (tweet) {
       assert.equal(null, stream.abortedBy)
 
       stream.stop()
@@ -41,24 +38,28 @@ exports.checkStream = function (stream, done) {
 describe('Streaming API', function () {
 
   it('statuses/sample', function (done) {
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/sample')
 
     exports.checkStream(stream, done)
   })
 
   it('statuses/filter using `track`', function (done) {
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/filter', { track: 'apple' })
 
     exports.checkStream(stream, done)
   })
 
   it('statuses/filter using `location`', function (done) {
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/filter', { locations: '-122.75,36.8,121.75,37.8,-74,40,73,41' })
 
     exports.checkStream(stream, done)
   })
 
   it('statuses/filter using `location` array for San Francisco', function (done) {
+    var twit = new Twit(config1);
     var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
 
     var stream = twit.stream('statuses/filter', { locations: sanFrancisco })
@@ -67,6 +68,7 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `location` array for San Francisco and New York', function (done) {
+    var twit = new Twit(config1);
     var params = {
       locations: [ '-122.75', '36.8', '121.75', '37.8', '-74', '40', '73', '41' ]
     }
@@ -77,8 +79,9 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `track` array', function (done) {
+    var twit = new Twit(config1);
     var params = {
-      track: [ 'spring', 'summer', 'fall', 'winter' ]
+      track: [ 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep' ]
     }
 
     var stream = twit.stream('statuses/filter', params)
@@ -87,8 +90,9 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `track` and `language`', function (done) {
+    var twit = new Twit(config1);
     var params = {
-      track: '#apple',
+      track: [ '#apple', 'google', 'twitter', 'facebook', 'happy', 'party', ':)' ],
       language: 'en'
     }
 
@@ -98,6 +102,7 @@ describe('Streaming API', function () {
   })
 
   it('stopping & restarting the stream works', function (done) {
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/sample')
 
     //stop the stream after 2 seconds
@@ -110,7 +115,7 @@ describe('Streaming API', function () {
 
     //after 3 seconds, start the stream, and stop after 'connect'
     setTimeout(function () {
-      stream.on('connect', function (req) {
+      stream.once('connected', function (req) {
         util.puts('\nrestarted stream')
         stream.stop()
         assert.equal('twit-client', stream.abortedBy)
@@ -124,6 +129,7 @@ describe('Streaming API', function () {
   })
 
   it('stopping & restarting stream emits to previously assigned callbacks', function (done) {
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/sample')
 
     var started = false
@@ -176,10 +182,13 @@ describe('streaming API events', function () {
     var receiverScreenName
 
     var dmId
+    var twit, twit2
 
     before(function (done) {
       // before we send direct messages the user receiving the msg
       // has to follow the sender
+      twit = new Twit(config1);
+      twit2 = new Twit(config2);
 
       async.parallel({
         // get sender screen name and set it for tests to use
@@ -235,9 +244,10 @@ describe('streaming API events', function () {
 
       async.parallel({
         listenForDm: function (parNext) {
+          console.log('\nlistening for DMs')
           // listen for direct_message event and check DM once it's received
-          receiverStream.on('direct_message', function (directMsg) {
-
+          receiverStream.once('direct_message', function (directMsg) {
+            console.log('got DM')
             restTest.checkDm(directMsg.direct_message)
 
             assert.equal(directMsg.direct_message.text, dmParams.text)
@@ -250,16 +260,17 @@ describe('streaming API events', function () {
         },
         sendDm: function (parNext) {
           // post a direct message from the sender's account
+          console.log('posting DM')
           twit.post('direct_messages/new', dmParams, function (err, reply) {
             assert(!err, err)
             assert(reply)
 
             dmId = reply.id_str
+            assert(dmId)
 
             restTest.checkDm(reply)
 
             assert.equal(reply.text, dmParams.text)
-            assert(dmId)
 
             return parNext()
           })

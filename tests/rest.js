@@ -172,14 +172,14 @@ describe('REST API', function () {
     })
   })
 
-  it('GET `search/tweets` { q: "banana since:2011-11-11" }', function (done) {
-    var params = { q: 'banana since:2011-11-11', count: 100 }
+  it('GET `search/tweets` { q: "fun since:2011-11-11" }', function (done) {
+    var params = { q: 'fun since:2011-11-11', count: 100 }
     twit.get('search/tweets', params, function (err, reply, response) {
       checkReply(err, reply)
       assert.ok(reply.statuses)
       checkTweet(reply.statuses[0])
 
-      console.log('\nnumber of banana statuses:', reply.statuses.length)
+      console.log('\nnumber of fun statuses:', reply.statuses.length)
 
       checkResponse(response)
 
