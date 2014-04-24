@@ -214,6 +214,7 @@ stream.on('connect', function (request) {
   //...
 })
 ```
+
 ##event: 'connected'
 
 Emitted when the response is received from Twitter. The http `response` object is emitted.
@@ -402,6 +403,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###1.1.14
+  * Emit `connected` event upon receiving the response from twitter
 
 ###1.0.0
   * now to stop and start the stream, use `stream.stop()` and `stream.start()` instead of emitting the `start` and `stop` events
