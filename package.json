@@ -29,6 +29,6 @@
     "url": "http://github.com/ttezel/twit.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/* -t 30000 -R spec"
+    "test": "./node_modules/.bin/mocha tests/* -t 60000 -R spec"
   }
 }
