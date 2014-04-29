@@ -111,7 +111,7 @@ GET any of the REST API endpoints.
 
 **path**
 
-The endpoint to hit. When specifying `path` values, omit the `.json` at the end (i.e. use `'search/tweets'` instead of `'search/tweets.json'`).
+The endpoint to hit. When specifying `path` values, omit the **'.json'** at the end (i.e. use **'search/tweets'** instead of **'search/tweets.json'**).
 
 **params**
 
