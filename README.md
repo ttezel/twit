@@ -25,43 +25,43 @@ var T = new Twit({
 //
 //  tweet 'hello world!'
 //
-T.post('statuses/update', { status: 'hello world!' }, function(err, reply) {
-  //  ...
+T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
+  console.log(data)
 })
 
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(err, reply) {
-  //  ...
+T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(err, data, response) {
+  console.log(data)
 })
 
 //
 //  get the list of user id's that follow @tolga_tezel
 //
-T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, reply) {
-  //  ...
+T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, response) {
+  console.log(data)
 })
 
 //
 //  retweet a tweet with id '343360866131001345'
 //
-T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, reply) {
-  //  ...
+T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
+  console.log(data)
 })
 
 //
 //  destroy a tweet with id '343360866131001345'
 //
-T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, reply) {
-  //  ...
+T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, data, response) {
+  console.log(data)
 })
 
 //
 // get `funny` twitter users
 //
-T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, reply) {
-  //  ...
+T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, response) {
+  console.log(data)
 })
 
 //
@@ -106,18 +106,27 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
-Just 3 methods to access the full twitter API.
-
 ##`T.get(path, [params], callback)`
-GET any of the REST API Endpoints.
+GET any of the REST API endpoints.
+
+**path**
+
+The endpoint to hit. When specifying `path` values, omit the `.json` at the end (i.e. use `'search/tweets'` instead of `'search/tweets.json'`).
+
+**params**
+
+(Optional) parameters for the request.
+
+**callback**
+
+`function (err, data, response)`
+
+- `data` is the parsed data received from Twitter.
+- `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) received from Twitter.
 
 ##`T.post(path, [params], callback)`
-POST any of the REST API Endpoints.
 
-##`T.stream(path, [params])`
-Use this with the Streaming API.
-
-**Note**: When specifying `path` values, omit the `.json` at the end (i.e. use `'statuses/sample'` instead of `'statuses/sample.json'`).
+POST any of the REST API endpoints. Same usage as `T.get()`.
 
 ##`T.getAuth()`
 Get the client's authentication tokens.
@@ -125,16 +134,19 @@ Get the client's authentication tokens.
 ##`T.setAuth(tokens)`
 Update the client's authentication tokens.
 
-###params
+##`T.stream(path, [params])`
+Use this with the Streaming API.
 
-Params is an optional object, allowing you to pass in parameters to Twitter when making a request. Any Arrays passed into `params` get converted to comma-separated strings, allowing you to do requests like:
+**params**
+
+(Optional) parameters for the request. Any Arrays passed in `params` get converted to comma-separated strings, allowing you to do requests like:
 
 ```javascript
 //
 // I only want to see tweets about my favorite fruits
 //
 
-//same result as doing { track: 'bananas,oranges,strawberries' }
+// same result as doing { track: 'bananas,oranges,strawberries' }
 var stream = T.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
 
 stream.on('tweet', function (tweet) {
