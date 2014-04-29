@@ -147,7 +147,7 @@ Streaming endpoint to hit. One of:
 - **'user'**
 - **'site'**
 
-For a description of each Streaming endpoint, see the [Twitter API docs](https://dev.twitter.com/docs/api/1.1).
+For a description of each Streaming endpoint, see the [Twitter API docs](https://dev.twitter.com/docs/api/1.1#334).
 
 **params**
 
