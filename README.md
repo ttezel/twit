@@ -139,9 +139,15 @@ Use this with the Streaming API.
 
 **path**
 
-* If `path` is **'user'**, the User stream of the authenticated user will be streamed.
-* If `path` is **'site'**, the Site stream of the authenticated application will be streamed.
-* If `path` is anything other than **'user'** or **'site'**, the Public stream will be streamed.
+Streaming endpoint to hit. One of:
+
+- **'statuses/filter'**
+- **'statuses/sample'**
+- **'statuses/firehose'**
+- **'user'**
+- **'site'**
+
+For a description of each Streaming endpoint, see the [Twitter API docs](https://dev.twitter.com/docs/api/1.1).
 
 **params**
 
