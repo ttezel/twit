@@ -137,6 +137,12 @@ Update the client's authentication tokens.
 ##`T.stream(path, [params])`
 Use this with the Streaming API.
 
+**path**
+
+* If `path` is `'user'`, the User stream of the authenticated user will be streamed.
+* If `path` is `'site'`, the Site stream of the authenticated application will be streamed.
+* If `path` is anything other than `'user'` or `'site'`, the Public stream will be streamed.
+
 **params**
 
 (Optional) parameters for the request. Any Arrays passed in `params` get converted to comma-separated strings, allowing you to do requests like:
@@ -157,13 +163,6 @@ stream.on('tweet', function (tweet) {
 # Using the Streaming API
 
 `T.stream(path, [params])` keeps the connection alive, and returns an `EventEmitter`.
-
-###path
-
-
-* If `path` is `'user'`, the User stream of the authenticated user will be streamed.
-* If `path` is `'site'`, the Site stream of the authenticated application will be streamed.
-* If `path` is anything other than `'user'` or `'site'`, the Public stream will be streamed.
 
 The following events are emitted:
 
