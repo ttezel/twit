@@ -139,9 +139,9 @@ Use this with the Streaming API.
 
 **path**
 
-* If `path` is `'user'`, the User stream of the authenticated user will be streamed.
-* If `path` is `'site'`, the Site stream of the authenticated application will be streamed.
-* If `path` is anything other than `'user'` or `'site'`, the Public stream will be streamed.
+* If `path` is **'user'**, the User stream of the authenticated user will be streamed.
+* If `path` is **'site'**, the Site stream of the authenticated application will be streamed.
+* If `path` is anything other than **'user'** or **'site'**, the Public stream will be streamed.
 
 **params**
 
