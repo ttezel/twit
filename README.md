@@ -244,7 +244,7 @@ stream.on('connected', function (response) {
 
 ##event: 'reconnect'
 
-Emitted when a reconnection attempt is made to Twitter. The http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs. `Twit` follows Twitter's guidelines on reconnecting to the Streaming API.
+Emitted when a reconnection attempt to Twitter is scheduled. If Twitter is having problems or we get rate limited, we schedule a reconnect according to Twitter's [reconnection guidelines](https://dev.twitter.com/docs/streaming-apis/connecting). The last http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs.
 
 ```javascript
 stream.on('reconnect', function (request, response, connectInterval) {
