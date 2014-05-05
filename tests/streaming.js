@@ -32,7 +32,7 @@ exports.checkStream = function (stream, done) {
 
       done()
     })
-  })
+  });
 }
 
 describe('Streaming API', function () {
@@ -46,28 +46,20 @@ describe('Streaming API', function () {
 
   it('statuses/filter using `track`', function (done) {
     var twit = new Twit(config1);
-    var stream = twit.stream('statuses/filter', { track: 'apple' })
+    var stream = twit.stream('statuses/filter', { track: 'fun' })
 
     exports.checkStream(stream, done)
   })
 
-  it('statuses/filter using `location`', function (done) {
+  it('statuses/filter using `locations` string', function (done) {
     var twit = new Twit(config1);
-    var stream = twit.stream('statuses/filter', { locations: '-122.75,36.8,121.75,37.8,-74,40,73,41' })
+    var world = '-180,-90,180,90';
+    var stream = twit.stream('statuses/filter', { locations: world })
 
     exports.checkStream(stream, done)
   })
 
-  it('statuses/filter using `location` array for San Francisco', function (done) {
-    var twit = new Twit(config1);
-    var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
-
-    var stream = twit.stream('statuses/filter', { locations: sanFrancisco })
-
-    exports.checkStream(stream, done)
-  })
-
-  it('statuses/filter using `location` array for San Francisco and New York', function (done) {
+  it('statuses/filter using `locations` array for San Francisco and New York', function (done) {
     var twit = new Twit(config1);
     var params = {
       locations: [ '-122.75', '36.8', '121.75', '37.8', '-74', '40', '73', '41' ]
@@ -289,4 +281,44 @@ describe('streaming API events', function () {
         return done()
       })
     })
+})
+
+describe.skip('streaming reconnect', function (done) {
+  this.timeout(0);
+
+  it('correctly implements 420 backoff', function (done) {
+    var twit = new Twit(config1);
+
+    var stream = twit.stream('statuses/filter', { track: [ 'fun', 'yolo']});
+
+    var expectedInterval = 0;
+
+    var numReconnectsTested = 0;
+    var numReconnectsToTest = 3;
+
+    stream.on('connected', function (res) {
+      // simulate twitter closing the connection with 420 status
+      res.statusCode = 420;
+      stream.request.abort()
+
+      // wait a bit before before checking if our connect interval got set
+      setTimeout(function () {
+        expectedInterval = expectedInterval ? 2*expectedInterval : 60000;
+
+        // make sure our connect interval is correct
+        assert.equal(stream.connectInterval, expectedInterval);
+        console.log('420 rate limiting backoff:', stream.connectInterval);
+
+        // simulate `scheduleReconnect` timer being called
+        stream.keepAlive();
+        delete stream.scheduledReconnect
+
+        numReconnectsTested += 1;
+
+        if (numReconnectsTested === numReconnectsToTest) {
+          return done();
+        }
+      }, 100);
+    });
+  });
 })
