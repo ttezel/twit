@@ -15,23 +15,27 @@ var assert = require('assert')
  * @param  {Function} done   completion callback
  */
 exports.checkStream = function (stream, done) {
-  stream.once('connected', function () {
+  stream.on('connected', function () {
     console.log('\nconnected'.grey)
+  });
 
-    stream.once('tweet', function (tweet) {
-      assert.equal(null, stream.abortedBy)
+  stream.once('tweet', function (tweet) {
+    assert.equal(null, stream.abortedBy)
 
-      stream.stop()
+    stream.stop()
 
-      assert.equal('twit-client', stream.abortedBy)
-      assert.ok(tweet)
-      assert.equal('string', typeof tweet.text)
-      assert.equal('string', typeof tweet.id_str)
+    assert.equal('twit-client', stream.abortedBy)
+    assert.ok(tweet)
+    assert.equal('string', typeof tweet.text)
+    assert.equal('string', typeof tweet.id_str)
 
-      console.log(('\ntweet: '+tweet.text).grey)
+    console.log(('\ntweet: '+tweet.text).grey)
 
-      done()
-    })
+    done()
+  });
+
+  stream.on('reconnect', function (req, res) {
+    console.log('Got disconnected. Scheduling reconnect! statusCode:', res.statusCode)
   });
 }
 
@@ -45,7 +49,7 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `track`', function (done) {
-    var twit = new Twit(config1);
+    var twit = new Twit(config2);
     var stream = twit.stream('statuses/filter', { track: 'fun' })
 
     exports.checkStream(stream, done)
@@ -60,7 +64,7 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `locations` array for San Francisco and New York', function (done) {
-    var twit = new Twit(config1);
+    var twit = new Twit(config2);
     var params = {
       locations: [ '-122.75', '36.8', '121.75', '37.8', '-74', '40', '73', '41' ]
     }
@@ -159,7 +163,7 @@ describe('Streaming API', function () {
     })
 
     stream.on('reconnect', function (req, res, ival) {
-      console.log('reconnect', ival)
+      console.log('reconnect. statusCode:', res.statusCode, 'interval:', ival)
     })
 
     stream.on('connect', function (req) {
