@@ -1,7 +1,7 @@
 {
   "name": "twit",
   "description": "Twitter API client for node (REST & Streaming)",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "author": "Tolga Tezel",
   "keywords": [
     "twitter",
