@@ -58,6 +58,20 @@ T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, data
 })
 
 //
+//  favorite a tweet with id '343360866131001345'
+//
+T.post('favorites/create', { id: '343360866131001345' }, function (err, reply) {
+  //  ...
+})
+
+//
+//  destroy a favorite with id '343360866131001345'
+//
+T.post('favorites/destroy', { id: '343360866131001345' }, function (err, reply) {
+  //  ...
+})
+
+//
 // get `funny` twitter users
 //
 T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, response) {
