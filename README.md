@@ -339,6 +339,21 @@ stream.on('favorite', function (event) {
 })
 ```
 
+##event: 'error'
+
+Emitted when an API request or response error occurs.
+An `Error` object is emitted, with properties:
+
+```js
+{
+  message:      '...',  // error message
+  statusCode:   '...',  // statusCode from Twitter
+  code:         '...',  // error code from Twitter
+  twitterReply: '...',  // raw response data from Twitter
+  allErrors:    '...'   // array of errors returned from Twitter
+}
+```
+
 ##stream.stop()
 
 Call this function on the stream to stop streaming (closes the connection with Twitter).
