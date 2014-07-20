@@ -287,6 +287,27 @@ describe('streaming API events', function () {
     })
 })
 
+describe('streaming API bad request', function (done) {
+  it('emits an error for a 401 response', function (done) {
+    var badCredentials = {
+        consumer_key: 'a'
+      , consumer_secret: 'b'
+      , access_token: 'c'
+      , access_token_secret: 'd'
+    }
+
+    var twit = new Twit(badCredentials);
+
+    var stream = twit.stream('statuses/filter', { track : ['foo'] });
+
+    stream.on('error', function (err) {
+      assert.equal(err.response.statusCode, 401)
+
+      return done()
+    })
+  })
+})
+
 describe.skip('streaming reconnect', function (done) {
   this.timeout(0);
 
