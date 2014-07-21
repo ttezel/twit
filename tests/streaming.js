@@ -318,10 +318,14 @@ describe('streaming API events', function () {
           // Since we want to test listening on a DM event, destroy and recreate the
           // message now that we're connected and can listen for it.
           twit.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
-            assert(!err, err)
-            restTest.checkDm(reply)
-            assert.equal(reply.id, dmId)
-            console.log('deleted DM', dmId)
+
+            if (!err || err.statusCode !== 404) {
+              assert(!err, err)
+              restTest.checkDm(reply)
+              assert.equal(reply.id, dmId)
+              console.log('deleted DM', dmId)
+            }
+
             dmId = null
 
             sendDm()
