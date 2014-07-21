@@ -39,6 +39,20 @@ exports.checkStream = function (stream, done) {
   });
 }
 
+var generateRandomString = function (length) {
+  var length = length || 10
+  var ret = ''
+  for (var i = 0; i < length; i++) {
+    // use an easy set of unicode as an alphabet - twitter won't reformat them
+    // which makes testing easier
+    ret += String.fromCharCode(Math.floor(Math.random()*90) + 33)
+  }
+
+  ret = encodeURI(ret)
+
+  return ret
+}
+
 describe('Streaming API', function () {
 
   it('statuses/sample', function (done) {
@@ -49,6 +63,7 @@ describe('Streaming API', function () {
   })
 
   it('statuses/filter using `track`', function (done) {
+    this.timeout(120000)
     var twit = new Twit(config2);
     var stream = twit.stream('statuses/filter', { track: 'fun' })
 
@@ -98,7 +113,7 @@ describe('Streaming API', function () {
   })
 
   it('stopping & restarting the stream works', function (done) {
-    var twit = new Twit(config1);
+    var twit = new Twit(config2);
     var stream = twit.stream('statuses/sample')
 
     //stop the stream after 2 seconds
@@ -125,13 +140,13 @@ describe('Streaming API', function () {
   })
 
   it('stopping & restarting stream emits to previously assigned callbacks', function (done) {
-    var twit = new Twit(config1);
+    var twit = new Twit(config2);
     var stream = twit.stream('statuses/sample')
 
     var started = false
     var numTweets = 0
     stream.on('tweet', function (tweet) {
-      console.log('\n.')
+      process.stdout.write('.')
       if (!started) {
         started = true
         numTweets++
@@ -189,6 +204,7 @@ describe('streaming API events', function () {
       async.parallel({
         // get sender screen name and set it for tests to use
         getSenderScreenName: function (parNext) {
+          console.log('getting first screen_name')
           twit.get('account/verify_credentials', function (err, reply) {
             assert(!err, err)
 
@@ -202,6 +218,7 @@ describe('streaming API events', function () {
         },
         // get receiver screen name and set it for tests to use
         getReceiverScreenName: function (parNext) {
+          console.log('getting second screen_name')
           twit2.get('account/verify_credentials', function (err, reply) {
             assert(!err, err)
 
@@ -217,7 +234,7 @@ describe('streaming API events', function () {
         assert(!err, err)
 
         var followParams = { screen_name: senderScreenName }
-
+        console.log('making second user follow first one so first can DM')
         // make receiver (twit2) follow sender (twit)
         twit2.post('friendships/create', followParams, function (err, reply) {
           assert(!err, err)
@@ -229,60 +246,103 @@ describe('streaming API events', function () {
     })
 
     it('direct_message event', function (done) {
+      this.timeout(0);
 
-      var dmParams = {
-        screen_name: receiverScreenName,
-        text: 'direct message streaming event test! :-)'
+      var makeDmParams =  function () {
+        return {
+          screen_name: receiverScreenName,
+          text: 'direct message streaming event test! :-) ' + generateRandomString(10),
+          twit_options: {
+            retry: true
+          }
+        }
       }
+
+      var dmId = null
+      var dmsSent = []
 
       // start listening for user stream events
       var receiverStream = twit2.stream('user')
 
-      async.parallel({
-        listenForDm: function (parNext) {
-          console.log('\nlistening for DMs')
-          // listen for direct_message event and check DM once it's received
-          receiverStream.once('direct_message', function (directMsg) {
-            console.log('got DM')
-            restTest.checkDm(directMsg.direct_message)
+      receiverStream.on('reconnect', function (request, response, connectInterval) {
+        console.log('stream reconnect: response status code', response.statusCode, 'connecting in', connectInterval)
+      });
 
-            assert.equal(directMsg.direct_message.text, dmParams.text)
-            assert.equal(directMsg.direct_message.sender.screen_name, senderScreenName)
+      console.log('\nlistening for DMs')
+      // listen for direct_message event and check DM once it's received
+      receiverStream.once('direct_message', function (directMsg) {
+        console.log('got DM', directMsg.direct_message.text)
+        restTest.checkDm(directMsg.direct_message)
 
-            receiverStream.stop()
+        // make sure one of the DMs sent was found
+        // (we can send multiple DMs if our stream has to reconnect)
+        var sentDmFound = dmsSent.some(function (dm) {
+          return (
+            directMsg.direct_message.text === dm.text &&
+            directMsg.direct_message.sender.screen_name === dm.sender.screen_name
+          )
+        })
 
-            return parNext()
-          })
-        },
-        sendDm: function (parNext) {
-          // post a direct message from the sender's account
-          console.log('posting DM')
+        if (!sentDmFound) {
+          console.log('this DM doesnt match our test DMs - still waiting for a matching one.')
+        }
+
+        if (sentDmFound) {
+          receiverStream.stop()
+          return done()
+        }
+      })
+
+      receiverStream.on('connected', function () {
+        var sendDm = function () {
+          var dmParams = makeDmParams()
+
           twit.post('direct_messages/new', dmParams, function (err, reply) {
             assert(!err, err)
             assert(reply)
+            restTest.checkDm(reply)
+
+            // we will check this dm against the reply recieved in the message event
+            dmsSent.push(reply)
+
+            console.log('posted DM, dmId:', reply.text, reply.id_str)
 
             dmId = reply.id_str
             assert(dmId)
-
-            restTest.checkDm(reply)
-
-            assert.equal(reply.text, dmParams.text)
-
-            return parNext()
           })
         }
-      }, done)
-    })
 
-    after(function (done) {
-      assert(dmId)
-      assert.equal(typeof dmId, 'string')
-      twit.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
-        assert(!err, err)
-        restTest.checkDm(reply)
-        assert.equal(reply.id, dmId)
+        if (dmId) {
+          console.log('stream is connected again. deleting dmId', dmId)
+          // if we already sent a DM it means we got disconnected and now the stream is reconnected.
+          // Since we want to test listening on a DM event, destroy and recreate the
+          // message now that we're connected and can listen for it.
+          twit.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
+            assert(!err, err)
+            restTest.checkDm(reply)
+            assert.equal(reply.id, dmId)
+            console.log('deleted DM', dmId)
+            dmId = null
 
-        return done()
+            sendDm()
+          })
+        } else {
+          // first execution of `connected` handler - send the DM
+          sendDm()
+        }
+      })
+
+      after(function (done) {
+        console.log('\ndeleting DM')
+        assert(dmId)
+        assert.equal(typeof dmId, 'string')
+        twit.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
+          assert(!err, err)
+          restTest.checkDm(reply)
+          assert.equal(reply.id, dmId)
+
+          return done()
+        })
       })
     })
 })
@@ -309,7 +369,6 @@ describe('streaming API bad request', function (done) {
 })
 
 describe.skip('streaming reconnect', function (done) {
-  this.timeout(0);
 
   it('correctly implements 420 backoff', function (done) {
     var twit = new Twit(config1);
