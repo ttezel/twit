@@ -40,7 +40,7 @@ setInterval(function() {
 
       while(i--) {
         var tweet = tweets[i]
-          , popularity = tweet.metadata.recent_retweets;
+          , popularity = tweet.retweet_count;
 
         if(popularity > max) {
           max = popularity;
