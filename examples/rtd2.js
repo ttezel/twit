@@ -30,7 +30,7 @@ setInterval(function() {
       , since: datestring()
       , result_type: 'mixed'
     };
-    bot.twit.get('search', params, function (err, reply) {
+    bot.twit.get('search/tweets', params, function (err, reply) {
       if(err) return handleError(err);
 
       var max = 0, popular;
