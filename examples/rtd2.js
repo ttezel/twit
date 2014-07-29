@@ -35,7 +35,7 @@ setInterval(function() {
 
       var max = 0, popular;
 
-      var tweets = reply.results
+      var tweets = reply.statuses
         , i = tweets.length;
 
       while(i--) {
