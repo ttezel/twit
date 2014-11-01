@@ -20,6 +20,57 @@ Bot.prototype.tweet = function (status, callback) {
   this.twit.post('statuses/update', { status: status }, callback);
 };
 
+Bot.prototype.searchFollow = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+	var randTweet = randIndex(tweets);
+	if(randTweet)
+	{
+		var target = randTweet.user.id_str;
+ 
+		self.twit.post('friendships/create', { id: target }, callback);
+	}
+	else
+		return callback(new Error('Could not find tweet.'));
+  });
+};
+
+//
+// retweet
+//
+Bot.prototype.retweet = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+    var randomTweet = randIndex(tweets);
+ 
+    self.twit.post('statuses/retweet/:id', { id: randomTweet.id_str }, callback);
+  });
+};
+ 
+//
+// favorite a tweet
+//
+Bot.prototype.favorite = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+    var randomTweet = randIndex(tweets);
+ 
+    self.twit.post('favorites/create', { id: randomTweet.id_str }, callback);
+  });
+};
+
 //
 //  choose a random friend of one of your followers, and follow that user
 //
