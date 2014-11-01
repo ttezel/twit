@@ -27,15 +27,9 @@ Bot.prototype.searchFollow = function (params, callback) {
     if(err) return callback(err);
  
     var tweets = reply.statuses;
-	var randTweet = randIndex(tweets);
-	if(randTweet)
-	{
-		var target = randTweet.user.id_str;
+    var target = randIndex(tweets).user.id_str;
  
-		self.twit.post('friendships/create', { id: target }, callback);
-	}
-	else
-		return callback(new Error('Could not find tweet.'));
+    self.twit.post('friendships/create', { id: target }, callback);
   });
 };
 
