@@ -27,9 +27,13 @@ Bot.prototype.searchFollow = function (params, callback) {
     if(err) return callback(err);
  
     var tweets = reply.statuses;
-    var target = randIndex(tweets).user.id_str;
+	var rTweet = randIndex(tweets)
+	if(typeof rTweet != 'undefined')
+	{
+		var target = rTweet.user.id_str;
  
-    self.twit.post('friendships/create', { id: target }, callback);
+		self.twit.post('friendships/create', { id: target }, callback);
+	}
   });
 };
 
@@ -44,8 +48,8 @@ Bot.prototype.retweet = function (params, callback) {
  
     var tweets = reply.statuses;
     var randomTweet = randIndex(tweets);
- 
-    self.twit.post('statuses/retweet/:id', { id: randomTweet.id_str }, callback);
+	if(typeof randomTweet != 'undefined')
+		self.twit.post('statuses/retweet/:id', { id: randomTweet.id_str }, callback);
   });
 };
  
@@ -60,8 +64,8 @@ Bot.prototype.favorite = function (params, callback) {
  
     var tweets = reply.statuses;
     var randomTweet = randIndex(tweets);
- 
-    self.twit.post('favorites/create', { id: randomTweet.id_str }, callback);
+	if(typeof randomTweet != 'undefined')
+		self.twit.post('favorites/create', { id: randomTweet.id_str }, callback);
   });
 };
 
