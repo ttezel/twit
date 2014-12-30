@@ -369,14 +369,14 @@ Note: there is no need to call `.start()` to begin streaming. `Twit.stream` call
 
 Anything in the Twitter API:
 
-* REST API Endpoints:       https://dev.twitter.com/docs/api
-* Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
-* User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
-* Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
+* REST API Endpoints:       https://dev.twitter.com/rest/public
+* Public stream endpoints:  https://dev.twitter.com/streaming/public
+* User stream endpoints:    https://dev.twitter.com/streaming/userstreams
+* Site stream endpoints:    https://dev.twitter.com/streaming/sitestreams
 
 -------
 
-Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+Go here to create an app and get OAuth credentials (if you haven't already): https://apps.twitter.com/app/new
 
 
 #How do I run the tests?
