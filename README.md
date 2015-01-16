@@ -410,6 +410,10 @@ The example is a twitter bot named [RTD2](https://twitter.com/#!/iRTD2) written 
 
 -------
 
+[FAQ](https://github.com/ttezel/twit/wiki/FAQ)
+
+-------
+
 ## License
 
 (The MIT License)
