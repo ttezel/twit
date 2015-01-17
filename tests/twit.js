@@ -69,7 +69,7 @@ describe('twit', function () {
       assert(twit.config.access_token_secret === config1.access_token_secret)
 
       twit.get('account/verify_credentials', function (err, reply, response) {
-        assert(!err);
+        assert(!err, err);
         assert(response.headers['x-rate-limit-limit'])
         done()
       })
