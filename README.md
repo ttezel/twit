@@ -102,6 +102,34 @@ stream.on('tweet', function (tweet) {
   console.log(tweet)
 })
 
+
+//
+// upload a media file and send a tweet
+//
+T.post(
+  'media/upload',
+  {
+    media: fs.readFileSync('/path/to/my/image.jpg', { encoding: 'base64' })
+  },
+  function(err, data, response) {
+
+    if (err === null) {
+
+      T.post(
+        'statuses/update',
+        {
+          status: 'hello world!',
+          media_ids: [data.media_id]
+        },
+        function(err, data, response) {
+          console.log(err);
+        }
+      );
+    }
+
+  }
+);
+
 ```
 
 # twit API:
