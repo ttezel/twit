@@ -113,13 +113,13 @@ T.post(
   },
   function(err, data, response) {
 
-    if (err === null) {
+    if (err === null && data.media_id_string) {
 
       T.post(
         'statuses/update',
         {
           status: 'hello world!',
-          media_ids: [data.media_id]
+          media_ids: [data.media_id_string]
         },
         function(err, data, response) {
           console.log(err);
