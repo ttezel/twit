@@ -32,7 +32,8 @@ T.post('statuses/update', { status: 'hello world!' }, function(err, data, respon
 //
 // upload media
 //
-T.mediaUpload({ media : fs.readFileSync('/path/toFile', {encoding : 'base64'})}, function(err, data, response) {
+var contents = fs.readFileSync('/path/toFile', {encoding : 'base64'});
+T.mediaUpload({ media : contents }, function(err, data, response) {
 	console.log(data);
 });
 
