@@ -30,6 +30,13 @@ T.post('statuses/update', { status: 'hello world!' }, function(err, data, respon
 })
 
 //
+// upload media
+//
+T.mediaUpload({ media : fs.readFileSync('/path/toFile', {encoding : 'base64'})}, function(err, data, response) {
+	console.log(data);
+});
+
+//
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
 T.get('search/tweets', { q: 'banana since:2011-11-11', count: 100 }, function(err, data, response) {
@@ -127,6 +134,10 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 ##`T.post(path, [params], callback)`
 
 POST any of the REST API endpoints. Same usage as `T.get()`.
+
+##`mediaUpload(params, callback)`
+
+POST base64 data to the MEDIA UPLOAD endpoint.
 
 ##`T.getAuth()`
 Get the client's authentication tokens.
