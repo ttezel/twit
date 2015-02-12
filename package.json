@@ -26,7 +26,7 @@
   "main": "./lib/twitter",
   "repository": {
     "type": "git",
-    "url": "http://github.com/ttezel/twit.git"
+    "url": "https://github.com/VoxFeed/twit.git"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests/* -t 70000 -R spec --bail"
