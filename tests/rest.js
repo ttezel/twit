@@ -1,6 +1,8 @@
 var assert = require('assert')
+  , fs = require('fs')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
+  , helpers = require('./helpers')
   , util = require('util')
   , async = require('async')
 
@@ -376,7 +378,7 @@ describe('REST API', function () {
 
         var dmParams = {
           screen_name: 'tolga_tezel',
-          text: 'hey this is a direct message from twit! :)'
+          text: 'hey this is a direct message from twit! :) ' + helpers.generateRandomString(15)
         }
         // post a direct message from the sender's account
         twit.post('direct_messages/new', dmParams, function (err, reply) {
@@ -403,6 +405,81 @@ describe('REST API', function () {
         })
       }
     }, done)
+  })
+
+  describe('Media Upload', function () {
+    var twit = null
+
+    before(function () {
+      twit = new Twit(config1)
+    })
+
+    it('Successfully POST media/upload with png', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/cutebird.png', { encoding: 'base64' })
+
+      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/png')
+        done()
+      })
+    })
+
+    it('Successfully POST media/upload with JPG', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/bigbird.jpg', { encoding: 'base64' })
+
+      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/jpeg')
+        done()
+      })
+    })
+
+    it('Succesfully POST media/upload with static GIF', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/twitterbird.gif', { encoding: 'base64' })
+
+      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/gif')
+        done()
+      })
+    })
+
+    it('Succesfully POST media/upload with animated GIF', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
+
+      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/animatedgif')
+        done()
+      })
+    })
+
+    it('POST animated GIF, then POST a tweet referencing the media', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
+
+      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/animatedgif')
+
+        var mediaIdStr = data.media_id_string
+        var params = { status: '#nofilter', media_ids: [mediaIdStr] }
+        twit.post('statuses/update', params, function (err, data, response) {
+          assert(!err, err)
+          tweet_id_str = data.id_str
+
+          twit.post('statuses/destroy/:id', { id: tweet_id_str }, function (err, data, response) {
+          checkReply(err, data)
+
+          done()
+        })
+        })
+      })
+    })
   })
 
   describe('error handling', function () {
@@ -512,6 +589,16 @@ exports.checkDm = function checkDm (dm) {
   assert.equal('string', typeof sender.screen_name)
 
   assert.equal('string', typeof dm.text)
+}
+
+exports.checkMediaUpload = function checkMediaUpload (data) {
+  assert.ok(data)
+  assert.ok(data.image)
+  assert.ok(data.image.w)
+  assert.ok(data.image.h)
+  assert.ok(data.media_id)
+  assert.equal('string', typeof data.media_id_string)
+  assert.ok(data.size)
 }
 
 exports.assertTweetHasText = function (tweet, text) {
