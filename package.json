@@ -15,10 +15,11 @@
     "oauth": "0.9.9"
   },
   "devDependencies": {
-    "mocha": "1.8.1",
+    "async": "0.2.9",
     "colors": "0.6.x",
+    "commander": "2.6.0",
     "memwatch": "0.2.2",
-    "async": "0.2.9"
+    "mocha": "2.1.0"
   },
   "engines": {
     "node": ">=0.6.0"
