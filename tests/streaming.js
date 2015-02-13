@@ -272,6 +272,7 @@ describe('streaming API direct message events', function () {
       }
 
       var dmIdsSent = []
+      var sentDmFound = false
 
       // start listening for user stream events
       var receiverStream = twitReceiver.stream('user')
@@ -283,17 +284,23 @@ describe('streaming API direct message events', function () {
       console.log('\nlistening for DMs')
       // listen for direct_message event and check DM once it's received
       receiverStream.on('direct_message', function (directMsg) {
-        console.log('got DM', directMsg.direct_message.text)
+        if (sentDmFound) {
+          // don't call `done` more than once
+          return
+        }
+
+        console.log('got DM event. id:', directMsg.direct_message.id_str)
         restTest.checkDm(directMsg.direct_message)
 
         // make sure one of the DMs sent was found
         // (we can send multiple DMs if our stream has to reconnect)
-        var sentDmFound = dmIdsSent.some(function (dmId) {
-          return dmId == directMsg.id_str
+        sentDmFound = dmIdsSent.some(function (dmId) {
+          return dmId == directMsg.direct_message.id_str
         })
 
         if (!sentDmFound) {
           console.log('this DM doesnt match our test DMs - still waiting for a matching one.')
+          console.log('dmIdsSent', dmIdsSent)
           return
         }
 
@@ -301,19 +308,34 @@ describe('streaming API direct message events', function () {
         return done()
       })
 
+      var lastTimeSent = null
+      var msToWait = 0
+
       receiverStream.on('connected', function () {
         var dmParams = makeDmParams()
-        console.log('sending a new DM:', dmParams.text)
 
-        twitSender.post('direct_messages/new', dmParams, function (err, reply) {
-          assert(!err, err)
-          assert(reply)
-          restTest.checkDm(reply)
-          // we will check this dm against the reply recieved in the message event
-          dmIdsSent.push(reply.id_str)
+        // use a setTimeout to enforce a debounce of 5 seconds.
+        // first call goes through without delay, then debounce kicks in.
+        setTimeout(function () {
+          msToWait = 5000 - (Date.now() - lastTimeSent)
+          if (msToWait < 0) {
+            msToWait = 0
+          }
 
-          console.log('successfully posted DM:', reply.text, reply.id_str)
-        })
+          console.log('sending a new DM:', dmParams.text, 'timeout:', msToWait)
+
+          lastTimeSent = Date.now()
+          twitSender.post('direct_messages/new', dmParams, function (err, reply) {
+            assert(!err, err)
+            assert(reply)
+            restTest.checkDm(reply)
+            assert(reply.id_str)
+            // we will check this dm against the reply recieved in the message event
+            dmIdsSent.push(reply.id_str)
+
+            console.log('successfully posted DM:', reply.text, reply.id_str)
+          })
+        }, msToWait)
       })
 
       // start listening for user events on receiver's account
@@ -330,7 +352,8 @@ describe('streaming API direct message events', function () {
           return function (next) {
             assert.equal(typeof dmId, 'string')
             console.log('\ndeleting DM', dmId)
-            twitSender.post('direct_messages/destroy', { id: dmId }, function (err, reply) {
+            var params = { id: dmId, twit_options: { retry: true } }
+            twitSender.post('direct_messages/destroy', params, function (err, reply) {
               assert(!err, err)
               restTest.checkDm(reply)
               assert.equal(reply.id, dmId)

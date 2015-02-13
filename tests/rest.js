@@ -41,7 +41,7 @@ describe('REST API', function () {
     , text = null
 
   it('POST `statuses/update`', function (done) {
-    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit' }
+    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit. ' + helpers.generateRandomString(7) }
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
 
@@ -467,12 +467,14 @@ describe('REST API', function () {
         assert.equal(data.image.image_type, 'image/animatedgif')
 
         var mediaIdStr = data.media_id_string
+        assert(mediaIdStr)
         var params = { status: '#nofilter', media_ids: [mediaIdStr] }
         twit.post('statuses/update', params, function (err, data, response) {
           assert(!err, err)
-          tweet_id_str = data.id_str
+          tweetIdStr = data.id_str
+          assert(tweetIdStr)
 
-          twit.post('statuses/destroy/:id', { id: tweet_id_str }, function (err, data, response) {
+          twit.post('statuses/destroy/:id', { id: tweetIdStr }, function (err, data, response) {
           checkReply(err, data)
 
           done()
