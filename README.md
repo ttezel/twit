@@ -65,6 +65,23 @@ T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, respons
 })
 
 //
+// post a tweet with media
+//
+var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+
+// first we must post the media to Twitter
+T.post('media/upload', { media: b64content }, function (err, data, response) {
+
+  // now we can reference the media and post a tweet (media will attach to the tweet)
+  var mediaIdStr = data.media_id_string
+  var params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
+
+  twit.post('statuses/update', params, function (err, data, response) {
+    console.log(data)
+  })
+})
+
+//
 //  stream a sample of public statuses
 //
 var stream = T.stream('statuses/sample')
