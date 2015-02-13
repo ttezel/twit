@@ -6,7 +6,7 @@ exports.generateRandomString = function generateRandomString (length) {
   for (var i = 0; i < length; i++) {
     // use an easy set of unicode as an alphabet - twitter won't reformat them
     // which makes testing easier
-    ret += String.fromCharCode(Math.floor(Math.random()*90) + 33)
+    ret += String.fromCharCode(Math.floor(Math.random()*128))
   }
 
   ret = encodeURI(ret)
