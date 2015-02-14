@@ -76,7 +76,7 @@ T.post('media/upload', { media: b64content }, function (err, data, response) {
   var mediaIdStr = data.media_id_string
   var params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
 
-  twit.post('statuses/update', params, function (err, data, response) {
+  T.post('statuses/update', params, function (err, data, response) {
     console.log(data)
   })
 })
