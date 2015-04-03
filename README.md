@@ -121,6 +121,20 @@ stream.on('tweet', function (tweet) {
 
 ```
 
+##App only auth:
+
+```javascript
+var Twit = require('twit')
+
+var T = new Twit({
+    consumer_key:         '...'
+  , consumer_secret:      '...'
+  , app_only_auth:        true
+},function() {
+    console.log('Bearer access token is ready, you can do your stuff now');
+})
+```
+
 # twit API:
 
 ##`T.get(path, [params], callback)`
