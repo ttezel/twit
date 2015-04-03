@@ -14,7 +14,8 @@ describe('App only auth', function () {
         var twit = new Twit(config,
             function () {
                 twit.get('application/rate_limit_status', function (err, resp) {
-                    assert(resp.resources.lists['/lists/list']);
+                    console.log('resp.resources.lists/lists/list] rate limit',resp.resources.lists['/lists/list']);
+                    assert(resp.resources.lists['/lists/list'].limit);
                     done();
 
                 });
