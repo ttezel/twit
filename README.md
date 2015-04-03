@@ -122,7 +122,7 @@ stream.on('tweet', function (tweet) {
 ```
 
 ##App only auth:
-
+See [Twitter docs](https://dev.twitter.com/oauth/application-only) about this mode
 ```javascript
 var Twit = require('twit')
 
