@@ -457,6 +457,10 @@ THE SOFTWARE.
 
 ## Changelog
 
+###1.1.20
+  * Implement support for POST /media/upload
+  * Reconnect logic fix for streaming; add stall abort/reconnect timeout on first connection attempt.
+
 ###1.1.14
   * Emit `connected` event upon receiving the response from twitter
 
