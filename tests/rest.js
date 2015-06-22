@@ -1,5 +1,6 @@
 var assert = require('assert')
   , fs = require('fs')
+  , sinon = require('sinon')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
   , helpers = require('./helpers')
@@ -37,37 +38,29 @@ describe('REST API', function () {
     })
   })
 
-  var tweetId = null
-    , text = null
 
-  it('POST `statuses/update`', function (done) {
+
+  it('POST `statuses/update` and POST `statuses/destroy:id`', function (done) {
+    var tweetId = null
+
     var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit. ' + helpers.generateRandomString(7) }
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
-
       console.log('\ntweeted:', reply.text)
       console.log('tweeted on:', reply.created_at)
 
       tweetId = reply.id_str
-      text = reply.text
-
+      assert(tweetId)
       checkResponse(response)
 
-      done()
-    })
-  })
+      var destroyRoute = 'statuses/destroy/'+tweetId
+      twit.post(destroyRoute, function (err, reply, response) {
+        checkReply(err, reply)
+        checkTweet(reply)
+        checkResponse(response)
 
-  it('POST `statuses/destroy:id`', function (done) {
-    var destroyRoute = 'statuses/destroy/'+tweetId
-
-    twit.post(destroyRoute, function (err, reply, response) {
-      checkReply(err, reply)
-      checkTweet(reply)
-      assert.equal(reply.text, text)
-
-      checkResponse(response)
-
-      done()
+        done()
+      })
     })
   })
 
@@ -500,7 +493,6 @@ describe('REST API', function () {
           assert(err.message.match(/token/))
           assert(err.twitterReply)
           assert(err.allErrors)
-          assert(!reply)
           assert(res)
           assert(res.headers)
           assert.equal(res.statusCode, 401)
@@ -509,23 +501,21 @@ describe('REST API', function () {
       })
     })
     describe('handling other errors', function () {
-      it('should just forward them', function (done) {
+      it('should just forward errors raised by underlying request lib', function (done) {
         var twit = new Twit(config1);
-
         var fakeError = new Error('derp')
 
-        // stub the makeRequest function to throw a fake error
-        var OARequest = require('../lib/oarequest')
-        var orig = OARequest.prototype.makeRequest
-        OARequest.prototype.makeRequest = function (cb) {
-          cb(fakeError);
+        var stubGet = function (params, cb) {
+          return cb(fakeError)
         }
+        var request = require('request')
+        sinon.stub(request, 'get', stubGet)
 
         twit.get('account/verify_credentials', function (err, reply, res) {
           assert(err === fakeError)
 
-          // restore stub
-          OARequest.prototype.makeRequest = orig
+          // restore request.get
+          request.get.restore()
 
           done()
         })
