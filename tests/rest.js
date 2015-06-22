@@ -236,12 +236,9 @@ describe('REST API', function () {
 
   it('GET `direct_messages`', function (done) {
     twit.get('direct_messages', function (err, reply, response) {
+      checkResponse(response)
       checkReply(err, reply)
       assert.ok(Array.isArray(reply))
-      exports.checkDm(reply[0])
-
-      checkResponse(response)
-
       done()
     })
   })
@@ -453,7 +450,9 @@ describe('REST API', function () {
       twit.post('media/upload', { media: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
-        assert.equal(data.image.image_type, 'image/animatedgif')
+        var expected_image_types = ['image/gif', 'image/animatedgif']
+        var image_type = data.image.image_type
+        assert.ok(expected_image_types.indexOf(image_type) !== -1, 'got unexpected image type:' + image_type)
         done()
       })
     })
@@ -464,21 +463,22 @@ describe('REST API', function () {
       twit.post('media/upload', { media: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
-        assert.equal(data.image.image_type, 'image/animatedgif')
+        var expected_image_types = ['image/gif', 'image/animatedgif']
+        var image_type = data.image.image_type
+        assert.ok(expected_image_types.indexOf(image_type) !== -1, 'got unexpected image type:' + image_type)
 
         var mediaIdStr = data.media_id_string
         assert(mediaIdStr)
         var params = { status: '#nofilter', media_ids: [mediaIdStr] }
         twit.post('statuses/update', params, function (err, data, response) {
           assert(!err, err)
-          tweetIdStr = data.id_str
+          var tweetIdStr = data.id_str
           assert(tweetIdStr)
 
-          twit.post('statuses/destroy/:id', { id: tweetIdStr }, function (err, data, response) {
-          checkReply(err, data)
-
-          done()
-        })
+          exports.req_with_retries(twit, 3, 'post', 'statuses/destroy/:id', { id: tweetIdStr }, [404], function (err, data, response) {
+            checkReply(err, data)
+            done()
+          })
         })
       })
     })
@@ -501,7 +501,9 @@ describe('REST API', function () {
           assert(err.twitterReply)
           assert(err.allErrors)
           assert(!reply)
-          checkResponse(res);
+          assert(res)
+          assert(res.headers)
+          assert.equal(res.statusCode, 401)
           done()
         })
       })
@@ -551,6 +553,7 @@ function checkReply (err, reply) {
 function checkResponse (response) {
   assert(response)
   assert(response.headers)
+  assert.equal(response.statusCode, 200)
 }
 
 /**
@@ -604,5 +607,15 @@ exports.checkMediaUpload = function checkMediaUpload (data) {
 }
 
 exports.assertTweetHasText = function (tweet, text) {
-   assert(tweet.text.toLowerCase().indexOf(text) !== -1, 'expected to find '+text+' in text: '+tweet.text);
- }
+  assert(tweet.text.toLowerCase().indexOf(text) !== -1, 'expected to find '+text+' in text: '+tweet.text);
+}
+
+exports.req_with_retries = function (twit_instance, num_tries, verb, path, params, status_codes_to_retry, cb) {
+  twit_instance[verb](path, params, function (err, data, response) {
+    if (!num_tries || (status_codes_to_retry.indexOf(response.statusCode) === -1)) {
+      return cb(err, data, response)
+    }
+
+    exports.req_with_retries(twit_instance, num_tries - 1, verb, path, params, status_codes_to_retry, cb)
+  })
+}
