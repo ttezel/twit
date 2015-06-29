@@ -4,6 +4,7 @@ var config1 = require('../config1');
 var Twit = require('../lib/twitter');
 var checkReply = require('./rest').checkReply;
 var checkResponse = require('./rest').checkResponse;
+var checkTweet = require('./rest').checkTweet;
 
 describe('REST API using app-only auth', function () {
   var twit = null
@@ -34,6 +35,19 @@ describe('REST API using app-only auth', function () {
       assert(body.resources.users)
       assert(body.resources.search)
       assert.equal(Object.keys(body.resources).length, 2)
+      done()
+    })
+  })
+
+  it('GET `search/tweets` { q: "a", since_id: 12345 }', function (done) {
+    var params = { q: 'a', since_id: 12345 }
+    twit.get('search/tweets', params, function (err, reply, response) {
+      checkReply(err, reply)
+      assert.ok(reply.statuses)
+      checkTweet(reply.statuses[0])
+
+      checkResponse(response)
+
       done()
     })
   })
