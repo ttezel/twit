@@ -15,8 +15,8 @@ describe('REST API', function () {
     twit = new Twit(config1);
   })
 
-  it('GET `application/rate_limit_status`', function (done) {
-    twit.get('application/rate_limit_status', function (err, reply, response) {
+  it('GET `account/verify_credentials`', function (done) {
+    twit.get('account/verify_credentials', function (err, reply, response) {
       checkReply(err, reply)
       assert.notEqual(reply.followers_count, undefined)
       assert.notEqual(reply.friends_count, undefined)
@@ -44,7 +44,9 @@ describe('REST API', function () {
   it('POST `statuses/update` and POST `statuses/destroy:id`', function (done) {
     var tweetId = null
 
-    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit. ' + helpers.generateRandomString(7) }
+    var params = {
+      status: '@tolga_tezel tweeting using github.com/ttezel/twit. ' + helpers.generateRandomString(7)
+    }
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
       console.log('\ntweeted:', reply.text)
@@ -53,10 +55,12 @@ describe('REST API', function () {
       assert(tweetId)
       checkResponse(response)
 
-      var destroyRoute = 'statuses/destroy/'+tweetId
-      twit.post(destroyRoute, function (err, reply, response) {
-        checkReply(err, reply)
-        checkTweet(reply)
+      var deleteParams = { id: tweetId }
+      // Try up to 2 times to delete the tweet.
+      // Even after a 200 response to statuses/update is returned, a delete might 404 so we retry.
+      exports.req_with_retries(twit, 2, 'post', 'statuses/destroy/:id', deleteParams, [404], function (err, body, response) {
+        checkReply(err, body)
+        checkTweet(body)
         checkResponse(response)
 
         done()
@@ -538,7 +542,7 @@ describe('REST API', function () {
  * @param  {error} err   error object (or null)
  * @param  {object} reply reply object received from twitter
  */
-function checkReply (err, reply) {
+var checkReply = exports.checkReply = function (err, reply) {
   assert.equal(err, null, 'reply err:'+util.inspect(err, true, 10, true))
   assert.equal(typeof reply, 'object')
 }
@@ -547,7 +551,7 @@ function checkReply (err, reply) {
  * check the http response object and its headers
  * @param  {object} response  http response object
  */
-function checkResponse (response) {
+var checkResponse = exports.checkResponse = function (response) {
   assert(response)
   assert(response.headers)
   assert.equal(response.statusCode, 200)
