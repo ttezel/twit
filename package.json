@@ -18,7 +18,6 @@
     "async": "0.2.9",
     "colors": "0.6.x",
     "commander": "2.6.0",
-    "memwatch": "0.2.2",
     "mocha": "2.1.0",
     "sinon": "1.15.4"
   },
