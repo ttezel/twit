@@ -123,6 +123,31 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
+##`var T = new Twit(config)`
+
+Create a `Twit` instance that can be used to make requests to Twitter's APIs.
+
+If authenticating with user context, `config` should be an object of the form:
+```
+{
+    consumer_key:         '...'
+  , consumer_secret:      '...'
+  , access_token:         '...'
+  , access_token_secret:  '...'
+}
+```
+
+If authenticating with application context, `config` should be an object of the form:
+```
+{
+    consumer_key:         '...'
+  , consumer_secret:      '...'
+  , app_only_auth:        true
+}
+```
+Note that Application-only auth will not allow you to perform requests to API endpoints requiring
+a user context, such as posting tweets. However, the endpoints available can have a higher rate limit.
+
 ##`T.get(path, [params], callback)`
 GET any of the REST API endpoints.
 
@@ -456,6 +481,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###2.0.0
+  * Implement Application-only auth
+  * Remove oauth module as a dependency
 
 ###1.1.20
   * Implement support for POST /media/upload
