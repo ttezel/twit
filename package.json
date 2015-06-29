@@ -12,14 +12,15 @@
     "oauth"
   ],
   "dependencies": {
-    "oauth": "0.9.9"
+    "request": "2.58.0"
   },
   "devDependencies": {
     "async": "0.2.9",
     "colors": "0.6.x",
     "commander": "2.6.0",
     "memwatch": "0.2.2",
-    "mocha": "2.1.0"
+    "mocha": "2.1.0",
+    "sinon": "1.15.4"
   },
   "engines": {
     "node": ">=0.6.0"
