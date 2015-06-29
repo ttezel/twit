@@ -70,7 +70,7 @@ T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, respons
 var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
 
 // first we must post the media to Twitter
-T.post('media/upload', { media: b64content }, function (err, data, response) {
+T.post('media/upload', { media_data: b64content }, function (err, data, response) {
 
   // now we can reference the media and post a tweet (media will attach to the tweet)
   var mediaIdStr = data.media_id_string
