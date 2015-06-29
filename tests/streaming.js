@@ -41,6 +41,11 @@ exports.checkStream = function (stream, done) {
   stream.on('reconnecting', function (req, res, connectInterval) {
     console.log('Got disconnected. Scheduling reconnect! statusCode:', res.statusCode, 'connectInterval', connectInterval)
   });
+
+  stream.on('error', function (err) {
+    console.log('Stream emitted an error', err)
+    return done(err)
+  })
 }
 
 /**
