@@ -1,4 +1,7 @@
 var assert = require('assert')
+  , http = require('http')
+  , EventEmitter = require('events').EventEmitter
+  , sinon = require('sinon')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
   , config2 = require('../config2')
@@ -21,11 +24,11 @@ exports.checkStream = function (stream, done) {
   });
 
   stream.once('tweet', function (tweet) {
-    assert.equal(null, stream.abortedBy)
+    assert.equal(null, stream._abortedBy)
 
     stream.stop()
 
-    assert.equal('twit-client', stream.abortedBy)
+    assert.equal('twit-client', stream._abortedBy)
     assert.ok(tweet)
     assert.equal('string', typeof tweet.text)
     assert.equal('string', typeof tweet.id_str)
@@ -35,8 +38,8 @@ exports.checkStream = function (stream, done) {
     done()
   });
 
-  stream.on('reconnect', function (req, res) {
-    console.log('Got disconnected. Scheduling reconnect! statusCode:', res.statusCode)
+  stream.on('reconnecting', function (req, res, connectInterval) {
+    console.log('Got disconnected. Scheduling reconnect! statusCode:', res.statusCode, 'connectInterval', connectInterval)
   });
 }
 
@@ -46,12 +49,12 @@ exports.checkStream = function (stream, done) {
  * @param  {object}   stream object returned by twit.stream()
  */
 exports.checkStreamStopState = function (stream) {
-  assert.strictEqual('twit-client', stream.abortedBy)
-  assert.strictEqual(stream.connectInterval, 0)
-  assert.strictEqual(stream.usedFirstReconnect, false)
+  assert.strictEqual('twit-client', stream._abortedBy)
+  assert.strictEqual(stream._connectInterval, 0)
+  assert.strictEqual(stream._usedFirstReconnect, false)
   assert.strictEqual(stream.request, undefined)
-  assert.strictEqual(stream.scheduledReconnect, null)
-  assert.strictEqual(stream.stallAbortTimeout, null)
+  assert.strictEqual(stream._scheduledReconnect, undefined)
+  assert.strictEqual(stream._stallAbortTimeout, undefined)
 }
 
 describe('Streaming API', function () {
@@ -93,7 +96,7 @@ describe('Streaming API', function () {
   it('statuses/filter using `track` array', function (done) {
     var twit = new Twit(config1);
     var params = {
-      track: [ 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep' ]
+      track: [ 'twitter', 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep' ]
     }
 
     var stream = twit.stream('statuses/filter', params)
@@ -104,7 +107,7 @@ describe('Streaming API', function () {
   it('statuses/filter using `track` and `language`', function (done) {
     var twit = new Twit(config1);
     var params = {
-      track: [ '#apple', 'google', 'twitter', 'facebook', 'happy', 'party', ':)' ],
+      track: [ 'twitter', '#apple', 'google', 'twitter', 'facebook', 'happy', 'party', ':)' ],
       language: 'en'
     }
 
@@ -119,7 +122,7 @@ describe('Streaming API', function () {
 
     //stop the stream after 2 seconds
     setTimeout(function () {
-      assert.equal(null, stream.abortedBy)
+      assert.equal(null, stream._abortedBy)
       stream.stop()
 
       exports.checkStreamStopState(stream)
@@ -264,22 +267,19 @@ describe('streaming API direct message events', function () {
       function makeDmParams () {
         return {
           screen_name: receiverScreenName,
-          text: helpers.generateRandomString(5) + ' direct message streaming event test! :-) ' + helpers.generateRandomString(20),
+          text: helpers.generateRandomString(10) + ' direct message streaming event test! :-) ' + helpers.generateRandomString(20),
           twit_options: {
             retry: true
           }
         }
       }
 
+      var dmIdsReceived = []
       var dmIdsSent = []
       var sentDmFound = false
 
       // start listening for user stream events
       var receiverStream = twitReceiver.stream('user')
-
-      receiverStream.on('reconnect', function (request, response, connectInterval) {
-        console.log('stream reconnect: response status code', response.statusCode, 'connecting in', connectInterval)
-      });
 
       console.log('\nlistening for DMs')
       // listen for direct_message event and check DM once it's received
@@ -291,6 +291,7 @@ describe('streaming API direct message events', function () {
 
         console.log('got DM event. id:', directMsg.direct_message.id_str)
         restTest.checkDm(directMsg.direct_message)
+        dmIdsReceived.push(directMsg.direct_message.id_str)
 
         // make sure one of the DMs sent was found
         // (we can send multiple DMs if our stream has to reconnect)
@@ -308,42 +309,30 @@ describe('streaming API direct message events', function () {
         return done()
       })
 
-      var lastTimeSent = null
+      var lastTimeSent = 0
       var msToWait = 0
+      var postDmInterval = null
 
       receiverStream.on('connected', function () {
         var dmParams = makeDmParams()
 
-        // use a setTimeout to enforce a debounce of 5 seconds.
-        // first call goes through without delay, then debounce kicks in.
-        setTimeout(function () {
-          msToWait = 5000 - (Date.now() - lastTimeSent)
-          if (msToWait < 0) {
-            msToWait = 0
+        console.log('sending a new DM:', dmParams.text)
+        twitSender.post('direct_messages/new', dmParams, function (err, reply) {
+          assert(!err, err)
+          assert(reply)
+          restTest.checkDm(reply)
+          assert(reply.id_str)
+          // we will check this dm against the reply recieved in the message event
+          dmIdsSent.push(reply.id_str)
+
+          console.log('successfully posted DM:', reply.text, reply.id_str)
+          if (dmIdsReceived.indexOf(reply.id_str) !== -1) {
+            // our response to the DM posting lost the race against the direct_message
+            // listener (we already got the event). So we can finish the test.
+            done()
           }
-
-          console.log('sending a new DM:', dmParams.text, 'timeout:', msToWait)
-
-          lastTimeSent = Date.now()
-          twitSender.post('direct_messages/new', dmParams, function (err, reply) {
-            assert(!err, err)
-            assert(reply)
-            restTest.checkDm(reply)
-            assert(reply.id_str)
-            // we will check this dm against the reply recieved in the message event
-            dmIdsSent.push(reply.id_str)
-
-            console.log('successfully posted DM:', reply.text, reply.id_str)
-          })
-        }, msToWait)
+        })
       })
-
-      // start listening for user events on receiver's account
-      var receiverStream = twitReceiver.stream('user')
-
-      receiverStream.on('reconnect', function (request, response, connectInterval) {
-        console.log('stream reconnect: response status code', response.statusCode, 'connecting in', connectInterval)
-      });
 
       after(function (done) {
         console.log('cleaning up DMs:', dmIdsSent)
@@ -380,48 +369,100 @@ describe('streaming API bad request', function (done) {
     var stream = twit.stream('statuses/filter', { track : ['foo'] });
 
     stream.on('error', function (err) {
-      assert.equal(err.response.statusCode, 401)
+      assert.equal(err.statusCode, 401)
+      assert(err.twitterReply)
 
       return done()
     })
   })
 })
 
-describe.skip('streaming reconnect', function (done) {
+describe('streaming reconnect', function (done) {
+  it('correctly implements connection closing backoff', function (done) {
+    var stubPost = function () {
+      var fakeRequest = new helpers.FakeRequest()
+      process.nextTick(function () {
+        fakeRequest.emit('close')
+      })
+      return fakeRequest
+    }
 
-  it('correctly implements 420 backoff', function (done) {
+    var request = require('request')
+    var stubPost = sinon.stub(request, 'post', stubPost)
+
     var twit = new Twit(config1);
-
     var stream = twit.stream('statuses/filter', { track: [ 'fun', 'yolo']});
 
-    var expectedInterval = 0;
+    var reconnects = [0, 250, 500, 750]
+    var reconnectCount = -1
 
-    var numReconnectsTested = 0;
-    var numReconnectsToTest = 3;
+    var testDone = false
 
-    stream.on('connected', function (res) {
-      // simulate twitter closing the connection with 420 status
-      res.statusCode = 420;
-      stream.request.abort()
+    stream.on('reconnect', function () {
+      if (testDone) {
+        return
+      }
+      reconnectCount += 1
+      var expectedInterval = reconnects[reconnectCount]
 
-      // wait a bit before before checking if our connect interval got set
-      setTimeout(function () {
-        expectedInterval = expectedInterval ? 2*expectedInterval : 60000;
+      // make sure our connect interval is correct
+      assert.equal(stream._connectInterval, expectedInterval);
 
-        // make sure our connect interval is correct
-        assert.equal(stream.connectInterval, expectedInterval);
-        console.log('420 rate limiting backoff:', stream.connectInterval);
+      // simulate immediate reconnect by forcing a new connection (`self._connectInterval` parameter unchanged)
+      stream._startPersistentConnection();
 
-        // simulate `scheduleReconnect` timer being called
-        stream.keepAlive();
-        delete stream.scheduledReconnect
+      if (reconnectCount === reconnects.length -1) {
+        // restore request.post
+        stubPost.restore()
+        testDone = true
+        return done();
+      }
+    });
+  });
 
-        numReconnectsTested += 1;
+  it('correctly implements 420 backoff', function (done) {
+    var stubPost = function () {
+      var fakeRequest = new helpers.FakeRequest()
+      process.nextTick(function () {
+        var fakeResponse = new helpers.FakeResponse(420)
+        fakeRequest.emit('response', fakeResponse)
+        fakeRequest.emit('close')
+      })
+      return fakeRequest
+    }
 
-        if (numReconnectsTested === numReconnectsToTest) {
-          return done();
-        }
-      }, 100);
+    var request = require('request')
+    var stubPost = sinon.stub(request, 'post', stubPost)
+
+    var twit = new Twit(config1);
+    var stream = twit.stream('statuses/filter', { track: [ 'fun', 'yolo']});
+
+    var reconnects = [60000, 120000, 240000, 480000]
+    var reconnectCount = -1
+    var testComplete = false
+
+    stream.on('reconnect', function (req, res, connectInterval) {
+      if (testComplete) {
+        // prevent race between last connection attempt firing a reconnect and us validating the final
+        // reconnect value in `reconnects`
+        return
+      }
+
+      reconnectCount += 1
+       var expectedInterval = reconnects[reconnectCount]
+
+      // make sure our connect interval is correct
+      assert.equal(stream._connectInterval, connectInterval);
+      assert.equal(stream._connectInterval, expectedInterval);
+      // simulate immediate reconnect by forcing a new connection (`self._connectInterval` parameter unchanged)
+      stream._startPersistentConnection();
+
+      if (reconnectCount === reconnects.length -1) {
+        // restore request.post
+        stubPost.restore()
+        testComplete = true
+        return done();
+      }
     });
   });
 })

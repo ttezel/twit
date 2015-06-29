@@ -20,10 +20,10 @@ describe('user events', function () {
     });
 
     it('friends', function (done) {
-        var ustream = twit.stream('user')
+        var ustream = twit.stream('user');
 
         //make sure we're connected to the right endpoint
-        assert.equal(ustream.path, 'https://userstream.twitter.com/1.1/user.json')
+        assert.equal(ustream.reqOpts.url, 'https://userstream.twitter.com/1.1/user.json')
 
         ustream.on('friends', function (friendsMsg) {
             checkFriendsMsg(friendsMsg)
@@ -44,5 +44,4 @@ describe('user events', function () {
             done()
         })
     })
-
 })

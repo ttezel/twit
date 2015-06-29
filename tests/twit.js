@@ -74,16 +74,5 @@ describe('twit', function () {
         done()
       })
     })
-
-    it('should create a new auth object', function () {
-      var oldAuth = twit.auth;
-
-      twit.setAuth({
-        consumer_key: 'a',
-        consumer_secret: 'b'
-      })
-
-      assert(twit.auth && twit.auth !== oldAuth)
-    })
   })
 });

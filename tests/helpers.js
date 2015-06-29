@@ -1,4 +1,28 @@
+var EventEmitter = require('events').EventEmitter;
+var stream = require('stream');
+var util = require('util');
 
+// Used to stub out calls to `request`.
+exports.FakeRequest = function () {
+  EventEmitter.call(this)
+}
+util.inherits(exports.FakeRequest, EventEmitter)
+exports.FakeRequest.prototype.destroy = function () {
+
+}
+
+// Used to stub out the http.IncomingMessage object emitted by the "response" event on `request`.
+exports.FakeResponse = function (statusCode) {
+  this.statusCode = statusCode
+  stream.Readable.call(this);
+}
+util.inherits(exports.FakeResponse, stream.Readable)
+exports.FakeResponse.prototype._read = function () {
+
+}
+exports.FakeResponse.prototype.destroy = function () {
+
+}
 
 exports.generateRandomString = function generateRandomString (length) {
   var length = length || 10

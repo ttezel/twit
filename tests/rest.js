@@ -1,4 +1,5 @@
 var assert = require('assert')
+  , EventEmitter = require('events').EventEmitter
   , fs = require('fs')
   , sinon = require('sinon')
   , Twit = require('../lib/twitter')
@@ -14,8 +15,8 @@ describe('REST API', function () {
     twit = new Twit(config1);
   })
 
-  it('GET `account/verify_credentials`', function (done) {
-    twit.get('account/verify_credentials', function (err, reply, response) {
+  it('GET `application/rate_limit_status`', function (done) {
+    twit.get('application/rate_limit_status', function (err, reply, response) {
       checkReply(err, reply)
       assert.notEqual(reply.followers_count, undefined)
       assert.notEqual(reply.friends_count, undefined)
@@ -47,7 +48,6 @@ describe('REST API', function () {
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
       console.log('\ntweeted:', reply.text)
-      console.log('tweeted on:', reply.created_at)
 
       tweetId = reply.id_str
       assert(tweetId)
@@ -65,21 +65,18 @@ describe('REST API', function () {
   })
 
   it('POST `statuses/update` with characters requiring escaping', function (done) {
-    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit :) !' }
+    var params = { status: '@tolga_tezel tweeting using github.com/ttezel/twit :) !' +  helpers.generateRandomString(15) }
 
     twit.post('statuses/update', params, function (err, reply, response) {
       checkReply(err, reply)
 
       console.log('\ntweeted:', reply.text)
-      console.log('tweeted on:', reply.created_at)
 
       checkResponse(response)
 
       var text = reply.text
 
       assert(reply.id_str)
-
-      console.log('id_str', reply.id_str)
 
       twit.post('statuses/destroy/:id', { id: reply.id_str }, function (err, reply, response) {
         checkReply(err, reply)
@@ -100,7 +97,6 @@ describe('REST API', function () {
       checkReply(err, reply)
 
       console.log('\ntweeted:', reply.text)
-      console.log('tweeted on:', reply.created_at)
 
       checkResponse(response)
 
@@ -407,10 +403,11 @@ describe('REST API', function () {
     it('Successfully POST media/upload with png', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/cutebird.png', { encoding: 'base64' })
 
-      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        assert.equal(response.statusCode, 200)
         assert(!err, err)
         exports.checkMediaUpload(data)
-        assert.equal(data.image.image_type, 'image/png')
+        assert(data.image.image_type == 'image/png' || data.image.image_type == 'image\/png')
         done()
       })
     })
@@ -418,7 +415,7 @@ describe('REST API', function () {
     it('Successfully POST media/upload with JPG', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/bigbird.jpg', { encoding: 'base64' })
 
-      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
         assert.equal(data.image.image_type, 'image/jpeg')
@@ -429,7 +426,7 @@ describe('REST API', function () {
     it('Succesfully POST media/upload with static GIF', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/twitterbird.gif', { encoding: 'base64' })
 
-      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
         assert.equal(data.image.image_type, 'image/gif')
@@ -440,7 +437,7 @@ describe('REST API', function () {
     it('Succesfully POST media/upload with animated GIF', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
 
-      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
         var expected_image_types = ['image/gif', 'image/animatedgif']
@@ -453,7 +450,7 @@ describe('REST API', function () {
     it('POST animated GIF, then POST a tweet referencing the media', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
 
-      twit.post('media/upload', { media: b64content }, function (err, data, response) {
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
         assert(!err, err)
         exports.checkMediaUpload(data)
         var expected_image_types = ['image/gif', 'image/animatedgif']
@@ -505,17 +502,27 @@ describe('REST API', function () {
         var twit = new Twit(config1);
         var fakeError = new Error('derp')
 
-        var stubGet = function (params, cb) {
-          return cb(fakeError)
+        var FakeRequest = function () {
+          EventEmitter.call(this)
         }
+        util.inherits(FakeRequest, EventEmitter)
+
+        var stubGet = function () {
+          var fakeRequest = new FakeRequest()
+          process.nextTick(function () {
+            fakeRequest.emit('error', fakeError)
+          })
+          return fakeRequest
+        }
+
         var request = require('request')
-        sinon.stub(request, 'get', stubGet)
+        var stubGet = sinon.stub(request, 'get', stubGet)
 
         twit.get('account/verify_credentials', function (err, reply, res) {
           assert(err === fakeError)
 
           // restore request.get
-          request.get.restore()
+          stubGet.restore()
 
           done()
         })
