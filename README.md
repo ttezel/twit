@@ -214,6 +214,16 @@ stream.on('tweet', function (tweet) {
 
 The following events are emitted:
 
+##event: 'message'
+
+Emitted each time an object is received in the stream. This is a catch-all event that can be used to process any data received in the stream, rather than using the more specific events documented below.
+
+```javascript
+stream.on('message', function (msg) {
+  //...
+})
+```
+
 ##event: 'tweet'
 
 Emitted each time a status (tweet) comes into the stream.
