@@ -1,6 +1,7 @@
 var assert = require('assert')
   , http = require('http')
   , EventEmitter = require('events').EventEmitter
+  , rewire = require('rewire')
   , sinon = require('sinon')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
@@ -378,6 +379,65 @@ describe('streaming API bad request', function (done) {
       assert(err.twitterReply)
 
       return done()
+    })
+  })
+})
+
+describe('streaming API `messages` event', function (done) {
+  var request = require('request');
+  var originalPost = request.post;
+  var RewiredTwit = rewire('../lib/twitter');
+  var RewiredStreamingApiConnection = rewire('../lib/streaming-api-connection');
+  var revertParser, revertTwit;
+
+  var MockParser = function () {
+    var self = this;
+    EventEmitter.call(self);
+    process.nextTick(function () {
+      self.emit('element', {scrub_geo: 'bar'})
+      self.emit('element', {limit: 'buzz'})
+    });
+  }
+  util.inherits(MockParser, EventEmitter);
+
+  before(function () {
+    revertTwit = RewiredTwit.__set__('StreamingAPIConnection', RewiredStreamingApiConnection);
+    revertParser = RewiredStreamingApiConnection.__set__('Parser', MockParser);
+
+    request.post = function () { return new helpers.FakeRequest() }
+  })
+
+  after(function () {
+    request.post = originalPost;
+    revertTwit();
+    revertParser();
+  })
+
+  it('is returned for 2 different event types', function (done) {
+    var twit = new RewiredTwit(config1);
+    var stream = twit.stream('statuses/sample');
+    var gotScrubGeo = false;
+    var gotLimit = false;
+    var numMessages = 0;
+
+    var maybeDone = function () {
+      if (gotScrubGeo && gotLimit && numMessages == 2) {
+        done()
+      }
+    }
+
+    stream.on('limit', function () {
+      gotLimit = true;
+      maybeDone();
+    });
+    stream.on('scrub_geo', function () {
+      gotScrubGeo = true;
+      maybeDone();
+    })
+
+    stream.on('message', function (msg) {
+      numMessages++;
+      maybeDone();
     })
   })
 })

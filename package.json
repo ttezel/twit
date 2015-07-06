@@ -19,6 +19,7 @@
     "colors": "0.6.x",
     "commander": "2.6.0",
     "mocha": "2.1.0",
+    "rewire": "2.3.4",
     "sinon": "1.15.4"
   },
   "engines": {
