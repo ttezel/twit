@@ -12,11 +12,17 @@ exports.FakeRequest.prototype.destroy = function () {
 }
 
 // Used to stub out the http.IncomingMessage object emitted by the "response" event on `request`.
-exports.FakeResponse = function (statusCode) {
-  this.statusCode = statusCode
+exports.FakeResponse = function (statusCode, body) {
+  if (!body) {
+    body = '';
+  }
+  this.statusCode = statusCode;
   stream.Readable.call(this);
+  this.push(body);
+  this.push(null);
 }
-util.inherits(exports.FakeResponse, stream.Readable)
+util.inherits(exports.FakeResponse, stream.Readable);
+
 exports.FakeResponse.prototype._read = function () {
 
 }
