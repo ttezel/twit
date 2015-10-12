@@ -531,3 +531,27 @@ describe('streaming reconnect', function (done) {
     });
   });
 })
+
+describe('Streaming API disconnect message', function (done) {
+  it('results in stopping the stream', function (done) {
+    var stubPost = function () {
+      var fakeRequest = new helpers.FakeRequest()
+      process.nextTick(function () {
+        var body = JSON.stringify({disconnect: true}) + '\r\n'
+        var fakeResponse = new helpers.FakeResponse(200, body)
+        fakeRequest.emit('response', fakeResponse)
+      })
+      return fakeRequest
+    }
+
+    var request = require('request')
+    var stubPost = sinon.stub(request, 'post', stubPost)
+
+    var twit = new Twit(config1);
+    var stream = twit.stream('statuses/filter', { track: ['fun']});
+
+    stream.on('disconnect', function (disconnMsg) {
+      done()
+    })
+  })
+})
