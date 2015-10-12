@@ -58,7 +58,6 @@ exports.checkStreamStopState = function (stream) {
   assert.strictEqual('twit-client', stream._abortedBy)
   assert.strictEqual(stream._connectInterval, 0)
   assert.strictEqual(stream._usedFirstReconnect, false)
-  assert.strictEqual(stream.request, undefined)
   assert.strictEqual(stream._scheduledReconnect, undefined)
   assert.strictEqual(stream._stallAbortTimeout, undefined)
 }
@@ -102,7 +101,7 @@ describe('Streaming API', function () {
   it('statuses/filter using `track` array', function (done) {
     var twit = new Twit(config1);
     var params = {
-      track: [ 'twitter', 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep' ]
+      track: [ 'twitter', 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep', 'fun' ]
     }
 
     var stream = twit.stream('statuses/filter', params)
