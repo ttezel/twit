@@ -101,7 +101,7 @@ describe('Streaming API', function () {
   it('statuses/filter using `track` array', function (done) {
     var twit = new Twit(config1);
     var params = {
-      track: [ 'twitter', 'spring', 'summer', 'fall', 'winter', 'weather', 'joy', 'laugh', 'sleep', 'fun' ]
+      track: [ 'twitter', ':)', 'fun' ]
     }
 
     var stream = twit.stream('statuses/filter', params)
@@ -544,13 +544,18 @@ describe('Streaming API disconnect message', function (done) {
     }
 
     var request = require('request')
-    var stubPost = sinon.stub(request, 'post', stubPost)
+    var origRequest = request.post
+    var stubs = sinon.collection
+    stubs.stub(request, 'post', stubPost)
 
     var twit = new Twit(config1);
     var stream = twit.stream('statuses/filter', { track: ['fun']});
 
     stream.on('disconnect', function (disconnMsg) {
-      done()
+      stream.stop();
+      // restore stub
+      request.post = origRequest
+      done();
     })
   })
 })
