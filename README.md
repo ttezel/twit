@@ -493,6 +493,11 @@ THE SOFTWARE.
 
 ## Changelog
 
+###2.1.1
+  * Strict-mode fixes (Twit can now be run with strict mode)
+  * Fix handling of disconect message from Twitter
+  * If Twitter returns a non-JSON-parseable fragment during streaming, emit 'parser-error' instead of 'error' (to discard fragments like "Internal Server Error")
+
 ###2.1.0
   * Add `message` event.
 
