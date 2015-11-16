@@ -189,7 +189,7 @@ Streaming endpoint to hit. One of:
 - **'user'**
 - **'site'**
 
-For a description of each Streaming endpoint, see the [Twitter API docs](https://dev.twitter.com/docs/api/1.1#334).
+For a description of each Streaming endpoint, see the [Twitter API docs](https://dev.twitter.com/streaming/overview).
 
 **params**
 
@@ -297,7 +297,7 @@ stream.on('connected', function (response) {
 
 ##event: 'reconnect'
 
-Emitted when a reconnection attempt to Twitter is scheduled. If Twitter is having problems or we get rate limited, we schedule a reconnect according to Twitter's [reconnection guidelines](https://dev.twitter.com/docs/streaming-apis/connecting). The last http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs.
+Emitted when a reconnection attempt to Twitter is scheduled. If Twitter is having problems or we get rate limited, we schedule a reconnect according to Twitter's [reconnection guidelines](https://dev.twitter.com/streaming/overview/connecting). The last http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs.
 
 ```javascript
 stream.on('reconnect', function (request, response, connectInterval) {
@@ -337,7 +337,7 @@ stream.on('user_withheld', function (withheldMsg) {
 
 ##event: 'friends'
 
-Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids.
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types#user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids.
 
 ```javascript
 stream.on('friends', function (friendsMsg) {
@@ -357,7 +357,7 @@ stream.on('direct_message', function (directMsg) {
 
 ##event: 'user_event'
 
-Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/docs/streaming-apis/messages#User_stream_messages).
+Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/streaming/overview/messages-types#Events_event).
 See the Twitter docs for more information on each event's structure.
 
 ```javascript
@@ -422,10 +422,10 @@ Note: there is no need to call `.start()` to begin streaming. `Twit.stream` call
 
 Anything in the Twitter API:
 
-* REST API Endpoints:       https://dev.twitter.com/docs/api
-* Public stream endpoints:  https://dev.twitter.com/docs/streaming-api/methods
-* User stream endpoints:    https://dev.twitter.com/docs/streaming-api/user-streams
-* Site stream endpoints:    https://dev.twitter.com/docs/streaming-api/site-streams
+* REST API Endpoints:       https://dev.twitter.com/overview/documentation
+* Public stream endpoints:  https://dev.twitter.com/streaming/public
+* User stream endpoints:    https://dev.twitter.com/streaming/userstreams
+* Site stream endpoints:    https://dev.twitter.com/streaming/sitestreams
 
 -------
 
