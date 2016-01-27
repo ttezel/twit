@@ -382,6 +382,7 @@ In addition, the following user stream events are provided for you to listen on:
 * `list_member_removed`
 * `list_user_subscribed`
 * `list_user_unsubscribed`
+* `quoted_tweet`
 * `unknown_user_event` (for an event that doesn't match any of the above)
 
 ###Example:
