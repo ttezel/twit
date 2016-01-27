@@ -494,6 +494,10 @@ THE SOFTWARE.
 
 ## Changelog
 
+###2.1.2
+  * Enable gzip on network traffic
+  * Add `quoted_tweet` event
+
 ###2.1.1
   * Strict-mode fixes (Twit can now be run with strict mode)
   * Fix handling of disconect message from Twitter

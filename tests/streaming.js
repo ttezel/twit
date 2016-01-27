@@ -9,8 +9,9 @@ var assert = require('assert')
   , colors = require('colors')
   , helpers = require('./helpers')
   , util = require('util')
+  , zlib = require('zlib')
   , async = require('async')
-  , restTest = require('./rest')
+  , restTest = require('./rest');
 
 /**
  * Stop the stream and check the tweet we got back.
@@ -132,18 +133,18 @@ describe('Streaming API', function () {
 
       exports.checkStreamStopState(stream)
 
-      util.puts('\nstopped stream')
+      console.log('\nstopped stream')
     }, 2000)
 
     //after 3 seconds, start the stream, and stop after 'connect'
     setTimeout(function () {
       stream.once('connected', function (req) {
-        util.puts('\nrestarted stream')
+        console.log('\nrestarted stream')
         stream.stop()
 
         exports.checkStreamStopState(stream)
 
-        util.puts('\nstopped stream')
+        console.log('\nstopped stream')
         done()
       })
 
@@ -529,17 +530,18 @@ describe('streaming reconnect', function (done) {
       }
     });
   });
-})
+});
 
 describe('Streaming API disconnect message', function (done) {
   it('results in stopping the stream', function (done) {
     var stubPost = function () {
       var fakeRequest = new helpers.FakeRequest()
       process.nextTick(function () {
-        var body = JSON.stringify({disconnect: true}) + '\r\n'
+        var body = zlib.gzipSync(JSON.stringify({disconnect: true}) + '\r\n')
         var fakeResponse = new helpers.FakeResponse(200, body)
-        fakeRequest.emit('response', fakeResponse)
-      })
+        fakeRequest.emit('response', fakeResponse);
+        fakeResponse.emit('close')
+      });
       return fakeRequest
     }
 
@@ -558,4 +560,4 @@ describe('Streaming API disconnect message', function (done) {
       done();
     })
   })
-})
+});
