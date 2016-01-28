@@ -494,6 +494,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+###2.1.3
+  * Fix bug in constructing HTTP requests for `account/update_profile_image` and `account/update_profile_background_image` paths.
+
 ###2.1.2
   * Enable gzip on network traffic
   * Add `quoted_tweet` event

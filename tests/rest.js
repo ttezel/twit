@@ -452,7 +452,7 @@ describe('REST API', function () {
     })
 
     it('POST animated GIF, then POST a tweet referencing the media', function (done) {
-      var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
+      var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' });
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
         assert(!err, err)
@@ -475,6 +475,18 @@ describe('REST API', function () {
           })
         })
       })
+    })
+  })
+
+  it('POST account/update_profile_image', function (done) {
+    var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
+
+    twit.post('account/update_profile_image', { image: b64content }, function (err, data, response) {
+      assert(!err, err);
+      exports.checkReply(err, data);
+      exports.checkUser(data);
+
+      done()
     })
   })
 
@@ -534,7 +546,7 @@ describe('REST API', function () {
     })
   })
 
-})
+});
 
 /**
  * Basic validation to verify we have no error and reply is an object
@@ -605,6 +617,13 @@ exports.checkMediaUpload = function checkMediaUpload (data) {
   assert.ok(data.media_id)
   assert.equal('string', typeof data.media_id_string)
   assert.ok(data.size)
+}
+
+exports.checkUser = function checkUser (data) {
+  assert.ok(data)
+  assert.ok(data.id_str)
+  assert.ok(data.name)
+  assert.ok(data.screen_name)
 }
 
 exports.assertTweetHasText = function (tweet, text) {
