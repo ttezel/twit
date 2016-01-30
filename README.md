@@ -397,6 +397,8 @@ In addition, the following user stream events are provided for you to listen on:
 * `list_user_subscribed`
 * `list_user_unsubscribed`
 * `quoted_tweet`
+* `retweeted_retweet`
+* `favorited_retweet`
 * `unknown_user_event` (for an event that doesn't match any of the above)
 
 ###Example:
@@ -511,6 +513,8 @@ THE SOFTWARE.
 ###2.1.6
   * Emit `friends` event for `friends_str` message received when a user stream is requested with `stringify_friend_ids=true`.
   * Handle receiving "Exceeded connection limit for user" message from Twitter while streaming. Emit `error` event for this case.
+  * Emit `retweeted_retweet` and `favorited_retweet` user events.
+  * Add MIT license to package.json (about time!)
 
 ###2.1.5
   * Support config-based request timeout.
