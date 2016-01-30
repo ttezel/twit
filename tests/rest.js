@@ -39,8 +39,6 @@ describe('REST API', function () {
     })
   })
 
-
-
   it('POST `statuses/update` and POST `statuses/destroy:id`', function (done) {
     var tweetId = null
 
@@ -404,7 +402,7 @@ describe('REST API', function () {
       twit = new Twit(config1)
     })
 
-    it('Successfully POST media/upload with png', function (done) {
+    it('POST media/upload with png', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/cutebird.png', { encoding: 'base64' })
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
@@ -416,7 +414,7 @@ describe('REST API', function () {
       })
     })
 
-    it('Successfully POST media/upload with JPG', function (done) {
+    it('POST media/upload with JPG', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/bigbird.jpg', { encoding: 'base64' })
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
@@ -427,7 +425,7 @@ describe('REST API', function () {
       })
     })
 
-    it('Succesfully POST media/upload with static GIF', function (done) {
+    it('POST media/upload with static GIF', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/twitterbird.gif', { encoding: 'base64' })
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
@@ -438,7 +436,7 @@ describe('REST API', function () {
       })
     })
 
-    it('Succesfully POST media/upload with animated GIF', function (done) {
+    it('POST media/upload with animated GIF using `media_data` parameter', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' })
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
@@ -451,7 +449,7 @@ describe('REST API', function () {
       })
     })
 
-    it('POST animated GIF, then POST a tweet referencing the media', function (done) {
+    it('POST media/upload with animated GIF, then POST a tweet referencing the media', function (done) {
       var b64content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' });
 
       twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
@@ -474,6 +472,19 @@ describe('REST API', function () {
             done()
           })
         })
+      })
+    })
+
+    it('POST media/upload with animated GIF using `media` parameter', function (done) {
+      var b64Content = fs.readFileSync(__dirname + '/img/snoopy-animated.gif', { encoding: 'base64' });
+
+      twit.post('media/upload', { media: b64Content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        var expected_image_types = ['image/gif', 'image/animatedgif']
+        var image_type = data.image.image_type
+        assert.ok(expected_image_types.indexOf(image_type) !== -1, 'got unexpected image type:' + image_type)
+        done()
       })
     })
   })
