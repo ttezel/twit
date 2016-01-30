@@ -555,10 +555,21 @@ describe('REST API', function () {
         })
       })
     })
-  })
 
+    describe('Request timeout', function () {
+      it('set to 1ms should return with a timeout error', function (done) {
+        config1.timeout_ms = 1;
+        var twit = new Twit(config1);
+        twit.get('account/verify_credentials', function (err, reply, res) {
+          assert(err)
+          assert.equal(err.message, 'ETIMEDOUT')
+          delete config1.timeout_ms
+          done()
+        })
+      })
+    })
+  });
 });
-
 /**
  * Basic validation to verify we have no error and reply is an object
  *

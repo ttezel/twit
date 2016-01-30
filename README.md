@@ -16,10 +16,11 @@ npm install twit
 var Twit = require('twit')
 
 var T = new Twit({
-    consumer_key:         '...'
-  , consumer_secret:      '...'
-  , access_token:         '...'
-  , access_token_secret:  '...'
+  consumer_key:         '...',
+  consumer_secret:      '...',
+  access_token:         '...',
+  access_token_secret:  '...',
+  timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
 })
 
 //
@@ -504,6 +505,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###2.1.5
+  * Support config-based request timeout.
 
 ###2.1.4
   * Support POST media/upload (chunked) and add `T.postMediaChunked()` to make it easy.
