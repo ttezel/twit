@@ -30,17 +30,17 @@ setInterval(function() {
       , since: datestring()
       , result_type: 'mixed'
     };
-    bot.twit.get('search', params, function (err, reply) {
+    bot.twit.get('search/tweets', params, function (err, reply) {
       if(err) return handleError(err);
 
       var max = 0, popular;
 
-      var tweets = reply.results
+      var tweets = reply.statuses
         , i = tweets.length;
 
       while(i--) {
         var tweet = tweets[i]
-          , popularity = tweet.metadata.recent_retweets;
+          , popularity = tweet.retweet_count;
 
         if(popularity > max) {
           max = popularity;
