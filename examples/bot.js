@@ -20,6 +20,55 @@ Bot.prototype.tweet = function (status, callback) {
   this.twit.post('statuses/update', { status: status }, callback);
 };
 
+Bot.prototype.searchFollow = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+	var rTweet = randIndex(tweets)
+	if(typeof rTweet != 'undefined')
+	{
+		var target = rTweet.user.id_str;
+ 
+		self.twit.post('friendships/create', { id: target }, callback);
+	}
+  });
+};
+
+//
+// retweet
+//
+Bot.prototype.retweet = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+    var randomTweet = randIndex(tweets);
+	if(typeof randomTweet != 'undefined')
+		self.twit.post('statuses/retweet/:id', { id: randomTweet.id_str }, callback);
+  });
+};
+ 
+//
+// favorite a tweet
+//
+Bot.prototype.favorite = function (params, callback) {
+  var self = this;
+ 
+  self.twit.get('search/tweets', params, function (err, reply) {
+    if(err) return callback(err);
+ 
+    var tweets = reply.statuses;
+    var randomTweet = randIndex(tweets);
+	if(typeof randomTweet != 'undefined')
+		self.twit.post('favorites/create', { id: randomTweet.id_str }, callback);
+  });
+};
+
 //
 //  choose a random friend of one of your followers, and follow that user
 //
