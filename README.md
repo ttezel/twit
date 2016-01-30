@@ -82,6 +82,17 @@ T.post('media/upload', { media_data: b64content }, function (err, data, response
 })
 
 //
+// post media via the chunked media upload API.
+// You can then use POST /statuses/update to post a tweet with the media attached as in the example above using `media_id_string`.
+// Note: You can also do this yourself manually using normal T.post() calls if you want more fine-grained
+// control over the streaming. See [here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20).
+//
+var filePath = '/absolute/path/to/file.mp4'
+T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
+  console.log(data)
+})
+
+//
 //  stream a sample of public statuses
 //
 var stream = T.stream('statuses/sample')
