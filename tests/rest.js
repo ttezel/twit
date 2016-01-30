@@ -501,6 +501,26 @@ describe('REST API', function () {
     })
   })
 
+  describe('Favorites', function () {
+    it('POST favorites/create and POST favorites/destroy work', function (done) {
+      twit.post('favorites/create', { id: '583531943624597504' }, function (err, data, resp) {
+        assert(!err, err);
+        exports.checkReply(err, data);
+        var tweetIdStr = data.id_str;
+        assert(tweetIdStr);
+
+        twit.post('favorites/destroy', { id: tweetIdStr }, function (err, data, resp) {
+          assert(!err, err);
+          exports.checkReply(err, data);
+          assert(data.id_str);
+          assert(data.text);
+
+          done();
+        })
+      })
+    })
+  })
+
   describe('error handling', function () {
     describe('handling errors from the twitter api', function () {
       it('should callback with an Error object with all the info and a response object', function (done) {
