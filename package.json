@@ -25,6 +25,7 @@
   "engines": {
     "node": ">=0.10.0"
   },
+  "license": "MIT",
   "main": "./lib/twitter",
   "repository": {
     "type": "git",
