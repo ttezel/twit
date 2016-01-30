@@ -361,6 +361,23 @@ describe('streaming API direct message events', function () {
     })
 })
 
+describe('streaming API friends preamble', function () {
+  it('returns an array of strings if stringify_friend_ids is true', function (done) {
+    var twit = new Twit(config1);
+    var stream = twit.stream('user', { stringify_friend_ids: true });
+    stream.on('friends', function (friendsObj) {
+      assert(friendsObj)
+      assert(friendsObj.friends_str)
+      if (friendsObj.friends_str.length) {
+        assert.equal(typeof friendsObj.friends_str[0], 'string')
+      } else {
+        console.log('\nEmpty friends preamble:', friendsObj, '. Make some friends on Twitter! ^_^')
+      }
+      done()
+    })
+  })
+})
+
 describe('streaming API bad request', function (done) {
   it('emits an error for a 401 response', function (done) {
     var badCredentials = {

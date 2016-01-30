@@ -349,9 +349,11 @@ stream.on('user_withheld', function (withheldMsg) {
 
 ##event: 'friends'
 
-Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types#user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids.
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types#user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
+list preamble will be returned as Strings (instead of Numbers).
 
 ```javascript
+var stream = T.stream('user', { stringify_friend_ids: true })
 stream.on('friends', function (friendsMsg) {
   //...
 })
@@ -505,6 +507,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###2.1.6
+  * Emit `friends` event for `friends_str` message received when a user stream is requested with `stringify_friend_ids=true`.
+
 
 ###2.1.5
   * Support config-based request timeout.
