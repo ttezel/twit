@@ -510,7 +510,7 @@ THE SOFTWARE.
 
 ###2.1.6
   * Emit `friends` event for `friends_str` message received when a user stream is requested with `stringify_friend_ids=true`.
-
+  * Handle receiving "Exceeded connection limit for user" message from Twitter while streaming. Emit `error` event for this case.
 
 ###2.1.5
   * Support config-based request timeout.

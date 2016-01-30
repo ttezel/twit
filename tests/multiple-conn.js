@@ -12,20 +12,34 @@ var restTest = require('./rest.js');
 describe.skip('multiple connections', function () {
   it('results in one of the streams closing', function (done) {
     var twit = new Twit(config1);
-    var streamFoo = twit.stream('statuses/sample');
-    var streamBar = twit.stream('statuses/sample');
 
-    streamFoo.on('disconnect', function (disconnect) {
-      assert.equal(typeof disconnect, 'object');
-      assert.equal(streamFoo.abortedBy, 'twit-client');
-      done();
+    var streams = [
+      twit.stream('statuses/sample'),
+      twit.stream('statuses/sample'),
+      twit.stream('statuses/sample'),
+    ];
+
+    streams.forEach(function (stream, i) {
+      stream.on('disconnect', function (disconnect) {
+        console.log('Disconect for stream', i)
+        assert.equal(typeof disconnect, 'object');
+        assert.equal(stream.abortedBy, 'twit-client');
+        done();
+      });
+
+      stream.on('error', function (errMsg) {
+        console.log('error for stream', i, errMsg)
+      })
+
+      stream.on('tweet', function (t) {
+        console.log(i)
+      })
+
+      stream.on('connected', function () {
+        console.log('Stream', i, 'connected.')
+      })
     });
 
-    streamBar.on('disconnect', function (disconnect) {
-      assert.equal(typeof disconnect, 'object');
-      assert.equal(streamBar.abortedBy, 'twit-client');
-      done();
-    });
   });
 });
 

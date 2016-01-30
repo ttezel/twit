@@ -578,3 +578,36 @@ describe('Streaming API disconnect message', function (done) {
     })
   })
 });
+
+describe('Streaming API Connection limit exceeded message', function (done) {
+  it('results in an `error` event containing the message', function (done) {
+    var errMsg = 'Exceeded connection limit for user';
+
+    var stubPost = function () {
+      var fakeRequest = new helpers.FakeRequest();
+      process.nextTick(function () {
+        var body = zlib.gzipSync(errMsg + '\r\n');
+        var fakeResponse = new helpers.FakeResponse(200, body);
+        fakeRequest.emit('response', fakeResponse);
+        fakeResponse.emit('close');
+      });
+      return fakeRequest
+    }
+
+    var request = require('request');
+    var origRequest = request.post;
+    var stubs = sinon.collection;
+    stubs.stub(request, 'post', stubPost);
+
+    var twit = new Twit(config1);
+    var stream = twit.stream('statuses/filter');
+
+    stream.on('error', function (err) {
+      assert(err.toString().indexOf(errMsg) !== -1, 'Unexpected error msg:' + errMsg + '.');;
+      stream.stop();
+      // restore stub
+      request.post = origRequest;
+      done();
+    })
+  })
+})
