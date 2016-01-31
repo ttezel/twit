@@ -3,6 +3,33 @@ var assert = require('assert')
   , config1 = require('../config1')
 
 describe('twit', function () {
+  describe('instantiation', function () {
+    it('works with var twit = new Twit()', function () {
+      var twit = new Twit({
+        consumer_key: 'a',
+        consumer_secret: 'b',
+        access_token: 'c',
+        access_token_secret: 'd'
+      });
+      assert(twit.config)
+      assert.equal(typeof twit.get, 'function')
+      assert.equal(typeof twit.post, 'function')
+      assert.equal(typeof twit.stream, 'function')
+    })
+    it('works with var twit = Twit()', function () {
+      var twit = Twit({
+        consumer_key: 'a',
+        consumer_secret: 'b',
+        access_token: 'c',
+        access_token_secret: 'd'
+      });
+      assert(twit.config)
+      assert.equal(typeof twit.get, 'function')
+      assert.equal(typeof twit.post, 'function')
+      assert.equal(typeof twit.stream, 'function')
+    })
+  })
+
   describe('config', function () {
     it('throws when passing empty config', function (done) {
       assert.throws(function () {

@@ -25,7 +25,6 @@ describe('REST API', function () {
       checkResponse(response)
 
       assert(response.headers['x-rate-limit-limit'])
-
       done()
     })
   })
@@ -392,7 +391,7 @@ describe('REST API', function () {
           return next()
         })
       }
-    }, done)
+    }, done);
   })
 
   describe('Media Upload', function () {
