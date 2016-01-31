@@ -12,6 +12,7 @@
     "oauth"
   ],
   "dependencies": {
+    "bluebird": "^3.1.5",
     "mime": "^1.3.4",
     "request": "2.58.0"
   },

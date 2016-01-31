@@ -30,6 +30,52 @@ describe('REST API', function () {
     })
   })
 
+  it('GET `account/verify_credentials` using promise API', function (done) {
+    twit.get('account/verify_credentials')
+      .catch(function (err) {
+        console.log('catch err', err.stack)
+      })
+      .then(function (result) {
+        checkReply(null, result.data)
+        assert.notEqual(result.data.followers_count, undefined)
+        assert.notEqual(result.data.friends_count, undefined)
+        assert.ok(result.data.id_str)
+        checkResponse(result.resp)
+        assert(result.resp.headers['x-rate-limit-limit'])
+
+        done()
+      })
+  })
+
+  it('GET `account/verify_credentials` using promise API AND callback API', function (done) {
+    var i = 0;
+
+    var _checkDataAndResp = function (data, resp) {
+      checkReply(null, data)
+      assert.notEqual(data.followers_count, undefined)
+      assert.notEqual(data.friends_count, undefined)
+      assert.ok(data.id_str)
+      checkResponse(resp)
+      assert(resp.headers['x-rate-limit-limit'])
+
+      i++;
+      if (i == 2) {
+        done()
+      }
+    }
+
+    var get = twit.get('account/verify_credentials', function (err, data, resp) {
+      assert(!err, err);
+      _checkDataAndResp(data, resp);
+    });
+    get.catch(function (err) {
+      console.log('Got error:', err.stack)
+    });
+    get.then(function (result) {
+      _checkDataAndResp(result.data, result.resp);
+    });
+  })
+
   it('POST `account/update_profile`', function (done) {
     twit.post('account/update_profile', function (err, reply, response) {
       checkReply(err, reply)
