@@ -4,6 +4,7 @@ var assert = require('assert')
   , sinon = require('sinon')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
+  , config2 = require('../config2')
   , helpers = require('./helpers')
   , util = require('util')
   , async = require('async')
@@ -500,6 +501,16 @@ describe('REST API', function () {
     })
   })
 
+  it('POST friendships/create', function (done) {
+    var params = { screen_name: 'tolga_tezel', follow: false };
+    twit.post('friendships/create', params, function (err, data, resp) {
+      assert(!err, err);
+      exports.checkReply(err, data);
+      exports.checkUser(data);
+      done();
+    });
+  })
+
   describe('Favorites', function () {
     it('POST favorites/create and POST favorites/destroy work', function (done) {
       twit.post('favorites/create', { id: '583531943624597504' }, function (err, data, resp) {
@@ -589,6 +600,69 @@ describe('REST API', function () {
     })
   });
 });
+
+describe('Twit agent_options config', function () {
+  it('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
+    config1.trusted_cert_fingerprints = [
+      '66:EA:47:62:D9:B1:4F:1A:AE:89:5F:68:BA:6B:8E:BB:F8:1D:BF:8E'
+    ];
+    var t = new Twit(config1);
+
+    t.get('account/verify_credentials', function (err, data, resp) {
+      assert(!err, err)
+      assert(data)
+      assert(data.id_str)
+      assert(data.name)
+      assert(data.screen_name)
+
+      delete config1.trusted_cert_fingerprints
+      done();
+    })
+  })
+
+  it('config.trusted_cert_fingerprints responds with Error when fingerprint mismatch occurs', function (done) {
+    config1.trusted_cert_fingerprints = [
+      'AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA'
+    ];
+    var t = new Twit(config1);
+
+    t.get('account/verify_credentials', function (err, data, resp) {
+      assert(err)
+      assert(err.toString().indexOf('Trusted fingerprints are: ' + config1.trusted_cert_fingerprints[0]) !== -1)
+
+      delete config1.trusted_cert_fingerprints
+      done();
+    })
+  })
+})
+
+describe('Local time offset compensation', function () {
+  it('Compensates for local time being behind', function (done) {
+    var t1 = Date.now();
+    var t = new Twit(config2);
+
+    var stubNow = function () {
+      return 0;
+    }
+    var stubDateNow = sinon.stub(Date, 'now', stubNow);
+
+    t.get('account/verify_credentials', function (err, data, resp) {
+      assert(err);
+
+      t.get('account/verify_credentials', function (err, data, resp) {
+        assert(!err, err);
+        exports.checkReply(err, data);
+        exports.checkUser(data);
+        assert(t._twitter_time_minus_local_time_ms > 0)
+
+        stubDateNow.restore();
+
+        done();
+      })
+    })
+  })
+})
+
 /**
  * Basic validation to verify we have no error and reply is an object
  *

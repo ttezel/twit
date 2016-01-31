@@ -448,6 +448,24 @@ Anything in the Twitter API:
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
+#Advanced
+
+You may specify an array of trusted certificate fingerprints if you want to only trust a specific set of certificates.
+When an HTTP response is received, it is verified that the certificate was signed, and the peer certificate's fingerprint must be one of the values you specified. By default, the node.js trusted "root" CAs will be used.
+
+eg.
+```js
+var twit = new Twit({
+  consumer_key:         '...',
+  consumer_secret:      '...',
+  access_token:         '...',
+  access_token_secret:  '...',
+  trusted_cert_fingerprints: [
+    '66:EA:47:62:D9:B1:4F:1A:AE:89:5F:68:BA:6B:8E:BB:F8:1D:BF:8E',
+  ]
+})
+```
+
 
 #How do I run the tests?
 
@@ -510,8 +528,14 @@ THE SOFTWARE.
 
 ## Changelog
 
-###2.1.7
+###2.2.0
   * Allow omission of `new` keyword; `var t = Twit(config)` works, and `var t = new Twit(config)` works too.
+  * Allow setting an array of trusted certificate fingerprints via `config.trusted_cert_fingerprints`.
+  * Automatically adjust timestamp for OAuth'ed HTTP requests
+  by recording the timestamp from Twitter HTTP responses, computing our local time offset, and applying the offset in the next HTTP request to Twitter.
+
+###2.1.7
+  * Add `mime` as a dependency.
 
 ###2.1.6
   * Emit `friends` event for `friends_str` message received when a user stream is requested with `stringify_friend_ids=true`.
