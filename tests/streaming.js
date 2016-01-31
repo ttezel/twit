@@ -611,3 +611,40 @@ describe('Streaming API Connection limit exceeded message', function (done) {
     })
   })
 })
+
+describe('Streaming API connection management', function () {
+  it('.stop() works in all states', function (done) {
+    var stubPost = function () {
+      var fakeRequest = new helpers.FakeRequest();
+      process.nextTick(function () {
+        var body = zlib.gzipSync('Foobar\r\n');
+        var fakeResponse = new helpers.FakeResponse(200, body);
+        fakeRequest.emit('response', fakeResponse);
+      });
+      return fakeRequest
+    }
+
+    var request = require('request');
+    var origRequest = request.post;
+    var stubs = sinon.collection;
+    stubs.stub(request, 'post', stubPost);
+
+    var twit = new Twit(config1);
+
+    var stream = twit.stream('statuses/sample');
+    stream.stop();
+    console.log('\nStopped. Restarting..');
+    stream.start();
+    stream.once('connect', function(request) {
+      console.log('Stream emitted `connect`. Stopping & starting stream..')
+      stream.stop();
+
+      stream.once('connected', function () {
+        console.log('Stream emitted `connected`. Stopping stream.');
+        stream.stop();
+        done();
+      });
+      stream.start();
+    });
+  })
+})
