@@ -48,8 +48,7 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, res
 // Twit has promise support; you can use the callback API,
 // promise API, or both at the same time.
 //
-twit
-  .get('account/verify_credentials', { skip_status: true })
+T.get('account/verify_credentials', { skip_status: true })
   .catch(function (err) {
     console.log('caught error', err.stack)
   })
