@@ -30,8 +30,9 @@ describe('REST API', function () {
     })
   })
 
-  it('GET `account/verify_credentials` using promise API', function (done) {
-    twit.get('account/verify_credentials')
+  it('GET `account/verify_credentials` using promise API only', function (done) {
+    twit
+      .get('account/verify_credentials', { skip_status: true })
       .catch(function (err) {
         console.log('catch err', err.stack)
       })

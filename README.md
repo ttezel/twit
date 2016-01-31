@@ -45,6 +45,25 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, res
 })
 
 //
+// Twit has promise support; you can use the callback API,
+// promise API, or both at the same time.
+//
+twit
+  .get('account/verify_credentials', { skip_status: true })
+  .catch(function (err) {
+    console.log('caught error', err.stack)
+  })
+  .then(function (result) {
+    // `result` is an Object with keys "data" and "resp".
+    // `data` and `resp` are the same objects as the ones passed
+    // to the callback.
+    // See https://github.com/ttezel/twit#tgetpath-params-callback
+    // for details.
+
+    console.log('data', result.data);
+  })
+
+//
 //  retweet a tweet with id '343360866131001345'
 //
 T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
@@ -527,6 +546,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+###2.2.1
+  * Add promise support to Twit REST API calls.
 
 ###2.2.0
   * Allow omission of `new` keyword; `var t = Twit(config)` works, and `var t = new Twit(config)` works too.
