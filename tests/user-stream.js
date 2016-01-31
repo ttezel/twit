@@ -13,35 +13,26 @@ function checkFriendsMsg (friendsMsg) {
 }
 
 describe('user events', function () {
-    var twit;
-
-    before(function () {
-        twit = new Twit(config1);
-    });
-
     it('friends', function (done) {
-        var ustream = twit.stream('user');
+        var twit = new Twit(config1);
+        var stream = twit.stream('user');
 
         //make sure we're connected to the right endpoint
-        assert.equal(ustream.reqOpts.url, 'https://userstream.twitter.com/1.1/user.json')
+        assert.equal(stream.reqOpts.url, 'https://userstream.twitter.com/1.1/user.json')
 
-        ustream.on('friends', function (friendsMsg) {
+        stream.on('friends', function (friendsMsg) {
             checkFriendsMsg(friendsMsg)
 
-            ustream.stop()
+            stream.stop()
             done()
         })
-    })
 
-    //skip since `user_event` don't happen very often
-    it.skip('user_event', function (done) {
-        var ustream = twit.stream('user')
+        stream.on('connect', function () {
+            console.log('\nuser stream connecting..')
+        })
 
-        ustream.on('user_event', function (eventMsg) {
-            console.log('got user_event:', eventMsg)
-
-            ustream.stop()
-            done()
+        stream.on('connected', function () {
+            console.log('user stream connected.')
         })
     })
 })

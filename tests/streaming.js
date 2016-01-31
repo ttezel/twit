@@ -154,7 +154,7 @@ describe('Streaming API', function () {
   })
 
   it('stopping & restarting stream emits to previously assigned callbacks', function (done) {
-    var twit = new Twit(config2);
+    var twit = new Twit(config1);
     var stream = twit.stream('statuses/sample')
 
     var started = false
@@ -642,6 +642,8 @@ describe('Streaming API connection management', function () {
       stream.once('connected', function () {
         console.log('Stream emitted `connected`. Stopping stream.');
         stream.stop();
+
+        stubs.restore();
         done();
       });
       stream.start();
