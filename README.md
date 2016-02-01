@@ -566,6 +566,10 @@ THE SOFTWARE.
 
 ## Changelog
 
+###2.2.2
+  * Emit `parser-error` instead of `error` event if Twitter sends back
+  an uncompressed HTTP response body.
+
 ###2.2.1
   * Add promise support to Twit REST API calls.
 
