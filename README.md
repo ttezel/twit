@@ -497,6 +497,13 @@ var twit = new Twit({
 })
 ```
 
+#Contributing
+
+- Make your changes
+- Make sure your code matches the style of the code around it
+- Add tests that cover your feature/bugfix
+- Run tests
+- Submit a pull request
 
 #How do I run the tests?
 
