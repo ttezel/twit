@@ -200,6 +200,19 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 
 POST any of the REST API endpoints. Same usage as `T.get()`.
 
+##`T.postMediaChunked(params, callback)`
+
+Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
+
+```js
+var filePath = '/absolute/path/to/file.mp4'
+T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
+  console.log(data)
+})
+```
+
+You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20).
+
 ##`T.getAuth()`
 Get the client's authentication tokens.
 
