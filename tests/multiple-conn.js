@@ -23,7 +23,6 @@ describe.skip('multiple connections', function () {
       stream.on('disconnect', function (disconnect) {
         console.log('Disconect for stream', i)
         assert.equal(typeof disconnect, 'object');
-        assert.equal(stream.abortedBy, 'twit-client');
         done();
       });
 

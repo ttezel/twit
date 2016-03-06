@@ -26,11 +26,7 @@ exports.checkStream = function (stream, done) {
   });
 
   stream.once('tweet', function (tweet) {
-    assert.equal(null, stream._abortedBy)
-
     stream.stop()
-
-    assert.equal('twit-client', stream._abortedBy)
     assert.ok(tweet)
     assert.equal('string', typeof tweet.text)
     assert.equal('string', typeof tweet.id_str)
@@ -56,7 +52,6 @@ exports.checkStream = function (stream, done) {
  * @param  {object}   stream object returned by twit.stream()
  */
 exports.checkStreamStopState = function (stream) {
-  assert.strictEqual('twit-client', stream._abortedBy)
   assert.strictEqual(stream._connectInterval, 0)
   assert.strictEqual(stream._usedFirstReconnect, false)
   assert.strictEqual(stream._scheduledReconnect, undefined)
@@ -128,7 +123,6 @@ describe('Streaming API', function () {
 
     //stop the stream after 2 seconds
     setTimeout(function () {
-      assert.equal(null, stream._abortedBy)
       stream.stop()
 
       exports.checkStreamStopState(stream)
