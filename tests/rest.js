@@ -534,6 +534,26 @@ describe('REST API', function () {
         done()
       })
     })
+
+    it('POST media/upload with JPG, then POST media/metadata/create with alt text', function (done) {
+      var b64content = fs.readFileSync(__dirname + '/img/bigbird.jpg', { encoding: 'base64' })
+
+      twit.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        assert(!err, err)
+        exports.checkMediaUpload(data)
+        assert.equal(data.image.image_type, 'image/jpeg')
+
+        var mediaIdStr = data.media_id_string
+        assert(mediaIdStr)
+        var altText = 'a very small Big Bird'
+        var params = { media_id: mediaIdStr, alt_text: { text: altText } }
+        twit.post('media/metadata/create', params, function (err, data, response) {
+          assert(!err, err)
+          // data is empty on media/metadata/create success; nothing more to assert
+          done();
+        })
+      })
+    })
   })
 
   it('POST account/update_profile_image', function (done) {
