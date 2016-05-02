@@ -574,6 +574,10 @@ THE SOFTWARE.
 
 ## Changelog
 
+###2.2.4
+  * Fix 401 Unauthorized error on streaming connection reconnect after not being
+  connected for some time (eg. due to > 1min loss of network).
+
 ###2.2.2
   * Emit `parser-error` instead of `error` event if Twitter sends back
   an uncompressed HTTP response body.
