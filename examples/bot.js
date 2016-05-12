@@ -20,6 +20,7 @@ Bot.prototype.tweet = function (status, callback) {
   this.twit.post('statuses/update', { status: status }, callback);
 };
 
+// choose a random tweet and follow that user
 Bot.prototype.searchFollow = function (params, callback) {
   var self = this;
  
