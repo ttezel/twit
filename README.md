@@ -427,6 +427,8 @@ In addition, the following user stream events are provided for you to listen on:
 * `unfavorite`
 * `follow`
 * `unfollow`
+* `mute`
+* `unmute`
 * `user_update`
 * `list_created`
 * `list_destroyed`
