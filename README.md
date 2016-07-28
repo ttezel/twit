@@ -4,6 +4,9 @@ Twitter API Client for node
 
 Supports both the **REST** and **Streaming** API.
 
+[![Dependency Status](https://david-dm.org/ttezel/twit/status.svg?style=flat)](https://david-dm.org/ttezel/twit)[![Known Vulnerabilities](https://snyk.io/test/npm/twit/badge.svg)](https://snyk.io/test/npm/twit)
+
+
 #Installing
 
 ```
