@@ -1,4 +1,5 @@
 #twit
+[![Known Vulnerabilities](https://snyk.io/test/github/ttezel/twit/badge.svg)](https://snyk.io/test/github/ttezel/twit)
 
 Twitter API Client for node
 

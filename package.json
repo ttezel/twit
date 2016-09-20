@@ -22,6 +22,7 @@
     "commander": "2.6.0",
     "mocha": "2.1.0",
     "rewire": "2.3.4",
+    "snyk": "^1.13.3",
     "sinon": "1.15.4"
   },
   "engines": {
@@ -34,6 +35,6 @@
     "url": "http://github.com/ttezel/twit.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/* -t 70000 -R spec --bail --globals domain,_events,_maxListeners"
+    "test": "snyk test && ./node_modules/.bin/mocha tests/* -t 70000 -R spec --bail --globals domain,_events,_maxListeners"
   }
 }
