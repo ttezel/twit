@@ -670,8 +670,9 @@ describe('REST API', function () {
 
 describe('Twit agent_options config', function () {
   it('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
+    // TODO: mock getPeerCertificate so we don't have to pin here
     config1.trusted_cert_fingerprints = [
-      '66:EA:47:62:D9:B1:4F:1A:AE:89:5F:68:BA:6B:8E:BB:F8:1D:BF:8E'
+      '24:EB:85:86:7A:98:71:85:E6:73:DF:0C:57:18:AE:50:2D:BA:0A:69'
     ];
     var t = new Twit(config1);
 
