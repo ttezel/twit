@@ -1,5 +1,7 @@
 #twit
 
+[![API Testing](https://img.shields.io/badge/test%20this%20API%20on-RapidAPI.com-blue.svg)](https://rapidapi.com/package/Twitter/functions?utm_source=GithubTwitter&utm_medium=button)
+
 Twitter API Client for node
 
 Supports both the **REST** and **Streaming** API.
