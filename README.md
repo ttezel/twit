@@ -576,6 +576,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.2.8
+  * Add support for HTTP DELETE; you can now `T.delete(...)`.
+
 ### 2.2.7
   * Don't attempt to reconnect to Twitter API when receiving HTTP status code 413 - request entity too large.
 
