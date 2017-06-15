@@ -56,7 +56,7 @@ T.get('account/verify_credentials', { skip_status: true })
     // `result` is an Object with keys "data" and "resp".
     // `data` and `resp` are the same objects as the ones passed
     // to the callback.
-    // See https://github.com/ttezel/twit# tgetpath-params-callback
+    // See https://github.com/ttezel/twit#tgetpath-params-callback
     // for details.
 
     console.log('data', result.data);
@@ -99,7 +99,7 @@ T.post('media/upload', { media_data: b64content }, function (err, data, response
   T.post('media/metadata/create', meta_params, function (err, data, response) {
     if (!err) {
       // now we can reference the media and post a tweet (media will attach to the tweet)
-      var params = { status: 'loving life # nofilter', media_ids: [mediaIdStr] }
+      var params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
 
       T.post('statuses/update', params, function (err, data, response) {
         console.log(data)
@@ -112,7 +112,7 @@ T.post('media/upload', { media_data: b64content }, function (err, data, response
 // post media via the chunked media upload API.
 // You can then use POST statuses/update to post a tweet with the media attached as in the example above using `media_id_string`.
 // Note: You can also do this yourself manually using T.post() calls if you want more fine-grained
-// control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20
+// control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20
 //
 var filePath = '/absolute/path/to/file.mp4'
 T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
@@ -149,9 +149,9 @@ stream.on('tweet', function (tweet) {
 })
 
 //
-// filter the public stream by english tweets containing `# apple`
+// filter the public stream by english tweets containing `#apple`
 //
-var stream = T.stream('statuses/filter', { track: '# apple', language: 'en' })
+var stream = T.stream('statuses/filter', { track: '#apple', language: 'en' })
 
 stream.on('tweet', function (tweet) {
   console.log(tweet)
@@ -388,7 +388,7 @@ stream.on('user_withheld', function (withheldMsg) {
 
 ## event: 'friends'
 
-Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types# user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters# stringify_friend_id) parameter is set, the friends
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types# user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
 list preamble will be returned as Strings (instead of Numbers).
 
 ```javascript
@@ -410,7 +410,7 @@ stream.on('direct_message', function (directMsg) {
 
 ## event: 'user_event'
 
-Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/streaming/overview/messages-types# Events_event).
+Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/streaming/overview/messages-types#Events_event).
 See the Twitter docs for more information on each event's structure.
 
 ```javascript
