@@ -576,6 +576,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.2.9
+  * Use JSON payload in request body for new DM endpoints.
+
 ### 2.2.8
   * Add support for HTTP DELETE; you can now `T.delete(...)`.
 
