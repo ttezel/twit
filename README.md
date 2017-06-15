@@ -576,6 +576,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.2.6
+  * Fix zlib error when streaming
+
 ### 2.2.4
   * Fix 401 Unauthorized error on streaming connection reconnect after not being
   connected for some time (eg. due to > 1min loss of network).
