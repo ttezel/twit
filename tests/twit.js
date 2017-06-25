@@ -63,6 +63,20 @@ describe('twit', function () {
 
       done()
     })
+
+    it('throws when config provides invalid strictSSL option', function (done) {
+      assert.throws(function () {
+        var twit = new Twit({
+            consumer_key: 'a'
+          , consumer_secret: 'a'
+          , access_token: 'a'
+          , access_token_secret: 'a'
+          , strictSSL: 'a'
+        })
+      }, Error)
+
+      done()
+    })
   })
 
   describe('setAuth()', function () {
