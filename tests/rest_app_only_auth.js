@@ -51,5 +51,30 @@ describe('REST API using app-only auth', function () {
       done()
     })
   })
-})
 
+  it('GET `users/show` { screen_name: twitter } multiple times', function (done) {
+    var index = 0
+    var limit = 50
+    var params = { screen_name: 'twitter' }
+
+    var getData = function () {
+      twit.get('users/show', params, function (err, data, response) {
+        if (data) {
+          assert.equal(783214, data.id)
+        } else {
+          throw new Error(err)
+        }
+
+        index++
+
+        if (index >= limit) {
+          done()
+        }
+      })
+    }
+
+    for (var i = 0; i <= limit; i++) {
+      getData()
+    }
+  })
+})
