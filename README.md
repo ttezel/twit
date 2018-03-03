@@ -1,16 +1,16 @@
-#twit
+# twit
 
 Twitter API Client for node
 
 Supports both the **REST** and **Streaming** API.
 
-#Installing
+# Installing
 
-```
+```shell
 npm install twit
 ```
 
-##Usage:
+## Usage:
 
 ```javascript
 var Twit = require('twit')
@@ -161,7 +161,7 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
-##`var T = new Twit(config)`
+## var T = new Twit(config)`
 
 Create a `Twit` instance that can be used to make requests to Twitter's APIs.
 
@@ -186,7 +186,7 @@ If authenticating with application context, `config` should be an object of the 
 Note that Application-only auth will not allow you to perform requests to API endpoints requiring
 a user context, such as posting tweets. However, the endpoints available can have a higher rate limit.
 
-##`T.get(path, [params], callback)`
+## T.get(path, [params], callback)`
 GET any of the REST API endpoints.
 
 **path**
@@ -202,13 +202,13 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 `function (err, data, response)`
 
 - `data` is the parsed data received from Twitter.
-- `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) received from Twitter.
+- `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html# http_http_incomingmessage) received from Twitter.
 
-##`T.post(path, [params], callback)`
+## T.post(path, [params], callback)`
 
 POST any of the REST API endpoints. Same usage as `T.get()`.
 
-##`T.postMediaChunked(params, callback)`
+## T.postMediaChunked(params, callback)`
 
 Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
 
@@ -219,15 +219,15 @@ T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
 })
 ```
 
-You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20).
+You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
 
-##`T.getAuth()`
+## T.getAuth()`
 Get the client's authentication tokens.
 
-##`T.setAuth(tokens)`
+## T.setAuth(tokens)`
 Update the client's authentication tokens.
 
-##`T.stream(path, [params])`
+## T.stream(path, [params])`
 Use this with the Streaming API.
 
 **path**
@@ -265,7 +265,7 @@ stream.on('tweet', function (tweet) {
 
 The following events are emitted:
 
-##event: 'message'
+## event: 'message'
 
 Emitted each time an object is received in the stream. This is a catch-all event that can be used to process any data received in the stream, rather than using the more specific events documented below.
 New in version 2.1.0.
@@ -276,7 +276,7 @@ stream.on('message', function (msg) {
 })
 ```
 
-##event: 'tweet'
+## event: 'tweet'
 
 Emitted each time a status (tweet) comes into the stream.
 
@@ -286,7 +286,7 @@ stream.on('tweet', function (tweet) {
 })
 ```
 
-##event: 'delete'
+## event: 'delete'
 
 Emitted each time a status (tweet) deletion message comes into the stream.
 
@@ -296,7 +296,7 @@ stream.on('delete', function (deleteMessage) {
 })
 ```
 
-##event: 'limit'
+## event: 'limit'
 
 Emitted each time a limitation message comes into the stream.
 
@@ -306,7 +306,7 @@ stream.on('limit', function (limitMessage) {
 })
 ```
 
-##event: 'scrub_geo'
+## event: 'scrub_geo'
 
 Emitted each time a location deletion message comes into the stream.
 
@@ -316,7 +316,7 @@ stream.on('scrub_geo', function (scrubGeoMessage) {
 })
 ```
 
-##event: 'disconnect'
+## event: 'disconnect'
 
 Emitted when a disconnect message comes from Twitter. This occurs if you have multiple streams connected to Twitter's API. Upon receiving a disconnect message from Twitter, `Twit` will close the connection and emit this event with the message details received from twitter.
 
@@ -326,7 +326,7 @@ stream.on('disconnect', function (disconnectMessage) {
 })
 ```
 
-##event: 'connect'
+## event: 'connect'
 
 Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
 
@@ -336,7 +336,7 @@ stream.on('connect', function (request) {
 })
 ```
 
-##event: 'connected'
+## event: 'connected'
 
 Emitted when the response is received from Twitter. The http `response` object is emitted.
 
@@ -346,7 +346,7 @@ stream.on('connected', function (response) {
 })
 ```
 
-##event: 'reconnect'
+## event: 'reconnect'
 
 Emitted when a reconnection attempt to Twitter is scheduled. If Twitter is having problems or we get rate limited, we schedule a reconnect according to Twitter's [reconnection guidelines](https://dev.twitter.com/streaming/overview/connecting). The last http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs.
 
@@ -356,7 +356,7 @@ stream.on('reconnect', function (request, response, connectInterval) {
 })
 ```
 
-##event: 'warning'
+## event: 'warning'
 
 This message is appropriate for clients using high-bandwidth connections, like the firehose. If your connection is falling behind, Twitter will queue messages for you, until your queue fills up, at which point they will disconnect you.
 
@@ -366,7 +366,7 @@ stream.on('warning', function (warning) {
 })
 ```
 
-##event: 'status_withheld'
+## event: 'status_withheld'
 
 Emitted when Twitter sends back a `status_withheld` message in the stream. This means that a tweet was withheld in certain countries.
 
@@ -376,7 +376,7 @@ stream.on('status_withheld', function (withheldMsg) {
 })
 ```
 
-##event: 'user_withheld'
+## event: 'user_withheld'
 
 Emitted when Twitter sends back a `user_withheld` message in the stream. This means that a Twitter user was withheld in certain countries.
 
@@ -386,9 +386,9 @@ stream.on('user_withheld', function (withheldMsg) {
 })
 ```
 
-##event: 'friends'
+## event: 'friends'
 
-Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types#user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types# user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
 list preamble will be returned as Strings (instead of Numbers).
 
 ```javascript
@@ -398,7 +398,7 @@ stream.on('friends', function (friendsMsg) {
 })
 ```
 
-##event: 'direct_message'
+## event: 'direct_message'
 
 Emitted when a direct message is sent to the user. Unfortunately, Twitter has not documented this event for user streams.
 
@@ -408,7 +408,7 @@ stream.on('direct_message', function (directMsg) {
 })
 ```
 
-##event: 'user_event'
+## event: 'user_event'
 
 Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/streaming/overview/messages-types#Events_event).
 See the Twitter docs for more information on each event's structure.
@@ -442,7 +442,7 @@ In addition, the following user stream events are provided for you to listen on:
 * `favorited_retweet`
 * `unknown_user_event` (for an event that doesn't match any of the above)
 
-###Example:
+### Example:
 
 ```javascript
 stream.on('favorite', function (event) {
@@ -450,7 +450,7 @@ stream.on('favorite', function (event) {
 })
 ```
 
-##event: 'error'
+## event: 'error'
 
 Emitted when an API request or response error occurs.
 An `Error` object is emitted, with properties:
@@ -465,18 +465,18 @@ An `Error` object is emitted, with properties:
 }
 ```
 
-##stream.stop()
+## stream.stop()
 
 Call this function on the stream to stop streaming (closes the connection with Twitter).
 
-##stream.start()
+## stream.start()
 
 Call this function to restart the stream after you called `.stop()` on it.
 Note: there is no need to call `.start()` to begin streaming. `Twit.stream` calls `.start()` for you.
 
 -------
 
-#What do I have access to?
+# What do I have access to?
 
 Anything in the Twitter API:
 
@@ -489,7 +489,7 @@ Anything in the Twitter API:
 
 Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
 
-#Advanced
+# Advanced
 
 You may specify an array of trusted certificate fingerprints if you want to only trust a specific set of certificates.
 When an HTTP response is received, it is verified that the certificate was signed, and the peer certificate's fingerprint must be one of the values you specified. By default, the node.js trusted "root" CAs will be used.
@@ -507,7 +507,7 @@ var twit = new Twit({
 })
 ```
 
-#Contributing
+# Contributing
 
 - Make your changes
 - Make sure your code matches the style of the code around it
@@ -515,7 +515,7 @@ var twit = new Twit({
 - Run tests
 - Submit a pull request
 
-#How do I run the tests?
+# How do I run the tests?
 
 Create two files: `config1.js` and `config2.js` at the root of the `twit` folder. They should contain two different sets of oauth credentials for twit to use (two accounts are needed for testing interactions). They should both look something like this:
 
@@ -576,78 +576,90 @@ THE SOFTWARE.
 
 ## Changelog
 
-###2.2.4
+### 2.2.9
+  * Use JSON payload in request body for new DM endpoints.
+
+### 2.2.8
+  * Add support for HTTP DELETE; you can now `T.delete(...)`.
+
+### 2.2.7
+  * Don't attempt to reconnect to Twitter API when receiving HTTP status code 413 - request entity too large.
+
+### 2.2.6
+  * Fix zlib error when streaming
+
+### 2.2.4
   * Fix 401 Unauthorized error on streaming connection reconnect after not being
   connected for some time (eg. due to > 1min loss of network).
 
-###2.2.2
+### 2.2.2
   * Emit `parser-error` instead of `error` event if Twitter sends back
   an uncompressed HTTP response body.
 
-###2.2.1
+### 2.2.1
   * Add promise support to Twit REST API calls.
 
-###2.2.0
+### 2.2.0
   * Allow omission of `new` keyword; `var t = Twit(config)` works, and `var t = new Twit(config)` works too.
   * Allow setting an array of trusted certificate fingerprints via `config.trusted_cert_fingerprints`.
   * Automatically adjust timestamp for OAuth'ed HTTP requests
   by recording the timestamp from Twitter HTTP responses, computing our local time offset, and applying the offset in the next HTTP request to Twitter.
 
-###2.1.7
+### 2.1.7
   * Add `mime` as a dependency.
 
-###2.1.6
+### 2.1.6
   * Emit `friends` event for `friends_str` message received when a user stream is requested with `stringify_friend_ids=true`.
   * Handle receiving "Exceeded connection limit for user" message from Twitter while streaming. Emit `error` event for this case.
   * Emit `retweeted_retweet` and `favorited_retweet` user events.
   * Add MIT license to package.json (about time!)
 
-###2.1.5
+### 2.1.5
   * Support config-based request timeout.
 
-###2.1.4
+### 2.1.4
   * Support POST media/upload (chunked) and add `T.postMediaChunked()` to make it easy.
 
-###2.1.3
+### 2.1.3
   * Fix bug in constructing HTTP requests for `account/update_profile_image` and `account/update_profile_background_image` paths.
 
-###2.1.2
+### 2.1.2
   * Enable gzip on network traffic
   * Add `quoted_tweet` event
 
-###2.1.1
+### 2.1.1
   * Strict-mode fixes (Twit can now be run with strict mode)
   * Fix handling of disconect message from Twitter
   * If Twitter returns a non-JSON-parseable fragment during streaming, emit 'parser-error' instead of 'error' (to discard fragments like "Internal Server Error")
 
-###2.1.0
+### 2.1.0
   * Add `message` event.
 
-###2.0.0
+### 2.0.0
   * Implement Application-only auth
   * Remove oauth module as a dependency
 
-###1.1.20
+### 1.1.20
   * Implement support for POST /media/upload
   * Reconnect logic fix for streaming; add stall abort/reconnect timeout on first connection attempt.
 
-###1.1.14
+### 1.1.14
   * Emit `connected` event upon receiving the response from twitter
 
-###1.0.0
+### 1.0.0
   * now to stop and start the stream, use `stream.stop()` and `stream.start()` instead of emitting the `start` and `stop` events
   * If twitter sends a `disconnect` message, closes the stream and emits `disconnect` with the disconnect message received from twitter
 
-###0.2.0
+### 0.2.0
   * Updated `twit` for usage with v1.1 of the Twitter API.
 
-###0.1.5
+### 0.1.5
 
   * **BREAKING CHANGE** to `twit.stream()`. Does not take a callback anymore. It returns
     immediately with the `EventEmitter` that you can listen on. The `Usage` section in
     the Readme.md has been updated. Read it.
 
 
-###0.1.4
+### 0.1.4
 
   * `twit.stream()` has signature `function (path, params, callback)`
