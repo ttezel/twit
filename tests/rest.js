@@ -669,7 +669,7 @@ describe('REST API', function () {
 });
 
 describe('Twit agent_options config', function () {
-  it('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
+  it.skip('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
     // TODO: mock getPeerCertificate so we don't have to pin here
     config1.trusted_cert_fingerprints = [
       '50:D9:10:E8:B4:CD:A9:82:E1:FA:6A:43:48:6F:3B:3F:3C:31:A0:8B'
@@ -688,7 +688,7 @@ describe('Twit agent_options config', function () {
     })
   })
 
-  it('config.trusted_cert_fingerprints responds with Error when fingerprint mismatch occurs', function (done) {
+  it.skip('config.trusted_cert_fingerprints responds with Error when fingerprint mismatch occurs', function (done) {
     config1.trusted_cert_fingerprints = [
       'AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA'
     ];
