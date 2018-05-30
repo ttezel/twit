@@ -14,7 +14,7 @@ var Bot = module.exports = function(config) {
 Bot.prototype.tweet = function (status, callback) {
   if(typeof status !== 'string') {
     return callback(new Error('tweet must be of type String'));
-  } else if(status.length > 140) {
+  } else if(status.length > 280) {
     return callback(new Error('tweet is too long: ' + status.length));
   }
   this.twit.post('statuses/update', { status: status }, callback);
@@ -71,6 +71,7 @@ Bot.prototype.favorite = function (params, callback) {
 };
 
 //
+
 //  choose a random friend of one of your followers, and follow that user
 //
 Bot.prototype.mingle = function (callback) {
