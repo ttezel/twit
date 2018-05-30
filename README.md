@@ -21,6 +21,7 @@ var T = new Twit({
   access_token:         '...',
   access_token_secret:  '...',
   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+  strictSSL:            true,     // optional - requires SSL certificates to be valid.
 })
 
 //
@@ -487,7 +488,7 @@ Anything in the Twitter API:
 
 -------
 
-Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+Go here to create an app and get OAuth credentials (if you haven't already): https://apps.twitter.com/app/new
 
 # Advanced
 
