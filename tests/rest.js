@@ -442,6 +442,32 @@ describe('REST API', function () {
     }, done);
   })
 
+  describe('Url construction', function () {
+    var twit = null
+    var parameters = {
+      elem1: 'hello world',
+      foo: 'bar'
+    }
+
+    before(function () {
+      twit = new Twit(config1)
+    })
+
+    it('adds query parameters to url', function (done) {
+      var resp = twit._buildReqOpts('POST', 'account/verify_credentials', parameters, false, function (err, data) {
+        assert.equal(data.url, 'https://api.twitter.com/1.1/account/verify_credentials.json?elem1=hello%20world&foo=bar')
+        done()
+      })
+    })
+
+    it('does not add query parameters to url when json should be in the payload', function (done) {
+      var resp = twit._buildReqOpts('POST', 'direct_messages/welcome_messages/new', parameters, false, function (err, data) {
+        assert.equal(data.url, 'https://api.twitter.com/1.1/direct_messages/welcome_messages/new.json')
+        done()
+      })
+    })
+  })
+
   describe('Media Upload', function () {
     var twit = null
 
