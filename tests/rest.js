@@ -442,6 +442,32 @@ describe('REST API', function () {
     }, done);
   })
 
+  describe('Url construction', function () {
+    var twit = null
+    var parameters = {
+      elem1: 'hello world',
+      foo: 'bar'
+    }
+
+    before(function () {
+      twit = new Twit(config1)
+    })
+
+    it('adds query parameters to url', function (done) {
+      var resp = twit._buildReqOpts('POST', 'account/verify_credentials', parameters, false, function (err, data) {
+        assert.equal(data.url, 'https://api.twitter.com/1.1/account/verify_credentials.json?elem1=hello%20world&foo=bar')
+        done()
+      })
+    })
+
+    it('does not add query parameters to url when json should be in the payload', function (done) {
+      var resp = twit._buildReqOpts('POST', 'direct_messages/welcome_messages/new', parameters, false, function (err, data) {
+        assert.equal(data.url, 'https://api.twitter.com/1.1/direct_messages/welcome_messages/new.json')
+        done()
+      })
+    })
+  })
+
   describe('Media Upload', function () {
     var twit = null
 
@@ -600,13 +626,13 @@ describe('REST API', function () {
 
   describe('error handling', function () {
     describe('handling errors from the twitter api', function () {
+      var twit = new Twit({
+        consumer_key: 'a',
+        consumer_secret: 'b',
+        access_token: 'c',
+        access_token_secret: 'd'
+      })
       it('should callback with an Error object with all the info and a response object', function (done) {
-        var twit = new Twit({
-          consumer_key: 'a',
-          consumer_secret: 'b',
-          access_token: 'c',
-          access_token_secret: 'd'
-        })
         twit.get('account/verify_credentials', function (err, reply, res) {
           assert(err instanceof Error)
           assert(err.statusCode === 401)
@@ -619,6 +645,21 @@ describe('REST API', function () {
           assert.equal(res.statusCode, 401)
           done()
         })
+      })
+      it('should return a rejected promise with the Twitter API errors', function() {
+          twit.get('account/verify_credentials')
+            .then(result => {
+              throw Error("Twitter API exception was not caught in the promise API")
+            })
+            .catch(err => {
+              assert(err instanceof Error)
+              assert(err.statusCode === 401)
+              assert(err.code > 0)
+              assert(err.message.match(/token/))
+              assert(err.twitterReply)
+              assert(err.allErrors)
+              return;
+            })
       })
     })
     describe('handling other errors', function () {
@@ -669,10 +710,10 @@ describe('REST API', function () {
 });
 
 describe('Twit agent_options config', function () {
-  it('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
+  it.skip('config.trusted_cert_fingerprints works against cert fingerprint for api.twitter.com:443', function (done) {
     // TODO: mock getPeerCertificate so we don't have to pin here
     config1.trusted_cert_fingerprints = [
-      '24:EB:85:86:7A:98:71:85:E6:73:DF:0C:57:18:AE:50:2D:BA:0A:69'
+      '50:D9:10:E8:B4:CD:A9:82:E1:FA:6A:43:48:6F:3B:3F:3C:31:A0:8B'
     ];
     var t = new Twit(config1);
 
@@ -688,7 +729,7 @@ describe('Twit agent_options config', function () {
     })
   })
 
-  it('config.trusted_cert_fingerprints responds with Error when fingerprint mismatch occurs', function (done) {
+  it.skip('config.trusted_cert_fingerprints responds with Error when fingerprint mismatch occurs', function (done) {
     config1.trusted_cert_fingerprints = [
       'AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA'
     ];
