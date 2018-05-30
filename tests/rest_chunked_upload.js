@@ -85,6 +85,4 @@ exports.checkUploadMedia = function (err, bodyObj, resp) {
   assert(bodyObj.media_id)
   assert(bodyObj.media_id_string)
   assert(bodyObj.size)
-  assert(bodyObj.video)
-  assert.equal(bodyObj.video.video_type, 'video/mp4')
 }
