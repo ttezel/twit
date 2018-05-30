@@ -487,7 +487,7 @@ Anything in the Twitter API:
 
 -------
 
-Go here to create an app and get OAuth credentials (if you haven't already): https://dev.twitter.com/apps/new
+Go here to create an app and get OAuth credentials (if you haven't already): https://apps.twitter.com/app/new
 
 # Advanced
 
