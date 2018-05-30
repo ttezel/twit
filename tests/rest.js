@@ -626,13 +626,13 @@ describe('REST API', function () {
 
   describe('error handling', function () {
     describe('handling errors from the twitter api', function () {
+      var twit = new Twit({
+        consumer_key: 'a',
+        consumer_secret: 'b',
+        access_token: 'c',
+        access_token_secret: 'd'
+      })
       it('should callback with an Error object with all the info and a response object', function (done) {
-        var twit = new Twit({
-          consumer_key: 'a',
-          consumer_secret: 'b',
-          access_token: 'c',
-          access_token_secret: 'd'
-        })
         twit.get('account/verify_credentials', function (err, reply, res) {
           assert(err instanceof Error)
           assert(err.statusCode === 401)
@@ -645,6 +645,21 @@ describe('REST API', function () {
           assert.equal(res.statusCode, 401)
           done()
         })
+      })
+      it('should return a rejected promise with the Twitter API errors', function() {
+          twit.get('account/verify_credentials')
+            .then(result => {
+              throw Error("Twitter API exception was not caught in the promise API")
+            })
+            .catch(err => {
+              assert(err instanceof Error)
+              assert(err.statusCode === 401)
+              assert(err.code > 0)
+              assert(err.message.match(/token/))
+              assert(err.twitterReply)
+              assert(err.allErrors)
+              return;
+            })
       })
     })
     describe('handling other errors', function () {
