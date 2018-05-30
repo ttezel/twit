@@ -385,7 +385,7 @@ describe('streaming API bad request', function (done) {
 
     var stream = twit.stream('statuses/filter', { track : ['foo'] });
 
-    stream.on('parser-error', function (err) {
+    stream.on('error', function (err) {
       assert.equal(err.statusCode, 401)
       assert(err.twitterReply)
 
