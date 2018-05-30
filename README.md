@@ -46,6 +46,20 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, res
 })
 
 //
+//  Follow somebody by userID
+//  You can obtain userID by this api or with https://tweeterid.com
+//  If follow == 'true', turn on the notifications
+//  If data != undefined, there is an error
+//
+T.post('friendships/create', {user_id: '742413851828838400', follow: 'true'}, function(data, response) {
+		if (data != undefined) {
+		  console.log(response);
+		  throw data;
+		}
+		console.log(response);
+})
+
+//
 // Twit has promise support; you can use the callback API,
 // promise API, or both at the same time.
 //
