@@ -32,7 +32,6 @@ describe('REST API using app-only auth', function () {
       checkReply(err, body)
       checkResponse(response)
       assert(body.rate_limit_context)
-      assert(body.resources.users)
       assert(body.resources.search)
       assert.equal(Object.keys(body.resources).length, 2)
       done()
