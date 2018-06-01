@@ -162,7 +162,7 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
-## var T = new Twit(config)`
+## `var T = new Twit(config)`
 
 Create a `Twit` instance that can be used to make requests to Twitter's APIs.
 
@@ -187,7 +187,7 @@ If authenticating with application context, `config` should be an object of the 
 Note that Application-only auth will not allow you to perform requests to API endpoints requiring
 a user context, such as posting tweets. However, the endpoints available can have a higher rate limit.
 
-## T.get(path, [params], callback)`
+## `T.get(path, [params], callback)`
 GET any of the REST API endpoints.
 
 **path**
@@ -222,13 +222,13 @@ T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
 
 You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
 
-## T.getAuth()`
+## `T.getAuth()`
 Get the client's authentication tokens.
 
-## T.setAuth(tokens)`
+## `T.setAuth(tokens)`
 Update the client's authentication tokens.
 
-## T.stream(path, [params])`
+## `T.stream(path, [params])`
 Use this with the Streaming API.
 
 **path**
