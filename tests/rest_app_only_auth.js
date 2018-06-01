@@ -55,6 +55,7 @@ describe('REST API using app-only auth', function () {
     var index = 0
     var limit = 50
     var params = { screen_name: 'twitter' }
+    var isDone = false;
 
     var getData = function () {
       twit.get('users/show', params, function (err, data) {
@@ -65,8 +66,9 @@ describe('REST API using app-only auth', function () {
         }
         index++
 
-        if (index >= limit) {
-          done()
+        if (index >= limit && !isDone) {
+          isDone = true;
+          done();
         }
       })
     }

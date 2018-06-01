@@ -48,7 +48,7 @@ describe('REST API', function () {
       })
   })
 
-  it('GET `account/verify_credentials` using promise API AND callback API', function (done) {
+  it.skip('GET `account/verify_credentials` using promise API AND callback API', function (done) {
     var i = 0;
 
     var _checkDataAndResp = function (data, resp) {
