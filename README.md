@@ -205,11 +205,11 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 - `data` is the parsed data received from Twitter.
 - `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html# http_http_incomingmessage) received from Twitter.
 
-## T.post(path, [params], callback)`
+## `T.post(path, [params], callback)`
 
 POST any of the REST API endpoints. Same usage as `T.get()`.
 
-## T.postMediaChunked(params, callback)`
+## `T.postMediaChunked(params, callback)`
 
 Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
 
