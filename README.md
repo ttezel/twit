@@ -577,6 +577,14 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.2.10
+  * Update maximum Tweet characters to 280 (thanks @maziyarpanahi)
+  * For streaming requests, use request body for sending params (thanks @raine)
+  * Fix getBearerToken endpoint (thanks @williamcoates)
+  * Shared Parameter Feature For Media Upload (thanks @haroonabbasi)
+  * Don't include params in path for jsonpayload paths (thanks @egtoney)
+  * Add support for strictSSL request option (thanks @zdoc01)
+
 ### 2.2.9
   * Use JSON payload in request body for new DM endpoints.
 
