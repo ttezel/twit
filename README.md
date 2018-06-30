@@ -577,6 +577,9 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.2.11
+* Fix media_category used for media uploads (thanks @BooDoo)
+
 ### 2.2.10
   * Update maximum Tweet characters to 280 (thanks @maziyarpanahi)
   * For streaming requests, use request body for sending params (thanks @raine)
