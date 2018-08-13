@@ -640,9 +640,6 @@ describe('REST API', function () {
           assert(err.message.match(/token/))
           assert(err.twitterReply)
           assert(err.allErrors)
-          assert(res)
-          assert(res.headers)
-          assert.equal(res.statusCode, 401)
           done()
         })
       })
@@ -680,8 +677,7 @@ describe('REST API', function () {
           return fakeRequest
         }
 
-        var request = require('request')
-        var stubGet = sinon.stub(request, 'get', stubGet)
+        var stubGet = sinon.stub(twit._request, 'get', stubGet)
 
         twit.get('account/verify_credentials', function (err, reply, res) {
           assert(err === fakeError)
