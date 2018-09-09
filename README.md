@@ -162,7 +162,7 @@ stream.on('tweet', function (tweet) {
 
 # twit API:
 
-## var T = new Twit(config)`
+## `var T = new Twit(config)`
 
 Create a `Twit` instance that can be used to make requests to Twitter's APIs.
 
@@ -187,7 +187,7 @@ If authenticating with application context, `config` should be an object of the 
 Note that Application-only auth will not allow you to perform requests to API endpoints requiring
 a user context, such as posting tweets. However, the endpoints available can have a higher rate limit.
 
-## T.get(path, [params], callback)`
+## `T.get(path, [params], callback)`
 GET any of the REST API endpoints.
 
 **path**
@@ -205,11 +205,11 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 - `data` is the parsed data received from Twitter.
 - `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html# http_http_incomingmessage) received from Twitter.
 
-## T.post(path, [params], callback)`
+## `T.post(path, [params], callback)`
 
 POST any of the REST API endpoints. Same usage as `T.get()`.
 
-## T.postMediaChunked(params, callback)`
+## `T.postMediaChunked(params, callback)`
 
 Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
 
@@ -222,13 +222,13 @@ T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
 
 You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
 
-## T.getAuth()`
+## `T.getAuth()`
 Get the client's authentication tokens.
 
-## T.setAuth(tokens)`
+## `T.setAuth(tokens)`
 Update the client's authentication tokens.
 
-## T.stream(path, [params])`
+## `T.stream(path, [params])`
 Use this with the Streaming API.
 
 **path**
@@ -576,6 +576,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Changelog
+
+### 2.2.11
+* Fix media_category used for media uploads (thanks @BooDoo)
+
+### 2.2.10
+  * Update maximum Tweet characters to 280 (thanks @maziyarpanahi)
+  * For streaming requests, use request body for sending params (thanks @raine)
+  * Fix getBearerToken endpoint (thanks @williamcoates)
+  * Shared Parameter Feature For Media Upload (thanks @haroonabbasi)
+  * Don't include params in path for jsonpayload paths (thanks @egtoney)
+  * Add support for strictSSL request option (thanks @zdoc01)
 
 ### 2.2.9
   * Use JSON payload in request body for new DM endpoints.
