@@ -66,21 +66,21 @@ T.get('account/verify_credentials', { skip_status: true })
 //
 //  retweet a tweet with id '343360866131001345'
 //
-T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
+T.post('statuses/retweet', { id: '343360866131001345' }, function (err, data, response) {
   console.log(data)
+})
+
+///
+/// like a tweet with id '343360866131001345'
+///
+T.post('favorites/create', { id: '343360866131001345' }, function (err, data, response) {
+  console.log(data);
 })
 
 //
 //  destroy a tweet with id '343360866131001345'
 //
-T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, data, response) {
-  console.log(data)
-})
-
-//
-// get `funny` twitter users
-//
-T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, response) {
+T.post('statuses/destroy', { id: '343360866131001345' }, function (err, data, response) {
   console.log(data)
 })
 
