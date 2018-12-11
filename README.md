@@ -203,7 +203,7 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 `function (err, data, response)`
 
 - `data` is the parsed data received from Twitter.
-- `response` is the [http.IncomingMessage](https://nodejs.org/api/http.html#http_http_incomingmessage) received from Twitter.
+- `response` is the [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) received from Twitter.
 
 ## `T.post(path, [params], callback)`
 
