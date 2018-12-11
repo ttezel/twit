@@ -203,7 +203,7 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 `function (err, data, response)`
 
 - `data` is the parsed data received from Twitter.
-- `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html# http_http_incomingmessage) received from Twitter.
+- `response` is the [http.IncomingMessage](https://nodejs.org/api/http.html#http_http_incomingmessage) received from Twitter.
 
 ## `T.post(path, [params], callback)`
 
@@ -220,7 +220,7 @@ T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
 })
 ```
 
-You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
+You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20).
 
 ## `T.getAuth()`
 Get the client's authentication tokens.
@@ -389,7 +389,7 @@ stream.on('user_withheld', function (withheldMsg) {
 
 ## event: 'friends'
 
-Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types# user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
+Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types#user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
 list preamble will be returned as Strings (instead of Numbers).
 
 ```javascript
