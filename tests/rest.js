@@ -1,3 +1,4 @@
+'use strict'
 var assert = require('assert')
   , EventEmitter = require('events').EventEmitter
   , fs = require('fs')

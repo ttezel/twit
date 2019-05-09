@@ -1,8 +1,8 @@
+'use strict'
 var assert = require('assert');
 
 var Twit = require('../lib/twitter');
 var config1 = require('../config1');
-var colors = require('colors');
 var restTest = require('./rest.js');
 
 /*

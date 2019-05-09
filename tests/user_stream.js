@@ -1,7 +1,7 @@
+'use strict'
 var assert = require('assert')
 var Twit = require('../lib/twitter')
 var config1 = require('../config1')
-var streaming = require('./streaming')
 
 //verify `friendsMsg` is a twitter 'friends' message object
 function checkFriendsMsg (friendsMsg) {

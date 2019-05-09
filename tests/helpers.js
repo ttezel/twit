@@ -1,3 +1,4 @@
+'use strict'
 var EventEmitter = require('events').EventEmitter;
 var stream = require('stream');
 var util = require('util');

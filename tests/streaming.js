@@ -1,12 +1,11 @@
+'use strict'
 var assert = require('assert')
-  , http = require('http')
   , EventEmitter = require('events').EventEmitter
   , rewire = require('rewire')
   , sinon = require('sinon')
   , Twit = require('../lib/twitter')
   , config1 = require('../config1')
   , config2 = require('../config2')
-  , colors = require('colors')
   , helpers = require('./helpers')
   , util = require('util')
   , zlib = require('zlib')
