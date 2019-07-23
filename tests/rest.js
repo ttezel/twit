@@ -638,6 +638,7 @@ describe('REST API', function () {
           assert(err.statusCode === 401)
           assert(err.code > 0)
           assert(err.message.match(/token/))
+          assert(typeof err.headers === 'object')
           assert(err.twitterReply)
           assert(err.allErrors)
           assert(res)
@@ -654,6 +655,7 @@ describe('REST API', function () {
             .catch(err => {
               assert(err instanceof Error)
               assert(err.statusCode === 401)
+              assert(typeof err.headers === 'object')
               assert(err.code > 0)
               assert(err.message.match(/token/))
               assert(err.twitterReply)
