@@ -577,8 +577,19 @@ THE SOFTWARE.
 
 ## Changelog
 
+### 2.3.0
+  * Allow uploading media files from file streams #1 @joeypatino
+  * Added an Direct message example for Twit API readme docs #2 @mtpjr88
+  * Add headers to REST error object #3 @Harrison-M
+  * Fix banner update URL (update_profile_background_image is deprecated) #4 @it-fm
+  * Use correct-content type when GET-ing a media/ path #5 @AndrewBarba
+  * Add support for subtitles create and delete #6 @dyep49
+  * Add new json payload path #7 @ashafa
+  * Video/upload chunk size #8 @pthieu
+  * Change MAX_VIDEO_CHUNK_BYTES to 5MB
+
 ### 2.2.11
-* Fix media_category used for media uploads (thanks @BooDoo)
+  * Fix media_category used for media uploads (thanks @BooDoo)
 
 ### 2.2.10
   * Update maximum Tweet characters to 280 (thanks @maziyarpanahi)
