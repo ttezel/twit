@@ -543,7 +543,7 @@ node examples/rtd2.js
 
 ![iRTD2](http://dl.dropbox.com/u/32773572/RTD2_logo.png)
 
-The example is a twitter bot named [RTD2](https://twitter.com/#!/iRTD2) written using `twit`. RTD2 tweets about **github** and curates its social graph.
+The example is a twitter bot named [RTD2](https://twitter.com/iRTD2) written using `twit`. RTD2 tweets about **github** and curates its social graph.
 
 -------
 
