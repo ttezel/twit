@@ -12,10 +12,10 @@ npm install twit
 
 ## Usage:
 
-```javascript
-var Twit = require('twit')
+```js
+const twit = require('twit')
 
-var T = new Twit({
+const twit = new Twit({
   consumer_key:         '...',
   consumer_secret:      '...',
   access_token:         '...',
@@ -27,21 +27,21 @@ var T = new Twit({
 //
 //  tweet 'hello world!'
 //
-T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
+twit.post('statuses/update', { status: 'hello world!' }, (err, data, response) => {
   console.log(data)
 })
 
 //
 //  search twitter for all tweets containing the word 'banana' since July 11, 2011
 //
-T.get('search/tweets', { q: 'banana since:2011-07-11', count: 100 }, function(err, data, response) {
+twit.get('search/tweets', { q: 'banana since:2011-07-11', count: 100 }, (err, data, response) => {
   console.log(data)
 })
 
 //
 //  get the list of user id's that follow @tolga_tezel
 //
-T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, response) {
+twit.get('followers/ids', { screen_name: 'tolga_tezel' },  (err, data, response) => {
   console.log(data)
 })
 
@@ -49,7 +49,7 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, res
 // Twit has promise support; you can use the callback API,
 // promise API, or both at the same time.
 //
-T.get('account/verify_credentials', { skip_status: true })
+twit.get('account/verify_credentials', { skip_status: true })
   .catch(function (err) {
     console.log('caught error', err.stack)
   })
@@ -66,43 +66,43 @@ T.get('account/verify_credentials', { skip_status: true })
 //
 //  retweet a tweet with id '343360866131001345'
 //
-T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
+twit.post('statuses/retweet/:id', { id: '343360866131001345' }, (err, data, response) => {
   console.log(data)
 })
 
 //
 //  destroy a tweet with id '343360866131001345'
 //
-T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, data, response) {
+twit.post('statuses/destroy/:id', { id: '343360866131001345' }, (err, data, response) => {
   console.log(data)
 })
 
 //
 // get `funny` twitter users
 //
-T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, response) {
+twit.get('users/suggestions/:slug', { slug: 'funny' }, (err, data, response) => {
   console.log(data)
 })
 
 //
 // post a tweet with media
 //
-var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+let b64contentwit = fs.readFileSync('/path/to/img', { encoding: 'base64' })
 
 // first we must post the media to Twitter
-T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+twit.post('media/upload', { media_data: b64content }, (err, data, response) => {
   // now we can assign alt text to the media, for use by screen readers and
   // other text-based presentations and interpreters
-  var mediaIdStr = data.media_id_string
-  var altText = "Small flowers in a planter on a sunny balcony, blossoming."
-  var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+  let mediaIdStr = data.media_id_string
+  let altTextwit = "Small flowers in a planter on a sunny balcony, blossoming."
+  let meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
 
-  T.post('media/metadata/create', meta_params, function (err, data, response) {
+  twit.post('media/metadata/create', meta_params, (err, data, response) => {
     if (!err) {
       // now we can reference the media and post a tweet (media will attach to the tweet)
-      var params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
+      let params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
 
-      T.post('statuses/update', params, function (err, data, response) {
+      twit.post('statuses/update', params, (err, data, response) => {
         console.log(data)
       })
     }
@@ -112,62 +112,62 @@ T.post('media/upload', { media_data: b64content }, function (err, data, response
 //
 // post media via the chunked media upload API.
 // You can then use POST statuses/update to post a tweet with the media attached as in the example above using `media_id_string`.
-// Note: You can also do this yourself manually using T.post() calls if you want more fine-grained
+// Note: You can also do this yourself manually using twit.post() calls if you want more fine-grained
 // control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20
 //
-var filePath = '/absolute/path/to/file.mp4'
-T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
+let filePath = '/absolute/path/to/file.mp4'
+twit.postMediaChunked({ file_path: filePath }, (err, data, response) => {
   console.log(data)
 })
 
 //
 //  stream a sample of public statuses
 //
-var stream = T.stream('statuses/sample')
+let stream = twit.stream('statuses/sample')
 
-stream.on('tweet', function (tweet) {
+stream.on('tweet', tweet => {
   console.log(tweet)
 })
 
 //
 //  filter the twitter public stream by the word 'mango'.
 //
-var stream = T.stream('statuses/filter', { track: 'mango' })
+let stream = twit.stream('statuses/filter', { track: 'mango' })
 
-stream.on('tweet', function (tweet) {
+stream.on('tweet', tweet => {
   console.log(tweet)
 })
 
 //
 // filter the public stream by the latitude/longitude bounded box of San Francisco
 //
-var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
+let sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
 
-var stream = T.stream('statuses/filter', { locations: sanFrancisco })
+let stream = twit.stream('statuses/filter', { locations: sanFrancisco })
 
-stream.on('tweet', function (tweet) {
+stream.on('tweet', tweet => {
   console.log(tweet)
 })
 
 //
 // filter the public stream by english tweets containing `#apple`
 //
-var stream = T.stream('statuses/filter', { track: '#apple', language: 'en' })
+let stream = twit.stream('statuses/filter', { track: '#apple', language: 'en' })
 
-stream.on('tweet', function (tweet) {
+stream.on('tweet', tweet => {
   console.log(tweet)
 })
 
 ```
 
-# twit API:
+# Twit API
 
-## `var T = new Twit(config)`
+## `const twit = new Twit(config)`
 
 Create a `Twit` instance that can be used to make requests to Twitter's APIs.
 
 If authenticating with user context, `config` should be an object of the form:
-```
+```js
 {
     consumer_key:         '...'
   , consumer_secret:      '...'
@@ -177,7 +177,7 @@ If authenticating with user context, `config` should be an object of the form:
 ```
 
 If authenticating with application context, `config` should be an object of the form:
-```
+```js
 {
     consumer_key:         '...'
   , consumer_secret:      '...'
@@ -185,9 +185,10 @@ If authenticating with application context, `config` should be an object of the 
 }
 ```
 Note that Application-only auth will not allow you to perform requests to API endpoints requiring
-a user context, such as posting tweets. However, the endpoints available can have a higher rate limit.
+a user context, such as posting tweets. However, the endpoints available can have a higher rate limitwit.
 
-## `T.get(path, [params], callback)`
+## `twit.get(path, [params], callback)`
+
 GET any of the REST API endpoints.
 
 **path**
@@ -200,35 +201,38 @@ The endpoint to hit. When specifying `path` values, omit the **'.json'** at the 
 
 **callback**
 
-`function (err, data, response)`
+`(err, data, response) =>`
 
 - `data` is the parsed data received from Twitter.
 - `response` is the [http.IncomingMessage](http://nodejs.org/api/http.html# http_http_incomingmessage) received from Twitter.
 
-## `T.post(path, [params], callback)`
+## `twit.post(path, [params], callback)`
 
-POST any of the REST API endpoints. Same usage as `T.get()`.
+POST any of the REST API endpoints. Same usage as `twit.get()`.
 
-## `T.postMediaChunked(params, callback)`
+## `twit.postMediaChunked(params, callback)`
 
 Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
 
 ```js
-var filePath = '/absolute/path/to/file.mp4'
-T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
+let filePath = '/absolute/path/to/file.mp4'
+twit.postMediaChunked({ file_path: filePath }, (err, data, response) => {
   console.log(data)
 })
 ```
 
-You can also use the POST media/upload API via T.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
+You can also use the POST media/upload API via twit.post() calls if you want more fine-grained control over the streaming; [see here for an example](https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js# L20).
 
-## `T.getAuth()`
+## `twit.getAuth()`
+
 Get the client's authentication tokens.
 
-## `T.setAuth(tokens)`
+## `twit.setAuth(tokens)`
+
 Update the client's authentication tokens.
 
-## `T.stream(path, [params])`
+## `twit.stream(path, [params])`
+
 Use this with the Streaming API.
 
 **path**
@@ -247,22 +251,22 @@ For a description of each Streaming endpoint, see the [Twitter API docs](https:/
 
 (Optional) parameters for the request. Any Arrays passed in `params` get converted to comma-separated strings, allowing you to do requests like:
 
-```javascript
+```js
 //
 // I only want to see tweets about my favorite fruits
 //
 
 // same result as doing { track: 'bananas,oranges,strawberries' }
-var stream = T.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
+let stream = twit.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
 
-stream.on('tweet', function (tweet) {
+stream.on('tweet', tweet => {
   //...
 })
 ```
 
 # Using the Streaming API
 
-`T.stream(path, [params])` keeps the connection alive, and returns an `EventEmitter`.
+`twit.stream(path, [params])` keeps the connection alive, and returns an `EventEmitter`.
 
 The following events are emitted:
 
@@ -271,8 +275,8 @@ The following events are emitted:
 Emitted each time an object is received in the stream. This is a catch-all event that can be used to process any data received in the stream, rather than using the more specific events documented below.
 New in version 2.1.0.
 
-```javascript
-stream.on('message', function (msg) {
+```js
+stream.on('message', msg => {
   //...
 })
 ```
@@ -281,8 +285,8 @@ stream.on('message', function (msg) {
 
 Emitted each time a status (tweet) comes into the stream.
 
-```javascript
-stream.on('tweet', function (tweet) {
+```js
+stream.on('tweet', tweet => {
   //...
 })
 ```
@@ -291,8 +295,8 @@ stream.on('tweet', function (tweet) {
 
 Emitted each time a status (tweet) deletion message comes into the stream.
 
-```javascript
-stream.on('delete', function (deleteMessage) {
+```js
+stream.on('delete', deleteMessage => {
   //...
 })
 ```
@@ -301,8 +305,8 @@ stream.on('delete', function (deleteMessage) {
 
 Emitted each time a limitation message comes into the stream.
 
-```javascript
-stream.on('limit', function (limitMessage) {
+```js
+stream.on('limit', limitMessage => {
   //...
 })
 ```
@@ -311,8 +315,8 @@ stream.on('limit', function (limitMessage) {
 
 Emitted each time a location deletion message comes into the stream.
 
-```javascript
-stream.on('scrub_geo', function (scrubGeoMessage) {
+```js
+stream.on('scrub_geo', scrubGeoMessage => {
   //...
 })
 ```
@@ -321,8 +325,8 @@ stream.on('scrub_geo', function (scrubGeoMessage) {
 
 Emitted when a disconnect message comes from Twitter. This occurs if you have multiple streams connected to Twitter's API. Upon receiving a disconnect message from Twitter, `Twit` will close the connection and emit this event with the message details received from twitter.
 
-```javascript
-stream.on('disconnect', function (disconnectMessage) {
+```js
+stream.on('disconnect', disconnectMessage => {
   //...
 })
 ```
@@ -331,8 +335,8 @@ stream.on('disconnect', function (disconnectMessage) {
 
 Emitted when a connection attempt is made to Twitter. The http `request` object is emitted.
 
-```javascript
-stream.on('connect', function (request) {
+```js
+stream.on('connect', request => {
   //...
 })
 ```
@@ -341,8 +345,8 @@ stream.on('connect', function (request) {
 
 Emitted when the response is received from Twitter. The http `response` object is emitted.
 
-```javascript
-stream.on('connected', function (response) {
+```js
+stream.on('connected', response => {
   //...
 })
 ```
@@ -351,8 +355,8 @@ stream.on('connected', function (response) {
 
 Emitted when a reconnection attempt to Twitter is scheduled. If Twitter is having problems or we get rate limited, we schedule a reconnect according to Twitter's [reconnection guidelines](https://dev.twitter.com/streaming/overview/connecting). The last http `request` and `response` objects are emitted, along with the time (in milliseconds) left before the reconnect occurs.
 
-```javascript
-stream.on('reconnect', function (request, response, connectInterval) {
+```js
+stream.on('reconnect', (request, response, connectInterval) => {
   //...
 })
 ```
@@ -361,8 +365,8 @@ stream.on('reconnect', function (request, response, connectInterval) {
 
 This message is appropriate for clients using high-bandwidth connections, like the firehose. If your connection is falling behind, Twitter will queue messages for you, until your queue fills up, at which point they will disconnect you.
 
-```javascript
-stream.on('warning', function (warning) {
+```js
+stream.on('warning', warning => {
   //...
 })
 ```
@@ -371,8 +375,8 @@ stream.on('warning', function (warning) {
 
 Emitted when Twitter sends back a `status_withheld` message in the stream. This means that a tweet was withheld in certain countries.
 
-```javascript
-stream.on('status_withheld', function (withheldMsg) {
+```js
+stream.on('status_withheld', withheldMsg => {
   //...
 })
 ```
@@ -381,8 +385,8 @@ stream.on('status_withheld', function (withheldMsg) {
 
 Emitted when Twitter sends back a `user_withheld` message in the stream. This means that a Twitter user was withheld in certain countries.
 
-```javascript
-stream.on('user_withheld', function (withheldMsg) {
+```js
+stream.on('user_withheld', withheldMsg => {
   //...
 })
 ```
@@ -392,9 +396,9 @@ stream.on('user_withheld', function (withheldMsg) {
 Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/streaming/overview/messages-types# user_stream_messsages) when connecting to a user stream. This message contains a list of the user's friends, represented as an array of user ids. If the [stringify_friend_ids](https://dev.twitter.com/streaming/overview/request-parameters#stringify_friend_id) parameter is set, the friends
 list preamble will be returned as Strings (instead of Numbers).
 
-```javascript
-var stream = T.stream('user', { stringify_friend_ids: true })
-stream.on('friends', function (friendsMsg) {
+```js
+let stream = twit.stream('user', { stringify_friend_ids: true })
+stream.on('friends', friendsMsg => {
   //...
 })
 ```
@@ -403,8 +407,8 @@ stream.on('friends', function (friendsMsg) {
 
 Emitted when a direct message is sent to the user. Unfortunately, Twitter has not documented this event for user streams.
 
-```javascript
-stream.on('direct_message', function (directMsg) {
+```js
+stream.on('direct_message', directMsg => {
   //...
 })
 ```
@@ -414,8 +418,8 @@ stream.on('direct_message', function (directMsg) {
 Emitted when Twitter sends back a [User stream event](https://dev.twitter.com/streaming/overview/messages-types#Events_event).
 See the Twitter docs for more information on each event's structure.
 
-```javascript
-stream.on('user_event', function (eventMsg) {
+```js
+stream.on('user_event', eventMsg => {
   //...
 })
 ```
@@ -445,8 +449,8 @@ In addition, the following user stream events are provided for you to listen on:
 
 ### Example:
 
-```javascript
-stream.on('favorite', function (event) {
+```js
+stream.on('favorite', event => {
   //...
 })
 ```
@@ -473,7 +477,7 @@ Call this function on the stream to stop streaming (closes the connection with T
 ## stream.start()
 
 Call this function to restart the stream after you called `.stop()` on it.
-Note: there is no need to call `.start()` to begin streaming. `Twit.stream` calls `.start()` for you.
+Note: there is no need to call `.start()` to begin streaming. `twit.stream` calls `.start()` for you.
 
 -------
 
@@ -497,7 +501,7 @@ When an HTTP response is received, it is verified that the certificate was signe
 
 eg.
 ```js
-var twit = new Twit({
+const twit = new Twit({
   consumer_key:         '...',
   consumer_secret:      '...',
   access_token:         '...',
@@ -592,7 +596,7 @@ THE SOFTWARE.
   * Use JSON payload in request body for new DM endpoints.
 
 ### 2.2.8
-  * Add support for HTTP DELETE; you can now `T.delete(...)`.
+  * Add support for HTTP DELETE; you can now `twit.delete(...)`.
 
 ### 2.2.7
   * Don't attempt to reconnect to Twitter API when receiving HTTP status code 413 - request entity too large.
@@ -612,7 +616,7 @@ THE SOFTWARE.
   * Add promise support to Twit REST API calls.
 
 ### 2.2.0
-  * Allow omission of `new` keyword; `var t = Twit(config)` works, and `var t = new Twit(config)` works too.
+  * Allow omission of `new` keyword; `const twit = Twit(config)` works, and `const twit = new Twit(config)` works too.
   * Allow setting an array of trusted certificate fingerprints via `config.trusted_cert_fingerprints`.
   * Automatically adjust timestamp for OAuth'ed HTTP requests
   by recording the timestamp from Twitter HTTP responses, computing our local time offset, and applying the offset in the next HTTP request to Twitter.
@@ -630,7 +634,7 @@ THE SOFTWARE.
   * Support config-based request timeout.
 
 ### 2.1.4
-  * Support POST media/upload (chunked) and add `T.postMediaChunked()` to make it easy.
+  * Support POST media/upload (chunked) and add `twit.postMediaChunked()` to make it easy.
 
 ### 2.1.3
   * Fix bug in constructing HTTP requests for `account/update_profile_image` and `account/update_profile_background_image` paths.
