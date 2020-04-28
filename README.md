@@ -13,7 +13,7 @@ npm install twit
 ## Usage:
 
 ```js
-const twit = require('twit')
+const Twit = require('twit')
 
 const twit = new Twit({
   consumer_key:         '...',
@@ -87,20 +87,20 @@ twit.get('users/suggestions/:slug', { slug: 'funny' }, (err, data, response) => 
 //
 // post a tweet with media
 //
-let b64contentwit = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+const b64contentwit = fs.readFileSync('/path/to/img', { encoding: 'base64' })
 
 // first we must post the media to Twitter
 twit.post('media/upload', { media_data: b64content }, (err, data, response) => {
   // now we can assign alt text to the media, for use by screen readers and
   // other text-based presentations and interpreters
-  let mediaIdStr = data.media_id_string
-  let altTextwit = "Small flowers in a planter on a sunny balcony, blossoming."
-  let meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
+  const mediaIdStr = data.media_id_string
+  const altTextwit = "Small flowers in a planter on a sunny balcony, blossoming."
+  const meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
 
   twit.post('media/metadata/create', meta_params, (err, data, response) => {
     if (!err) {
       // now we can reference the media and post a tweet (media will attach to the tweet)
-      let params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
+      const params = { status: 'loving life #nofilter', media_ids: [mediaIdStr] }
 
       twit.post('statuses/update', params, (err, data, response) => {
         console.log(data)
@@ -115,7 +115,7 @@ twit.post('media/upload', { media_data: b64content }, (err, data, response) => {
 // Note: You can also do this yourself manually using twit.post() calls if you want more fine-grained
 // control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20
 //
-let filePath = '/absolute/path/to/file.mp4'
+const filePath = '/absolute/path/to/file.mp4'
 twit.postMediaChunked({ file_path: filePath }, (err, data, response) => {
   console.log(data)
 })
@@ -123,7 +123,7 @@ twit.postMediaChunked({ file_path: filePath }, (err, data, response) => {
 //
 //  stream a sample of public statuses
 //
-let stream = twit.stream('statuses/sample')
+const stream = twit.stream('statuses/sample')
 
 stream.on('tweet', tweet => {
   console.log(tweet)
@@ -132,7 +132,7 @@ stream.on('tweet', tweet => {
 //
 //  filter the twitter public stream by the word 'mango'.
 //
-let stream = twit.stream('statuses/filter', { track: 'mango' })
+const stream = twit.stream('statuses/filter', { track: 'mango' })
 
 stream.on('tweet', tweet => {
   console.log(tweet)
@@ -141,9 +141,9 @@ stream.on('tweet', tweet => {
 //
 // filter the public stream by the latitude/longitude bounded box of San Francisco
 //
-let sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
+const sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
 
-let stream = twit.stream('statuses/filter', { locations: sanFrancisco })
+const stream = twit.stream('statuses/filter', { locations: sanFrancisco })
 
 stream.on('tweet', tweet => {
   console.log(tweet)
@@ -152,7 +152,7 @@ stream.on('tweet', tweet => {
 //
 // filter the public stream by english tweets containing `#apple`
 //
-let stream = twit.stream('statuses/filter', { track: '#apple', language: 'en' })
+const stream = twit.stream('statuses/filter', { track: '#apple', language: 'en' })
 
 stream.on('tweet', tweet => {
   console.log(tweet)
@@ -215,7 +215,7 @@ POST any of the REST API endpoints. Same usage as `twit.get()`.
 Helper function to post media via the POST media/upload (chunked) API. `params` is an object containing a `file_path` key. `file_path` is the absolute path to the file you want to upload.
 
 ```js
-let filePath = '/absolute/path/to/file.mp4'
+const filePath = '/absolute/path/to/file.mp4'
 twit.postMediaChunked({ file_path: filePath }, (err, data, response) => {
   console.log(data)
 })
@@ -257,7 +257,7 @@ For a description of each Streaming endpoint, see the [Twitter API docs](https:/
 //
 
 // same result as doing { track: 'bananas,oranges,strawberries' }
-let stream = twit.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
+const stream = twit.stream('statuses/filter', { track: ['bananas', 'oranges', 'strawberries'] })
 
 stream.on('tweet', tweet => {
   //...
@@ -291,12 +291,12 @@ stream.on('tweet', tweet => {
 })
 ```
 
-## event: 'delete'
+## event: 'deconste'
 
-Emitted each time a status (tweet) deletion message comes into the stream.
+Emitted each time a status (tweet) deconstion message comes into the stream.
 
 ```js
-stream.on('delete', deleteMessage => {
+stream.on('deconste', deconsteMessage => {
   //...
 })
 ```
@@ -313,7 +313,7 @@ stream.on('limit', limitMessage => {
 
 ## event: 'scrub_geo'
 
-Emitted each time a location deletion message comes into the stream.
+Emitted each time a location deconstion message comes into the stream.
 
 ```js
 stream.on('scrub_geo', scrubGeoMessage => {
@@ -397,7 +397,7 @@ Emitted when Twitter sends the ["friends" preamble](https://dev.twitter.com/stre
 list preamble will be returned as Strings (instead of Numbers).
 
 ```js
-let stream = twit.stream('user', { stringify_friend_ids: true })
+const stream = twit.stream('user', { stringify_friend_ids: true })
 stream.on('friends', friendsMsg => {
   //...
 })
@@ -596,7 +596,7 @@ THE SOFTWARE.
   * Use JSON payload in request body for new DM endpoints.
 
 ### 2.2.8
-  * Add support for HTTP DELETE; you can now `twit.delete(...)`.
+  * Add support for HTTP DEconstE; you can now `twit.deconste(...)`.
 
 ### 2.2.7
   * Don't attempt to reconnect to Twitter API when receiving HTTP status code 413 - request entity too large.
