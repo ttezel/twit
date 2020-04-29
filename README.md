@@ -87,14 +87,14 @@ twit.get('users/suggestions/:slug', { slug: 'funny' }, (err, data, response) => 
 //
 // post a tweet with media
 //
-const b64contentwit = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+const b64content= = fs.readFileSync('/path/to/img', { encoding: 'base64' })
 
 // first we must post the media to Twitter
 twit.post('media/upload', { media_data: b64content }, (err, data, response) => {
   // now we can assign alt text to the media, for use by screen readers and
   // other text-based presentations and interpreters
   const mediaIdStr = data.media_id_string
-  const altTextwit = "Small flowers in a planter on a sunny balcony, blossoming."
+  const altText = "Small flowers in a planter on a sunny balcony, blossoming."
   const meta_params = { media_id: mediaIdStr, alt_text: { text: altText } }
 
   twit.post('media/metadata/create', meta_params, (err, data, response) => {
@@ -291,12 +291,12 @@ stream.on('tweet', tweet => {
 })
 ```
 
-## event: 'deconste'
+## event: 'delete'
 
-Emitted each time a status (tweet) deconstion message comes into the stream.
+Emitted each time a status (tweet) deletion message comes into the stream.
 
 ```js
-stream.on('deconste', deconsteMessage => {
+stream.on('delete', deleteMessage => {
   //...
 })
 ```
@@ -313,7 +313,7 @@ stream.on('limit', limitMessage => {
 
 ## event: 'scrub_geo'
 
-Emitted each time a location deconstion message comes into the stream.
+Emitted each time a location deletion message comes into the stream.
 
 ```js
 stream.on('scrub_geo', scrubGeoMessage => {
@@ -596,7 +596,7 @@ THE SOFTWARE.
   * Use JSON payload in request body for new DM endpoints.
 
 ### 2.2.8
-  * Add support for HTTP DEconstE; you can now `twit.deconste(...)`.
+  * Add support for HTTP DELETE; you can now `twit.delete(...)`.
 
 ### 2.2.7
   * Don't attempt to reconnect to Twitter API when receiving HTTP status code 413 - request entity too large.
