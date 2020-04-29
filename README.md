@@ -524,12 +524,11 @@ const twit = new Twit({
 
 Create two files: `config1.js` and `config2.js` at the root of the `twit` folder. They should contain two different sets of oauth credentials for twit to use (two accounts are needed for testing interactions). They should both look something like this:
 
-```
+```js
 module.exports = {
-    consumer_key: '...'
-  , consumer_secret: '...'
-  , access_token: '...'
-  , access_token_secret: '...'
+    consumer_key: '...', 
+    consumer_secret: '...', 
+    access_token_secret: '...'
 }
 ```
 
