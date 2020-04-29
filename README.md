@@ -50,10 +50,10 @@ twit.get('followers/ids', { screen_name: 'tolga_tezel' },  (err, data, response)
 // promise API, or both at the same time.
 //
 twit.get('account/verify_credentials', { skip_status: true })
-  .catch(function (err) {
+  .catch(err => {
     console.log('caught error', err.stack)
   })
-  .then(function (result) {
+  .then(result => {
     // `result` is an Object with keys "data" and "resp".
     // `data` and `resp` are the same objects as the ones passed
     // to the callback.
