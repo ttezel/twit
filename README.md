@@ -169,19 +169,19 @@ Create a `Twit` instance that can be used to make requests to Twitter's APIs.
 If authenticating with user context, `config` should be an object of the form:
 ```js
 {
-    consumer_key:         '...'
-  , consumer_secret:      '...'
-  , access_token:         '...'
-  , access_token_secret:  '...'
+    consumer_key:         '...', 
+    consumer_secret:      '...', 
+    access_token:         '...', 
+    access_token_secret:  '...'
 }
 ```
 
 If authenticating with application context, `config` should be an object of the form:
 ```js
 {
-    consumer_key:         '...'
-  , consumer_secret:      '...'
-  , app_only_auth:        true
+    consumer_key:         '...', 
+    consumer_secret:      '...', 
+    app_only_auth:        true
 }
 ```
 Note that Application-only auth will not allow you to perform requests to API endpoints requiring
