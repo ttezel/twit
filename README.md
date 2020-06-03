@@ -580,7 +580,7 @@ THE SOFTWARE.
 ### 2.3.1 (Alembic/Twothink, Inc. Internal Version)
   * Patch path handling when using full URLs instead of a path @netik
   * Fold-in @tykarol's 2.3.0 changes 
-  * Possible breaking change: Stop collapsing arrays in reqOpts.body if a POST request is in use (i.e. JSON). This subtly changes the creation of JSON objects and will break the enterprise API.
+  * Possible breaking change: Stop collapsing arrays in reqOpts.body if a POST request is in use (i.e. JSON). This fixes JSON object creation which is subtly broken in prior releases.
   * Clean up and expand JSONPAYLOD_PATHS to have enterprise API locations
 
 ### 2.3.0
