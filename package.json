@@ -1,7 +1,7 @@
 {
   "name": "twit",
   "description": "Twitter API client for node (REST & Streaming)",
-  "version": "2.2.11",
+  "version": "2.3.0",
   "author": "Tolga Tezel",
   "keywords": [
     "twitter",
@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "bluebird": "^3.1.5",
+    "file-type": "^3.9.0",
     "mime": "^1.3.4",
     "request": "^2.68.0"
   },
