@@ -12,6 +12,8 @@ npm install twit
 
 ## Usage:
 
+*Note: Twitter now calls the consumer keys API keys.*
+
 ```javascript
 var Twit = require('twit')
 
@@ -161,6 +163,8 @@ stream.on('tweet', function (tweet) {
 ```
 
 # twit API:
+
+*Note: Twitter now calls the consumer keys API keys.*
 
 ## `var T = new Twit(config)`
 
