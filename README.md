@@ -46,8 +46,8 @@ T.get('followers/ids', { screen_name: 'tolga_tezel' },  function (err, data, res
 })
 
 //
-// Twit has promise support; you can use the callback API,
-// promise API, or both at the same time.
+//  Twit has promise support; you can use the callback API,
+//  promise API, or both at the same time.
 //
 T.get('account/verify_credentials', { skip_status: true })
   .catch(function (err) {
@@ -78,14 +78,14 @@ T.post('statuses/destroy/:id', { id: '343360866131001345' }, function (err, data
 })
 
 //
-// get `funny` twitter users
+//  get `funny` twitter users
 //
 T.get('users/suggestions/:slug', { slug: 'funny' }, function (err, data, response) {
   console.log(data)
 })
 
 //
-// post a tweet with media
+//  post a tweet with media
 //
 var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
 
@@ -110,10 +110,10 @@ T.post('media/upload', { media_data: b64content }, function (err, data, response
 })
 
 //
-// post media via the chunked media upload API.
-// You can then use POST statuses/update to post a tweet with the media attached as in the example above using `media_id_string`.
-// Note: You can also do this yourself manually using T.post() calls if you want more fine-grained
-// control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20
+//  post media via the chunked media upload API.
+//  You can then use POST statuses/update to post a tweet with the media attached as in the example above using `media_id_string`.
+//  Note: You can also do this yourself manually using T.post() calls if you want more fine-grained
+//  control over the streaming. Example: https://github.com/ttezel/twit/blob/master/tests/rest_chunked_upload.js#L20
 //
 var filePath = '/absolute/path/to/file.mp4'
 T.postMediaChunked({ file_path: filePath }, function (err, data, response) {
@@ -139,7 +139,7 @@ stream.on('tweet', function (tweet) {
 })
 
 //
-// filter the public stream by the latitude/longitude bounded box of San Francisco
+//  filter the public stream by the latitude/longitude bounded box of San Francisco
 //
 var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ]
 
@@ -150,7 +150,7 @@ stream.on('tweet', function (tweet) {
 })
 
 //
-// filter the public stream by english tweets containing `#apple`
+//  filter the public stream by english tweets containing `#apple`
 //
 var stream = T.stream('statuses/filter', { track: '#apple', language: 'en' })
 
@@ -249,7 +249,7 @@ For a description of each Streaming endpoint, see the [Twitter API docs](https:/
 
 ```javascript
 //
-// I only want to see tweets about my favorite fruits
+//  I only want to see tweets about my favorite fruits
 //
 
 // same result as doing { track: 'bananas,oranges,strawberries' }
